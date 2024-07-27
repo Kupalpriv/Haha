@@ -1,12 +1,12 @@
 module.exports.config = {
-    name: "bot",
+    name: "sim",
     version: "1.0.0",
     role: 0,
     credits: "chiie",
     description: "Simulated conversation",
     hasPrefix: false,
     aliases: [],
-    usage: "[bot <query>]",
+    usage: "[sim <query>]",
     cooldown: 5,
 };
 
@@ -16,7 +16,7 @@ module.exports.run = async function({ api, event, args }) {
     try {
         const query = args.join(" ");
         if (!query) {
-            api.sendMessage("Usage: bot <query>", event.threadID);
+            api.sendMessage("Usage: sim <query>", event.threadID);
             return;
         }
 
