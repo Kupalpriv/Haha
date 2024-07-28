@@ -3,40 +3,39 @@ const axios = require("axios");
 module.exports.config = {
     name: "ai2",
     version: "1.0.0",
+    role: 0,
     credits: "chill",
-    description: "Interact with Llama AI",
+    description: "Ask Mistral AI a question",
     hasPrefix: false,
-    cooldown: 5,
-    aliases: ["llama"]
+    aliases: ["mistral"],
+    usage: "ai2 <question>",
+    cooldown: 3
 };
 
-module.exports.run = async function ({ api, event, args }) {
+module.exports.run = async function({ api, event, args }) {
     try {
-        let q = args.join(" ");
-        if (!q) {
-            return api.sendMessage("[ ❗ ] - Missing question for the ai2", event.threadID, event.messageID);
+        const question = args.join(" ");
+        if (!question) {
+            api.sendMessage("Usage: mistral <question>", event.threadID);
+            return;
         }
 
-        const initialMessage = await new Promise((resolve, reject) => {
-            api.sendMessage("Answering plss wait...", event.threadID, (err, info) => {
-                if (err) return reject(err);
-                resolve(info);
-            });
-        });
+        const url = `https://hiroshi-rest-api.replit.app/ai/mistral8x7B?ask=${encodeURIComponent(question)}`;
+        const pendingMessageID = (await api.sendMessage("𝙼𝙸𝚂𝚃𝚁𝙰𝙻 𝙸𝚂 𝙰𝙽𝚂𝚆𝙴𝚁𝙸𝙽𝙶 𝙿𝙻𝚂𝚂𝚂 𝚆𝙰𝙸𝚃𝚃𝚃...", event.threadID)).messageID;
 
-        try {
-            const response = await axios.get(`https://joshweb.click/ai/llama-3-8b?q=${encodeURIComponent(q)}&uid=100`);
-            const answer = response.data.result;
+        const response = await axios.get(url);
+        const mistralResponse = response.data.response.trim();
 
-            const formattedResponse = `👾 Iᒪᒪᗰᗩ\n━━━━━━━━━━━━━━━━━━\n${answer}\n━━━━━━━━━━━━━━━━━━`;
+        const formattedMessage = `💤 | 𝙼𝙸𝚂𝚃𝚁𝙰𝙻 𝙰𝙸
+━━━━━━━━━━━━━━━━━━
+${mistralResponse}
+━━━━━━━━━━━━━━━━━━
+🗣 𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${event.senderID}`;
 
-            await api.editMessage(formattedResponse, initialMessage.messageID);
-        } catch (error) {
-            console.error(error);
-            await api.editMessage("An error occurred while processing your request.", initialMessage.messageID);
-        }
+        api.editMessage(formattedMessage, event.threadID, pendingMessageID);
+
     } catch (error) {
-        console.error("Error in ai2 command:", error);
-        api.sendMessage("An error occurred while processing your request.", event.threadID);
+        console.error('Error:', error);
+        api.sendMessage("An error occurred while processing the request.", event.threadID);
     }
 };
