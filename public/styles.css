@@ -75,13 +75,13 @@ label {
 .btn-primary:hover {
     background-color: #004090;
     border: 1px solid #004090;
-    transform: scale(1.08);
+    transform: scale(1.05);
     animation: buttonHover 0.3s ease-in-out;
 }
 
 @keyframes buttonHover {
     0% { transform: scale(1); }
-    50% { transform: scale(1.08); }
+    50% { transform: scale(1.05); }
     100% { transform: scale(1); }
 }
 
@@ -161,7 +161,7 @@ label {
 
 #inputOfPrefix, #inputOfAdmin, #inputOfBotName {
     padding: 18px;
-    width: 240px;
+    width: 100%;
     border: 1px solid #666666;
     border-radius: 10px;
     cursor: pointer;
@@ -207,20 +207,9 @@ h1, p, .btn-primary, .footer, .container, #result, .form-check {
     animation: glow 1.5s ease-in-out infinite alternate;
 }
 
-@keyframes rotate {
-    0% { transform: rotate(0deg); }
-    50% { transform: rotate(360deg); }
-    100% { transform: rotate(0deg); }
-}
-
-.rotating-element {
-    display: inline-block;
-    animation: rotate 3s linear infinite;
-}
-
 @keyframes float {
     0% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
+    50% { transform: translateY(-10px); }
     100% { transform: translateY(0); }
 }
 
