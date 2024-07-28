@@ -8,15 +8,15 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand rotating-element" href="#">𝗛𝗼𝗺𝗲</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">𝗛𝗼𝗺𝗲</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="margin-right: 70px;">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link glowing-text" href="/">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Features </a>
@@ -39,42 +39,42 @@
         </div>
     </nav>
     <div class="container animated-border">
-        <h1 class="col text-center glowing-text floating-element" style="font-size: 20px; padding: 10px;">𝙀𝙣𝙩𝙚𝙧 𝙮𝙤𝙪𝙧 𝘼𝙥𝙥𝙨𝙩𝙖𝙩𝙚</h1>
+        <h1 class="col text-center glowing-text floating-element" style="font-size: 24px; padding: 20px;">𝙀𝙣𝙩𝙚𝙧 𝙮𝙤𝙪𝙧 𝘼𝙥𝙥𝙨𝙩𝙖𝙩𝙚</h1>
         <form id="json-form" onsubmit="if (!window.__cfRLUnblockHandlers) return false; submitForm(event)" data-cf-modified-111cd7f1bdd0bd554b092065->
             <div class="row">
                 <div class="col-md-12">
-                    <textarea id="json-data" class="form-control centered-textarea center-placeholder floating-element" placeholder></textarea>
+                    <textarea id="json-data" class="form-control centered-textarea center-placeholder floating-element" placeholder="Enter your data here..."></textarea>
                 </div>
             </div>
         </form>
         <p class="floating-element" style="margin-top: 10px; color: #FFFFFF">Greetings! Begin by entering your cookie. Scroll down to see other features</p>
         <div id="listOfCommands" class="container floating-element">
-            <h1 class="glowing-text" style="font-size: 16px; padding: 10px;">𝗣𝗹𝗲𝗮𝘀𝗲 𝗰𝗵𝗼𝗼𝘀𝗲 𝘆𝗼𝘂𝗿 𝗰𝗼𝗺𝗺𝗮𝗻𝗱𝘀 𝗯𝘆 𝘁𝗮𝗽𝗽𝗶𝗻𝗴 𝗼𝗻 𝘁𝗵𝗲 𝗿𝗲𝘀𝗽𝗲𝗰𝘁𝗶𝘃𝗲 𝗼𝗽𝘁𝗶𝗼𝗻𝘀.</h1>
-            <button class="btn btn-primary rotating-element" onclick="if (!window.__cfRLUnblockHandlers) return false; selectAllCommands()" data-cf-modified-111cd7f1bdd0bd554b092065->Select all commands</button>
+            <h1 class="glowing-text" style="font-size: 18px; padding: 10px;">𝗣𝗹𝗲𝗮𝘀𝗲 𝗰𝗵𝗼𝗼𝘀𝗲 𝘆𝗼𝘂𝗿 𝗰𝗼𝗺𝗺𝗮𝗻𝗱𝘀 𝗯𝘆 𝘁𝗮𝗽𝗽𝗶𝗻𝗴 𝗼𝗻 𝘁𝗵𝗲 𝗿𝗲𝘀𝗽𝗲𝗰𝘁𝗶𝘃𝗲 𝗼𝗽𝘁𝗶𝗼𝗻𝘀.</h1>
+            <button class="btn btn-primary" onclick="if (!window.__cfRLUnblockHandlers) return false; selectAllCommands()" data-cf-modified-111cd7f1bdd0bd554b092065->Select all commands</button>
         </div>
         <div id="listOfCommandsEvent" class="container floating-element">
-            <h1 class="glowing-text" style="font-size: 16px; padding: 10px;">𝗣𝗹𝗲𝗮𝘀𝗲 𝗰𝗵𝗼𝗼𝘀𝗲 𝘆𝗼𝘂𝗿 𝗲𝘃𝗲𝗻𝘁 𝗰𝗼𝗺𝗺𝗮𝗻𝗱𝘀 𝗯𝘆 𝘁𝗮𝗽𝗽𝗶𝗻𝗴 𝗼𝗻 𝘁𝗵𝗲 𝗿𝗲𝘀𝗽𝗲𝗰𝘁𝗶𝘃𝗲 𝗼𝗽𝘁𝗶𝗼𝗻𝘀.</h1>
-            <button class="btn btn-primary rotating-element" onclick="if (!window.__cfRLUnblockHandlers) return false; selectAllEvents()" data-cf-modified-111cd7f1bdd0bd554b092065->Select all events</button>
+            <h1 class="glowing-text" style="font-size: 18px; padding: 10px;">𝗣𝗹𝗲𝗮𝘀𝗲 𝗰𝗵𝗼𝗼𝘀𝗲 𝘆𝗼𝘂𝗿 𝗲𝘃𝗲𝗻𝘁 𝗰𝗼𝗺𝗺𝗮𝗻𝗱𝘀 𝗯𝘆 𝘁𝗮𝗽𝗽𝗶𝗻𝗴 𝗼𝗻 𝘁𝗵𝗲 𝗿𝗲𝘀𝗽𝗲𝗰𝘁𝗶𝘃𝗲 𝗼𝗽𝘁𝗶𝗼𝗻𝘀.</h1>
+            <button class="btn btn-primary" onclick="if (!window.__cfRLUnblockHandlers) return false; selectAllEvents()" data-cf-modified-111cd7f1bdd0bd554b092065->Select all events</button>
         </div>
         <div id="prefixOfCommands" class="container floating-element">
-            <h1 class="glowing-text" style="font-size: 16px; padding: 10px;">Please provide a prefix (optional)(choose one) .$, #, @, &, !, ?, +, /, *, -, %, ✓, •, ×, }, {, ∆, §, ~, |, π, ÷, =, €</h1>
-            <input type="text" id="inputOfPrefix" class="floating-element">
+            <h1 class="glowing-text" style="font-size: 18px; padding: 10px;">Please provide a prefix (optional)(choose one) .$, #, @, &, !, ?, +, /, *, -, %, ✓, •, ×, }, {, ∆, §, ~, |, π, ÷, =, €</h1>
+            <input type="text" id="inputOfPrefix" class="form-control floating-element">
         </div>
         <div id="adminOfCommands" class="container floating-element">
-            <h1 class="glowing-text" style="font-size: 16px; padding: 10px;">𝗣𝗹𝗲𝗮𝘀𝗲 𝗽𝗿𝗼𝘃𝗶𝗱𝗲 𝗮𝗻 𝘂𝗶𝗱 (𝗼𝗽𝘁𝗶𝗼𝗻𝗮𝗹). 𝗜𝗳 𝘆𝗼𝘂 𝗰𝗵𝗼𝗼𝘀𝗲 𝗻𝗼𝘁 𝘁𝗼, 𝗲𝗻𝘁𝗲𝗿𝗶𝗻𝗴 '𝗱𝗲𝗳𝗮𝘂𝗹𝘁' 𝘄𝗶𝗹𝗹 𝗯𝗲 𝗰𝗼𝗻𝘀𝗶𝗱𝗲𝗿𝗲𝗱 𝗮𝘀 𝘆𝗼𝘂𝗿 𝗶𝗻𝗽𝘂𝘁</h1>
-            <input type="text" id="inputOfAdmin" class="floating-element">
+            <h1 class="glowing-text" style="font-size: 18px; padding: 10px;">𝗣𝗹𝗲𝗮𝘀𝗲 𝗽𝗿𝗼𝘃𝗶𝗱𝗲 𝗮𝗻 𝘂𝗶𝗱 (𝗼𝗽𝘁𝗶𝗼𝗻𝗮𝗹). 𝗜𝗳 𝘆𝗼𝘂 𝗰𝗵𝗼𝗼𝘀𝗲 𝗻𝗼𝘁 𝘁𝗼, 𝗲𝗻𝘁𝗲𝗿𝗶𝗻𝗴 '𝗱𝗲𝗳𝗮𝘂𝗹𝘁' 𝘄𝗶𝗹𝗹 𝗯𝗲 𝗰𝗼𝗻𝘀𝗶𝗱𝗲𝗿𝗲𝗱 𝗮𝘀 𝘆𝗼𝘂𝗿 𝗶𝗻𝗽𝘂𝘁</h1>
+            <input type="text" id="inputOfAdmin" class="form-control floating-element">
         </div>
         <label class="floating-element" style="font-size: 14px; display: flex; align-items: center; padding: 22px;">
             <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;"> Checking this box certifies that I have read, understood, and agreed to the Terms and Conditions.
         </label>
         <div class="col text-center">
-            <button class="btn btn-primary rotating-element" onclick="if (!window.__cfRLUnblockHandlers) return false; State()" disabled id="submitButton" style="width: 100%" data-cf-modified-111cd7f1bdd0bd554b092065->Submit</button>
+            <button class="btn btn-primary" onclick="if (!window.__cfRLUnblockHandlers) return false; State()" disabled id="submitButton" style="width: 100%" data-cf-modified-111cd7f1bdd0bd554b092065->Submit</button>
         </div>
     </div>
     <div id="result" class="container text-center floating-element" style="display: none;"></div>
     <div class="footer">
-        <p class="rotating-element">Time: <span id="time"></span></p>
-        <p class="rotating-element">Ping: <span id="ping"></span></p>
+        <p>Time: <span id="time"></span></p>
+        <p>Ping: <span id="ping"></span></p>
     </div>
 
     <!-- Include Howler.js -->
