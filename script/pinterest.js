@@ -42,6 +42,8 @@ module.exports.run = async function({ api, event, args }) {
 
         // Check if the API returned images
         if (imageUrls && imageUrls.length > 0) {
+            const attachments = [];
+
             for (let i = 0; i < imageUrls.length; i++) {
                 const imageUrl = imageUrls[i];
                 const imagePath = path.join(__dirname, `pinterest_image_${i}.jpg`);
@@ -62,16 +64,21 @@ module.exports.run = async function({ api, event, args }) {
                     writer.on('error', reject);
                 });
 
-                // Send the image as an attachment
-                await new Promise((resolve, reject) => {
-                    api.sendMessage({
-                        attachment: fs.createReadStream(imagePath)
-                    }, event.threadID, () => {
-                        fs.unlinkSync(imagePath); // Clean up the file after sending
-                        resolve();
-                    });
-                });
+                // Add the image path to the attachments array
+                attachments.push(fs.createReadStream(imagePath));
             }
+
+            // Send all the images as attachments in a single message
+            api.sendMessage({
+                attachment: attachments
+            }, event.threadID, () => {
+                // Clean up the files after sending
+                attachments.forEach((attachment, index) => {
+                    const filePath = path.join(__dirname, `pinterest_image_${index}.jpg`);
+                    fs.unlinkSync(filePath);
+                });
+            });
+
         } else {
             api.sendMessage("No images found.", event.threadID);
         }
