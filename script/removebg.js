@@ -20,7 +20,7 @@ module.exports.run = async function({ api, event }) {
 
   // Check if there is an attachment and it's an image
   if (!event.attachments || event.attachments.length === 0) {
-    api.sendMessage('Please reply to image na removebg.', threadID, messageID);
+    api.sendMessage('Please reply to an image na removebg.', threadID, messageID);
     return;
   }
 
@@ -34,6 +34,7 @@ module.exports.run = async function({ api, event }) {
   const apiUrl = `https://markdevs-last-api-2epw.onrender.com/api/removebg?imageUrl=${encodeURIComponent(imageUrl)}`;
 
   try {
+    // Perform the API call to remove the background
     const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
     const buffer = Buffer.from(response.data, 'binary');
 
