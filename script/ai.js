@@ -33,13 +33,13 @@ module.exports.run = async function({ api, event, args }) {
     });
   });
 
-  const apiUrl = `https://api.kenliejugarap.com/freegpt4o8k/?question=${encodeURIComponent(prompt)}`;
+  const apiUrl = `https://hiroshi-rest-api.replit.app/ai/turbov2?ask=${encodeURIComponent(prompt)}`;
 
   try {
     const startTime = Date.now();
     const response = await axios.get(apiUrl);
     const result = response.data;
-    const aiResponse = result.result; // Adjusted to match new API response format
+    const aiResponse = result.response; // Adjusted to match new API response format
     const endTime = Date.now();
     const responseTime = ((endTime - startTime) / 1000).toFixed(2);
 
