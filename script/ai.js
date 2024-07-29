@@ -33,13 +33,13 @@ module.exports.run = async function({ api, event, args }) {
     });
   });
 
-  const apiUrl = `https://joshweb.click/new/gpt-3_5-turbo?prompt=${encodeURIComponent(prompt)}`;
+  const apiUrl = `https://api.kenliejugarap.com/freegpt4o8k/?question=${encodeURIComponent(prompt)}`;
 
   try {
     const startTime = Date.now();
     const response = await axios.get(apiUrl);
     const result = response.data;
-    const aiResponse = result.result.reply;
+    const aiResponse = result.result; // Adjusted to match new API response format
     const endTime = Date.now();
     const responseTime = ((endTime - startTime) / 1000).toFixed(2);
 
@@ -67,7 +67,7 @@ ${aiResponse}
     });
   } catch (error) {
     console.error('Error:', error);
-    const errorMessage = `⚠️ Error: ${error.message}. Please try using Adobo command.`;
+    const errorMessage = `⚠️ Error: ${error.message}. Please try again later.`;
     await api.editMessage(errorMessage, responseMessage.messageID);
   }
 };
