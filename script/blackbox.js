@@ -27,8 +27,8 @@ module.exports.run = async function({ api, event, args }) {
     });
 
     try {
-        const response = await axios.get('https://joshweb.click/api/blackboxai', {
-            params: { q: bulag, uid: '100' }
+        const response = await axios.get('https://markdevs-last-api-2epw.onrender.com/api/box', {
+            params: { query: bulag }
         });
         const mapanghi = response.data;
         const responseString = mapanghi.result ? mapanghi.result : 'No result found.';
