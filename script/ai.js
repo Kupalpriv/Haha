@@ -1,73 +1,52 @@
 const axios = require('axios');
 
 module.exports.config = {
-  name: 'ai',
-  version: '1.0.0',
-  role: 0,
-  hasPrefix: false,
-  aliases: ['ai'],
-  description: "Ask AI a question",
-  usage: "ai [question]",
-  credits: 'churchill',
-  cooldown: 3,
+    name: 'ai',
+    version: '1.0.0',
+    role: 0,
+    hasPrefix: false,
+    aliases: ['ai'],
+    description: 'Interact with GPT-4 AI',
+    usage: 'ai [question]',
+    credits: 'churchill',
+    cooldown: 3,
 };
 
 module.exports.run = async function({ api, event, args }) {
-  const prompt = args.join(" ");
-  const threadID = event.threadID;
-  const senderID = event.senderID;
-  const messageID = event.messageID;
+    const question = args.join(' ');
 
-  if (!prompt) {
-    api.sendMessage('Please provide a question, ex: ai what is love?', threadID, messageID);
-    return;
-  }
+    if (!question) {
+        return api.sendMessage('Please provide a question, for example: ai what is chilli?', event.threadID, event.messageID);
+    }
 
-  const responseMessage = await new Promise(resolve => {
-    api.sendMessage(' ✍️ 𝚈𝙸 𝙰𝙽𝚂𝚆𝙴𝚁𝙸𝙽𝙶...', threadID, (err, info) => {
-      if (err) {
-        console.error('Error sending message:', err);
-        return;
-      }
-      resolve(info);
+    const initialMessage = await new Promise((resolve, reject) => {
+        api.sendMessage('💀 𝙰𝙽𝚂𝚆𝙴𝚁𝙸𝙽𝙶...', event.threadID, (err, info) => {
+            if (err) return reject(err);
+            resolve(info);
+        });
     });
-  });
 
-  const apiUrl = `https://hiroshi-rest-api.replit.app/ai/yi?ask=${encodeURIComponent(prompt)}`;
+    try {
+        const response = await axios.get('https://markdevs-last-api-2epw.onrender.com/api/v3/gpt4', {
+            params: { ask: question }
+        });
+        const aiResponse = response.data;
+        const responseString = aiResponse.answer ? aiResponse.answer : 'No result found.';
 
-  try {
-    const startTime = Date.now();
-    const response = await axios.get(apiUrl);
-    const result = response.data;
-    const aiResponse = result.response; // Adjusted to match new API response format
-    const endTime = Date.now();
-    const responseTime = ((endTime - startTime) / 1000).toFixed(2);
-
-    api.getUserInfo(senderID, async (err, ret) => {
-      if (err) {
-        console.error('Error fetching user info:', err);
-        await api.editMessage('Error fetching user info.', responseMessage.messageID);
-        return;
-      }
-
-      const userName = ret[senderID].name;
-      const formattedResponse = `✌️ 𝚈𝙸 𝙰𝙸
+        const formattedResponse = `
+🤯 𝙰𝙸 𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝙶𝙿𝚃4
 ━━━━━━━━━━━━━━━━━━
-${aiResponse}
+${responseString}
 ━━━━━━━━━━━━━━━━━━
-🗣 𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${userName}
-⏰ 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎 𝚃𝚒𝚖𝚎: ${responseTime}s`;
+𝚆𝚊𝚐 𝚖𝚘 𝚔𝚘𝚙𝚢𝚊𝚑𝚒𝚗 𝚕𝚊𝚑𝚊𝚝 𝚗𝚐 𝚜𝚊𝚐𝚘𝚝
+𝚔𝚞𝚗𝚐 𝚊𝚢𝚊𝚠 𝚖𝚘 𝚖𝚊𝚑𝚊𝚕𝚊𝚝𝚊.
+-𝙲𝚑𝚞𝚛𝚌𝚑𝚒𝚕𝚕 𝚙𝚘𝚐𝚒
+        `;
 
-      try {
-        await api.editMessage(formattedResponse, responseMessage.messageID);
-      } catch (error) {
-        console.error('Error editing message:', error);
-        api.sendMessage('Error editing message: ' + error.message, threadID, messageID);
-      }
-    });
-  } catch (error) {
-    console.error('Error:', error);
-    const errorMessage = `⚠️ Error: ${error.message}. Please try again later.`;
-    await api.editMessage(errorMessage, responseMessage.messageID);
-  }
+        await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
+
+    } catch (error) {
+        console.error('Error:', error);
+        await api.editMessage('An error occurred, please try using the "ai2" command.', initialMessage.messageID);
+    }
 };
