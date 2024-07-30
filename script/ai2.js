@@ -24,7 +24,7 @@ module.exports.run = async function({ api, event, args }) {
   }
 
   const responseMessage = await new Promise(resolve => {
-    api.sendMessage('🤖 𝚃𝚄𝚁𝙱𝙾 𝙰𝙽𝚂𝚆𝙴𝚁𝙸𝙽𝙶...', threadID, (err, info) => {
+    api.sendMessage(' ✍️ 𝚈𝙸 𝙰𝙽𝚂𝚆𝙴𝚁𝙸𝙽𝙶...', threadID, (err, info) => {
       if (err) {
         console.error('Error sending message:', err);
         return;
@@ -33,7 +33,7 @@ module.exports.run = async function({ api, event, args }) {
     });
   });
 
-  const apiUrl = `https://hiroshi-rest-api.replit.app/ai/turbov2?ask=${encodeURIComponent(prompt)}`;
+  const apiUrl = `https://hiroshi-rest-api.replit.app/ai/yi?ask=${encodeURIComponent(prompt)}`;
 
   try {
     const startTime = Date.now();
@@ -51,7 +51,7 @@ module.exports.run = async function({ api, event, args }) {
       }
 
       const userName = ret[senderID].name;
-      const formattedResponse = `🤖 𝙶𝙿𝚃+ 𝚃𝚄𝚁𝙱𝙾 𝙰𝙸
+      const formattedResponse = `✌️ 𝚈𝙸 𝙰𝙸
 ━━━━━━━━━━━━━━━━━━
 ${aiResponse}
 ━━━━━━━━━━━━━━━━━━
