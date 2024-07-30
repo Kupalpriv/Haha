@@ -38,8 +38,12 @@ module.exports.run = async function({ api, event, args }) {
   try {
     const startTime = Date.now();
     const response = await axios.get(apiUrl);
-    const result = response.data;
-    const aiResponse = result.response;
+    let aiResponse = response.data.response;
+
+    // Remove unwanted donation request text using regex
+    const unwantedTextRegex = /Is this answer helpful to you\?.*?\(Clicking the link and clicking any ads or button and wait for 30 seconds \(3 times\) everyday is a big donation and help to us to maintain the servers, last longer, and upgrade servers in the future\)/s;
+    aiResponse = aiResponse.replace(unwantedTextRegex, '');
+
     const endTime = Date.now();
     const responseTime = ((endTime - startTime) / 1000).toFixed(2);
 
