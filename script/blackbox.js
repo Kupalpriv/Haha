@@ -35,11 +35,11 @@ module.exports.run = async function({ api, event, args }) {
         const responseString = mapanghi.response ? mapanghi.response : 'No result found.';
 
         const formattedResponse = `
-📦 𝙱𝙾𝚇+ 𝙲𝙾𝙽𝚅𝙴𝚁𝚂𝙰𝚃𝙸𝙾𝙽𝙰𝙻
+📦 𝙱𝙻𝙰𝙲𝙺𝙱𝙾𝚇 𝙰i
 ━━━━━━━━━━━━━━━━━━
 ${responseString}
 ━━━━━━━━━━━━━━━━━━
-𝚃𝚈𝙿𝙴 "𝙲𝙻𝙴𝙰𝚁 𝙲𝙾𝙽𝚅𝙾" 𝚃𝙾 𝙲𝙻𝙴𝙰𝚁 𝙲𝙾𝙽𝚅𝙾𝚁𝚂𝙰𝚃𝙸𝙾𝙽
+-𝙲𝙷𝚄𝚁𝙲𝙷𝙸𝙻𝙻𝙸
         `;
 
         await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
