@@ -16,31 +16,29 @@ module.exports.run = async function({ api, event, args }) {
     const question = args.join(' ');
 
     if (!question) {
-        return api.sendMessage('Please provide a question, for example: ai what is chilli?', event.threadID, event.messageID);
+        return api.sendMessage('Please provide a question, for example: ai what is the meaning of life?', event.threadID, event.messageID);
     }
 
     const initialMessage = await new Promise((resolve, reject) => {
-        api.sendMessage('💀 𝙰𝙽𝚂𝚆𝙴𝚁𝙸𝙽𝙶...', event.threadID, (err, info) => {
+        api.sendMessage('𝙰𝚒 𝚊𝚗𝚜𝚠𝚎𝚛𝚒𝚗𝚐...', event.threadID, (err, info) => {
             if (err) return reject(err);
             resolve(info);
         });
     });
 
     try {
-        const response = await axios.get('https://markdevs-last-api-2epw.onrender.com/api/v3/gpt4', {
-            params: { ask: question }
+        const response = await axios.get('https://markdevs-last-api-2epw.onrender.com/gpt4', {
+            params: { prompt: question, uid: 1 }
         });
         const aiResponse = response.data;
-        const responseString = aiResponse.answer ? aiResponse.answer : 'No result found.';
+        const responseString = aiResponse.gpt4 ? aiResponse.gpt4 : 'No result found.';
 
         const formattedResponse = `
-🤯 𝙰𝙸 𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝙶𝙿𝚃4
+🤖 𝙶𝙿𝚃4+ 𝙲𝙾𝙽𝚃𝙸𝙽𝚄𝙴𝚂 𝙰𝙸
 ━━━━━━━━━━━━━━━━━━
 ${responseString}
 ━━━━━━━━━━━━━━━━━━
-𝚆𝚊𝚐 𝚖𝚘 𝚔𝚘𝚙𝚢𝚊𝚑𝚒𝚗 𝚕𝚊𝚑𝚊𝚝 𝚗𝚐 𝚜𝚊𝚐𝚘𝚝
-𝚔𝚞𝚗𝚐 𝚊𝚢𝚊𝚠 𝚖𝚘 𝚖𝚊𝚑𝚊𝚕𝚊𝚝𝚊.
--𝙲𝚑𝚞𝚛𝚌𝚑𝚒𝚕𝚕 𝚙𝚘𝚐𝚒
+𝚃𝚈𝙿𝙴 "𝙲𝙻𝙴𝙰𝚁 𝙲𝙾𝙽𝚅𝙾" 𝚃𝙾 𝙲𝙻𝙴𝙰𝚁 𝙲𝙾𝙽𝚅𝙴𝚁𝚂𝙰𝚃𝙸𝙾𝙽
         `;
 
         await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
