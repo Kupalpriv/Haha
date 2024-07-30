@@ -1,13 +1,13 @@
 const axios = require('axios');
 
 module.exports.config = {
-  name: 'ai2',
+  name: 'ai',
   version: '1.0.0',
   role: 0,
   hasPrefix: false,
-  aliases: ['ai2'],
+  aliases: ['ai'],
   description: "Ask AI a question",
-  usage: "ai2 [question]",
+  usage: "ai [question]",
   credits: 'churchill',
   cooldown: 3,
 };
@@ -19,7 +19,7 @@ module.exports.run = async function({ api, event, args }) {
   const messageID = event.messageID;
 
   if (!prompt) {
-    api.sendMessage('Please provide a question, ex: ai2 what is love?', threadID, messageID);
+    api.sendMessage('Please provide a question, ex: ai what is love?', threadID, messageID);
     return;
   }
 
