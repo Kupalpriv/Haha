@@ -30,8 +30,9 @@ module.exports.run = async function({ api, event, args }) {
         const response = await axios.get('https://markdevs-last-api-2epw.onrender.com/api/box', {
             params: { query: bulag }
         });
+
         const mapanghi = response.data;
-        const responseString = mapanghi.result ? mapanghi.result : 'No result found.';
+        const responseString = mapanghi.response ? mapanghi.response : 'No result found.';
 
         const formattedResponse = `
 📦 𝙱𝙾𝚇+ 𝙲𝙾𝙽𝚅𝙴𝚁𝚂𝙰𝚃𝙸𝙾𝙽𝙰𝙻
