@@ -1,77 +1,50 @@
 const axios = require('axios');
 
 module.exports.config = {
-  name: 'gpt',
-  version: '1.0.0',
-  role: 0,
-  hasPrefix: false,
-  aliases: ['gpt'],
-  description: "Ask GPT a question",
-  usage: "gpt [question]",
-  credits: 'churchill',
-  cooldown: 3,
+    name: 'gpt',
+    version: '1.0.0',
+    role: 0,
+    hasPrefix: false,
+    aliases: ['gpt'],
+    description: 'Interact with GPT-4 AI',
+    usage: 'gpt [query]',
+    credits: 'churchill',
+    cooldown: 3,
 };
 
 module.exports.run = async function({ api, event, args }) {
-  const prompt = args.join(" ");
-  const threadID = event.threadID;
-  const senderID = event.senderID;
-  const messageID = event.messageID;
+    const query = args.join(' ');
 
-  if (!prompt) {
-    api.sendMessage('Please provide a question, ex: gpt what is chilli?', threadID, messageID);
-    return;
-  }
+    if (!query) {
+        return api.sendMessage('Please provide a query, for example: gpt what is the meaning of life?', event.threadID, event.messageID);
+    }
 
-  const responseMessage = await new Promise(resolve => {
-    api.sendMessage('⏳ Generating answer...', threadID, (err, info) => {
-      if (err) {
-        console.error('Error sending message:', err);
-        return;
-      }
-      resolve(info);
+    const initialMessage = await new Promise((resolve, reject) => {
+        api.sendMessage('𝙶𝙿𝚃4 𝙰𝙽𝚂𝚆𝙴𝚁𝙸𝙽𝙶...', event.threadID, (err, info) => {
+            if (err) return reject(err);
+            resolve(info);
+        });
     });
-  });
 
-  const apiUrl = `https://api.kenliejugarap.com/freegpt4o8k/?question=${encodeURIComponent(prompt)}`;
+    try {
+        const response = await axios.get('https://markdevs-last-api-2epw.onrender.com/api/v2/gpt4', {
+            params: { query }
+        });
+        const aiResponse = response.data;
+        const responseString = aiResponse.gpt4 ? aiResponse.gpt4 : 'No result found.';
 
-  try {
-    const startTime = Date.now();
-    const response = await axios.get(apiUrl);
-    let aiResponse = response.data.response;
-
-    // Remove unwanted donation request text using regex
-    const unwantedTextRegex = /Is this answer helpful to you\?.*?\(Clicking the link and clicking any ads or button and wait for 30 seconds \(3 times\) everyday is a big donation and help to us to maintain the servers, last longer, and upgrade servers in the future\)/s;
-    aiResponse = aiResponse.replace(unwantedTextRegex, '');
-
-    const endTime = Date.now();
-    const responseTime = ((endTime - startTime) / 1000).toFixed(2);
-
-    api.getUserInfo(senderID, async (err, ret) => {
-      if (err) {
-        console.error('Error fetching user info:', err);
-        await api.editMessage('Error fetching user info.', responseMessage.messageID);
-        return;
-      }
-
-      const userName = ret[senderID].name;
-      const formattedResponse = `𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝙶𝙿𝚃
+        const formattedResponse = `
+𝙶𝙿𝚃4 𝙰𝙸
 ━━━━━━━━━━━━━━━━━━
-${aiResponse}
+${responseString}
 ━━━━━━━━━━━━━━━━━━
-🗣 𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${userName}
-⏰ 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎 𝚃𝚒𝚖𝚎: ${responseTime}s`;
+-𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝙶𝙿𝚃
+        `;
 
-      try {
-        await api.editMessage(formattedResponse, responseMessage.messageID);
-      } catch (error) {
-        console.error('Error editing message:', error);
-        api.sendMessage('Error editing message: ' + error.message, threadID, messageID);
-      }
-    });
-  } catch (error) {
-    console.error('Error:', error);
-    const errorMessage = `⚠️ Error: ${error.message}. Please try again later.`;
-    await api.editMessage(errorMessage, responseMessage.messageID);
-  }
+        await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
+
+    } catch (error) {
+        console.error('Error:', error);
+        await api.editMessage('An error occurred, please try using the "ai2" command.', initialMessage.messageID);
+    }
 };
