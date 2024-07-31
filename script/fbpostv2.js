@@ -56,7 +56,7 @@ module.exports.run = async function ({ api, event, args }) {
         api.sendMessage("Creating the Facebook post, please wait...", event.threadID);
 
         // Fetch the response from the Facebook Post API
-        const response = await axios.get(`https://joshweb.click/canvas/fbpost?uid=${mentionId}&text=${encodeURIComponent(text)}&name=${encodeURIComponent(name)}`, { responseType: 'arraybuffer' });
+        const response = await axios.get(`https://ggwp-yyxy.onrender.com/canvas/fbpost?uid=${mentionId}&text=${encodeURIComponent(text)}&name=${encodeURIComponent(name)}`, { responseType: 'arraybuffer' });
         const buffer = Buffer.from(response.data, 'binary');
         const filePath = path.join(__dirname, `${mentionId}.jpg`);
 
