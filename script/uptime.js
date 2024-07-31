@@ -49,7 +49,7 @@ module.exports.run = async ({ api, event }) => {
 
     const avatarId = Math.floor(Math.random() * 800) + 1;
 
-    const apiUrl = `https://joshweb.click/canvas/uptime?id=${avatarId}&instag=${instag}&ghub=${ghub}&fb=${fb}&hours=${hours}&minutes=${mins}&seconds=${seconds}&botname=${botName}`;
+    const apiUrl = `https://ggwp-yyxy.onrender.com/canvas/uptime?id=${avatarId}&instag=${instag}&ghub=${ghub}&fb=${fb}&hours=${hours}&minutes=${mins}&seconds=${seconds}&botname=${botName}`;
 
     try {
         const response = await chungkilss.get(apiUrl, { responseType: 'arraybuffer' });
