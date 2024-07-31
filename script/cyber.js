@@ -38,7 +38,7 @@ module.exports.run = async function({ api, event, args }) {
     }
   }, 1000);
 
-  const apiUrl = `https://joshweb.click/api/cyberchrono?q=${encodeURIComponent(question)}`;
+  const apiUrl = `https://ggwp-yyxy.onrender.com/api/cyberchrono?q=${encodeURIComponent(question)}`;
 
   try {
     const response = await axios.get(apiUrl);
