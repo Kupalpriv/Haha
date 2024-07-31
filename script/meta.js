@@ -20,7 +20,7 @@ module.exports.run = async function({ api, event, args }) {
     }
 
     const initialMessage = await new Promise((resolve, reject) => {
-        api.sendMessage('𝙰𝚒 𝚊𝚗𝚜𝚠𝚎𝚛𝚒𝚗𝚐...', event.threadID, (err, info) => {
+        api.sendMessage('𝙼𝚎𝚝𝚊 𝙻𝚕𝚖𝚊 𝚆𝚛𝚒𝚝𝚒𝚗𝚐...', event.threadID, (err, info) => {
             if (err) return reject(err);
             resolve(info);
         });
@@ -36,10 +36,9 @@ module.exports.run = async function({ api, event, args }) {
         const formattedResponse = `
 💪 | 𝙼𝙴𝚃𝙰 𝙰𝙸
 ━━━━━━━━━━━━━━━━━━
-**Question:** ${question}
-
+Question: ${question}
 ━━━━━━━━━━━━━━━━━━
-**Response:** ${responseString}
+𝙼𝙴𝚃𝙰 𝚂𝙰𝙸𝙳 - ${responseString}
 ━━━━━━━━━━━━━━━━━━
         `;
 
