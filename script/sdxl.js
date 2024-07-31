@@ -48,7 +48,7 @@ module.exports.run = async function ({ api, event, args }) {
             }
 
             try {
-                const beluga = await axios.get(`https://joshweb.click/sdxl`, {
+                const beluga = await axios.get(`https://ggwp-yyxy.onrender.com/sdxl`, {
                     params: {
                         q: chilli,
                         style: hot
