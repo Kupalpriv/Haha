@@ -40,7 +40,7 @@ module.exports.run = async function({ api, event, args }) {
 
         const uid = event.senderID;  // Using the sender's ID as UID
 
-        const apiUrl = `https://joshweb.click/cai/chat?q=${encodeURIComponent(query)}&character=${encodeURIComponent(character)}&uid=${uid}`;
+        const apiUrl = `https://ggwp-yyxy.onrender.com/cai/chat?q=${encodeURIComponent(query)}&character=${encodeURIComponent(character)}&uid=${uid}`;
 
         api.sendMessage("Talking to the AI character, please wait...", event.threadID);
 
