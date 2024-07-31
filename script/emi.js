@@ -27,7 +27,7 @@ module.exports.run = async function({ api, event, args }) {
         }
 
         // Construct the API URL
-        const url = `https://joshweb.click/emi?prompt=${encodeURIComponent(prompt)}`;
+        const url = `https://ggwp-yyxy.onrender.com/emi?prompt=${encodeURIComponent(prompt)}`;
         const imagePath = path.join(__dirname, "generated_image.jpeg");
 
         // Notify the user that the image is being generated
