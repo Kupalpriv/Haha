@@ -38,7 +38,7 @@ module.exports.run = async function({ api, event, args }) {
 
         const uid = event.senderID;  // Using the sender's ID as UID
 
-        const apiUrl = `https://joshweb.click/cai/create?name=${encodeURIComponent(name)}&prompt=${encodeURIComponent(defaultPrompt)}&uid=${uid}`;
+        const apiUrl = `https://ggwp-yyxy.onrender.com/cai/create?name=${encodeURIComponent(name)}&prompt=${encodeURIComponent(defaultPrompt)}&uid=${uid}`;
 
         api.sendMessage("Creating new AI character, please wait...", event.threadID);
 
