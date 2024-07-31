@@ -22,10 +22,10 @@ module.exports.run = async function({ api, event, args }) {
         return;
     }
 
-    // Inform the user that the bot is searching for the ringtone
+    // Inform yung ngga user
     api.sendMessage('Searching for your ringtone, please wait...', event.threadID, event.messageID);
 
-    const url = `https://joshweb.click/api/ringtone?q=${encodeURIComponent(query)}`;
+    const url = `https://ggwp-yyxy.onrender.com/api/ringtone?q=${encodeURIComponent(query)}`;
 
     try {
         const response = await axios.get(url);
