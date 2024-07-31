@@ -26,7 +26,7 @@ module.exports.run = async function ({ api, event, args }) {
   });
 
   try {
-    const response = await axios.get(`https://hiroshi-rest-api.replit.app/ai/claude?ask=${encodeURIComponent(question)}`);
+    const response = await axios.get(`https://ggwp-yyxy.onrender.com/api/claude-3?q=${encodeURIComponent(question)}`);
     const answer = response.data.response;
 
     const formattedResponse = `
