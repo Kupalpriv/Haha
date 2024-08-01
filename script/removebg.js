@@ -21,7 +21,7 @@ module.exports.run = async ({ api, event, args }) => {
 
   try {
     api.sendMessage("Removing background...", threadID, messageID);
-    const response = await axios.get(`https://allinoneapis-jgyx.onrender.com/api/try/removebg?url=${encodeURIComponent(mark)}`);
+    const response = await axios.get(`https://markdevs-last-api-as2j.onrender.com/api/removebg?imageUrl=${encodeURIComponent(mark)}`);
     const processedImageURL = response.data.image_data;
 
     const img = (await axios.get(processedImageURL, { responseType: "arraybuffer"})).data;
