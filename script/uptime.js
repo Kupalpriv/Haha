@@ -51,14 +51,14 @@ module.exports.run = async ({ api, event }) => {
 
     const apiUrl = `https://ggwp-yyxy.onrender.com/canvas/uptime?id=${avatarId}&instag=${instag}&ghub=${ghub}&fb=${fb}&hours=${hours}&minutes=${mins}&seconds=${seconds}&botname=${botName}`;
 
+    const timeStart = Date.now();
+    const returnResult = `BOT has been working for ${hours} hour(s) ${mins} minute(s) ${seconds} second(s).\n\n❖ Cpu usage: ${usage.cpu.toFixed(1)}%\n❖ RAM usage: ${byte2mb(usage.memory)}\n❖ Cores: ${chilli.cpus().length}\n❖ Ping: ${Date.now() - timeStart}ms\n❖ Operating System Platform: ${osInfo.platform}\n❖ System CPU Architecture: ${osInfo.architecture}`;
+
     try {
         const response = await chungkilss.get(apiUrl, { responseType: 'arraybuffer' });
         const imagePath = churchillitos.join(__dirname, "uptime.jpg");
 
         pogi.writeFileSync(imagePath, response.data);
-
-        const timeStart = Date.now();
-        const returnResult = `BOT has been working for ${hours} hour(s) ${mins} minute(s) ${seconds} second(s).\n\n❖ Cpu usage: ${usage.cpu.toFixed(1)}%\n❖ RAM usage: ${byte2mb(usage.memory)}\n❖ Cores: ${chilli.cpus().length}\n❖ Ping: ${Date.now() - timeStart}ms\n❖ Operating System Platform: ${osInfo.platform}\n❖ System CPU Architecture: ${osInfo.architecture}`;
 
         api.sendMessage({
             body: returnResult,
@@ -68,6 +68,6 @@ module.exports.run = async ({ api, event }) => {
         });
     } catch (error) {
         console.error('Error:', error);
-        api.sendMessage("An error occurred while processing the request.", event.threadID);
+        api.sendMessage(returnResult, event.threadID);
     }
 };
