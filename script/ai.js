@@ -6,7 +6,7 @@ module.exports.config = {
     role: 0,
     hasPrefix: false,
     aliases: ['ai'],
-    description: 'Interact with GPT-4 AI',
+    description: 'Interact with the Hercai AI',
     usage: 'ai [question]',
     credits: 'churchill',
     cooldown: 3,
@@ -16,35 +16,40 @@ module.exports.run = async function({ api, event, args }) {
     const question = args.join(' ');
 
     if (!question) {
-        return api.sendMessage('Please provide a question, for example: ai what is the meaning of life?', event.threadID, event.messageID);
+        return api.sendMessage('Please provide a question, for example: ai what is love?', event.threadID, event.messageID);
     }
 
     const initialMessage = await new Promise((resolve, reject) => {
-        api.sendMessage('𝙰𝚒 𝚊𝚗𝚜𝚠𝚎𝚛𝚒𝚗𝚐...', event.threadID, (err, info) => {
+        api.sendMessage({
+            body: '🤖 Ai answering...',
+            mentions: [{ tag: event.senderID, id: event.senderID }],
+        }, event.threadID, (err, info) => {
             if (err) return reject(err);
             resolve(info);
-        });
+        }, event.messageID);
     });
 
     try {
-        const response = await axios.get('https://markdevs-last-api-2epw.onrender.com/gpt4', {
-            params: { prompt: question, uid: 1 }
+        const response = await axios.get('https://hercai.onrender.com/v3/hercai', {
+            params: { question }
         });
         const aiResponse = response.data;
-        const responseString = aiResponse.gpt4 ? aiResponse.gpt4 : 'No result found.';
+        const responseString = aiResponse.reply ? aiResponse.reply : 'No result found.';
 
         const formattedResponse = `
-🤖 𝙶𝙿𝚃4+ 𝙲𝙾𝙽𝚃𝙸𝙽𝚄𝙴𝚂 𝙰𝙸
+🤖 Hercai AI
 ━━━━━━━━━━━━━━━━━━
 ${responseString}
 ━━━━━━━━━━━━━━━━━━
-𝚃𝚈𝙿𝙴 "ai 𝙲𝙻𝙴𝙰𝚁 𝙲𝙾𝙽𝚅𝙾" 𝚃𝙾 𝙲𝙻𝙴𝙰𝚁 𝙲𝙾𝙽𝚅𝙴𝚁𝚂𝙰𝚃𝙸𝙾𝙽
+-𝚆𝙰𝙶 𝙼𝙾 𝙲𝙾𝙿𝚈 𝙻𝙰𝙷𝙰𝚃 𝙽𝙶 𝚂𝙰𝙶𝙾𝚃 𝙺𝚄𝙽𝙶 𝙰𝚈𝙰𝚆 𝙼𝙾𝙽𝙶 𝙼𝙰𝙷𝙰𝙻𝙰𝚃𝙰
+━━━━━━━━━━━━━━━━━━
+If you want to donate for the server, just PM or Add the developer: [https://www.facebook.com/Churchill.Dev4100]
         `;
 
         await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
 
     } catch (error) {
         console.error('Error:', error);
-        await api.editMessage('An error occurred, please try using the "ai2" command.', initialMessage.messageID);
+        await api.editMessage('An error occurred, please try again later.', initialMessage.messageID);
     }
 };
