@@ -23,14 +23,15 @@ module.exports.run = async function({ api, event, args }) {
     return;
   }
 
-  const responseMessage = await new Promise(resolve => {
-    api.sendMessage(' ✍️ 𝚈𝙸 𝙰𝙽𝚂𝚆𝙴𝚁𝙸𝙽𝙶...', threadID, (err, info) => {
-      if (err) {
-        console.error('Error sending message:', err);
-        return;
-      }
+  const responseMessage = await new Promise((resolve, reject) => {
+    
+    api.sendMessage({
+      body: '✍️ 𝚈𝙸 𝙰𝙽𝚂𝚆𝙴𝚁𝙸𝙽𝙶...',
+      mentions: [{ tag: senderID, id: senderID }],
+    }, threadID, (err, info) => {
+      if (err) return reject(err);
       resolve(info);
-    });
+    }, messageID);
   });
 
   const apiUrl = `https://hiroshi-rest-api.replit.app/ai/yi?ask=${encodeURIComponent(prompt)}`;
@@ -39,7 +40,7 @@ module.exports.run = async function({ api, event, args }) {
     const startTime = Date.now();
     const response = await axios.get(apiUrl);
     const result = response.data;
-    const aiResponse = result.response; // Adjusted to match new API response format
+    const aiResponse = result.response; 
     const endTime = Date.now();
     const responseTime = ((endTime - startTime) / 1000).toFixed(2);
 
@@ -59,6 +60,7 @@ ${aiResponse}
 ⏰ 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎 𝚃𝚒𝚖𝚎: ${responseTime}s`;
 
       try {
+        // Edit the initial message with the AI's response
         await api.editMessage(formattedResponse, responseMessage.messageID);
       } catch (error) {
         console.error('Error editing message:', error);
