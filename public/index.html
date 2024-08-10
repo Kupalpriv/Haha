@@ -3,9 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Turn yout Fb acc into chatbot ai">
-    <meta name="keywords" content="Chilli hot">
-    <meta name="author" content="Churchill Dev">
     <title>Churchilli</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -13,17 +10,17 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Home</a>
+        <a class="navbar-brand" href="#">𝗛𝗼𝗺𝗲</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="margin-right: 70px;">
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item active">
                     <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Features </a>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Features</a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="#">Cookies Extractor</a>
                         <div class="dropdown-divider"></div>
@@ -43,55 +40,121 @@
         </div>
     </nav>
 
-    <div class="container animated-border">
-        <h1 class="col text-center glowing-text floating-element">Enter your Appstate</h1>
-        <form id="json-form" onsubmit="State(event)">
+    <div class="container animated-border mt-4">
+        <h1 class="text-center glowing-text floating-element">𝙀𝙣𝙩𝙚𝙧 𝙮𝙤𝙪𝙧 𝘼𝙥𝙥𝙨𝙩𝙖𝙩𝙚</h1>
+        <form id="json-form" onsubmit="submitForm(event)">
             <div class="form-group">
                 <textarea id="json-data" class="form-control centered-textarea center-placeholder floating-element" placeholder="Enter your c3cfbstate here..."></textarea>
             </div>
-            <p class="floating-element">Greetings! Begin by entering your cookie. Scroll down to see other features</p>
-
-            <div id="listOfCommands" class="container floating-element">
-                <h2 class="glowing-text">Please choose your commands by tapping on the respective options.</h2>
-                <button type="button" class="btn btn-primary" onclick="selectAllCommands()">Select all commands</button>
-            </div>
-
-            <div id="listOfCommandsEvent" class="container floating-element">
-                <h2 class="glowing-text">Please choose your event commands by tapping on the respective options.</h2>
-                <button type="button" class="btn btn-primary" onclick="selectAllEvents()">Select all events</button>
-            </div>
-
-            <div id="prefixOfCommands" class="container floating-element">
-                <h2 class="glowing-text">Please provide a prefix (optional)</h2>
-                <input type="text" id="inputOfPrefix" class="form-control floating-element" placeholder=". $, #, @, &, !, ?">
-            </div>
-
-            <div id="adminOfCommands" class="container floating-element">
-                <h2 class="glowing-text">Please provide an UID (optional). Enter 'default' if not applicable.</h2>
-                <input type="text" id="inputOfAdmin" class="form-control floating-element">
-            </div>
-
-            <label class="floating-element form-check-label" for="agreeCheckbox" style="display: flex; align-items: center; padding: 22px;">
-                <input type="checkbox" id="agreeCheckbox" class="form-check-input" style="margin-right: 10px;"> I agree to the Terms and Conditions.
-            </label>
-
-            <div class="text-center">
-                <button type="submit" id="submitButton" class="btn btn-primary" style="width: 100%" disabled>Submit</button>
-            </div>
         </form>
+        <p class="floating-element text-white mt-3">Greetings! Begin by entering your cookie. Scroll down to see other features.</p>
 
-        <div id="result" class="container text-center floating-element" style="display: none;"></div>
+        <div id="listOfCommands" class="container floating-element">
+            <h2 class="glowing-text">Choose Your Commands</h2>
+            <button class="btn btn-primary" onclick="selectAllCommands()">Select all commands</button>
+        </div>
+
+        <div id="listOfCommandsEvent" class="container floating-element">
+            <h2 class="glowing-text">Choose Your Event Commands</h2>
+            <button class="btn btn-primary" onclick="selectAllEvents()">Select all events</button>
+        </div>
+
+        <div id="prefixOfCommands" class="container floating-element">
+            <h2 class="glowing-text">Provide a Prefix (Optional)</h2>
+            <input type="text" id="inputOfPrefix" class="form-control floating-element" placeholder="Select one: $, #, @, &, !, ?...">
+        </div>
+
+        <div id="adminOfCommands" class="container floating-element">
+            <h2 class="glowing-text">Provide a UID (Optional)</h2>
+            <input type="text" id="inputOfAdmin" class="form-control floating-element" placeholder="Enter UID or type 'default'">
+        </div>
+
+        <div class="form-group floating-element">
+            <label for="agreeCheckbox" class="d-flex align-items-center">
+                <input type="checkbox" id="agreeCheckbox" class="mr-2"> I have read, understood, and agreed to the Terms and Conditions.
+            </label>
+        </div>
+
+        <div class="text-center">
+            <button class="btn btn-primary" onclick="State()" id="submitButton" style="width: 100%;" disabled>Submit</button>
+        </div>
     </div>
 
-    <footer class="footer">
+    <div id="result" class="container text-center floating-element" style="display: none;"></div>
+
+    <footer class="footer text-center mt-4">
         <p>Time: <span id="time"></span></p>
         <p>Ping: <span id="ping"></span></p>
     </footer>
 
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="./index.js"></script>
+
+    <script>
+        
+        var backgroundMusic = new Howl({
+            src: ['https://i.imgur.com/M0NptSl.mp4'],
+            autoplay: true,
+            loop: true,
+            volume: 0.5,
+            onplayerror: function() {
+                backgroundMusic.once('unlock', function() {
+                    backgroundMusic.play();
+                });
+            }
+        });
+
+        
+        var encodedCredits = "QXV0b2JvdCBCeQpDaHVyY2hpbGwgQWJpbmc=";
+
+        function showCredits() {
+            var decodedCredits = atob(encodedCredits);
+            var creditsDiv = document.createElement('div');
+            creditsDiv.style.fontSize = '25px';
+            creditsDiv.style.marginTop = '20px';
+            creditsDiv.innerHTML = decodedCredits.split('\n').map(function(item) {
+                return `<span class="animated-text">${item}</span>`;
+            }).join('<br>');
+            document.body.appendChild(creditsDiv);
+            animateText();
+        }
+
+        function animateText() {
+            var animatedTexts = document.querySelectorAll('.animated-text');
+            animatedTexts.forEach(function(el) {
+                var text = el.textContent;
+                el.innerHTML = '';
+                for (var i = 0; i < text.length; i++) {
+                    var span = document.createElement('span');
+                    span.textContent = text[i];
+                    el.appendChild(span);
+                }
+            });
+            startColorAnimation();
+        }
+
+        function startColorAnimation() {
+            var colorArray = ["#FF0000", "#FF1100", "#FF2200", "#FF3300", "#FF4400", "#FF5500", "#FF6600", "#FF7700", "#FF8800", "#FF9900", "#FFaa00", "#FFbb00", "#FFcc00", "#FFdd00", "#FFee00", "#FFff00", "#FFee00", "#FFdd00", "#FFcc00", "#FFbb00", "#FFaa00", "#FF9900", "#FF8800", "#FF7700", "#FF6600", "#FF5500", "#FF4400", "#FF3300", "#FF2200", "#FF1100"];
+            var spans = document.querySelectorAll('.animated-text span');
+            var colorIndex = 0;
+
+            function updateColors() {
+                spans.forEach(function(span, i) {
+                    span.style.color = colorArray[(colorIndex + i) % colorArray.length];
+                });
+                colorIndex = (colorIndex + 1) % colorArray.length;
+                requestAnimationFrame(updateColors);
+            }
+
+            updateColors();
+        }
+
+        showCredits();
+    </script>
 </body>
 </html>
