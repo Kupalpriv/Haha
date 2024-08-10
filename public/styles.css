@@ -1,10 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 body {
-    margin: auto;
+    margin: 0;
     padding: 20px;
     font-family: 'Poppins', sans-serif;
-    overflow: auto;
     background: linear-gradient(135deg, #1e1e1e 0%, #2e2e2e 100%);
     color: #ffffff;
     animation: fadeIn 1s ease-in-out;
@@ -20,8 +19,7 @@ body {
     border-radius: 15px;
     padding: 30px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin: 30px auto;
     animation: slideIn 1s ease-in-out;
 }
 
@@ -30,10 +28,10 @@ body {
     to { transform: translateY(0); opacity: 1; }
 }
 
-h1 {
+h1, h2 {
     color: #ffffff;
-    font-size: 36px;
-    margin-bottom: 25px;
+    font-size: 24px;
+    margin-bottom: 20px;
     animation: fadeInUp 1s ease-in-out;
 }
 
@@ -42,7 +40,7 @@ h1 {
     to { transform: translateY(0); opacity: 1; }
 }
 
-label {
+label, p {
     color: #bbbbbb;
     font-weight: bold;
     margin-bottom: 12px;
@@ -56,7 +54,6 @@ label {
     width: 100%;
     min-height: 160px;
     padding: 18px;
-    box-sizing: border-box;
     border: 1px solid #666666;
     border-radius: 10px;
     resize: none;
@@ -96,110 +93,29 @@ label {
     animation: fadeIn 1.5s ease-in-out;
 }
 
-.footer p {
-    margin: 0;
-    display: inline-block;
-    margin-right: 35px;
-}
-
-.container-buttons {
-    margin-top: 25px;
-    text-align: center;
-}
-
-.container-buttons .btn {
-    margin: 7px;
-    animation: fadeIn 1.2s ease-in-out;
-}
-
-#result {
-    padding: 20px;
-    margin-top: 25px;
-    border-radius: 10px;
-    background-color: rgba(40, 40, 40, 0.85);
-    color: #ffffff;
-    animation: fadeIn 1.3s ease-in-out;
-}
-
-.center-placeholder::placeholder {
-    text-align: center;
-    color: #aaaaaa;
-}
-
-.form-check {
+.form-check-label {
     display: flex;
     margin-top: 15px;
-    padding: 18px;
     align-items: center;
-    border: 1px solid #666666;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    background-color: rgba(30, 30, 30, 0.95);
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-.form-check:hover {
-    background-color: rgba(40, 40, 40, 0.95);
-    border-color: #777777;
 }
 
 .form-check-input {
     margin-right: 12px;
-    opacity: 0;
 }
 
-.disable {
-    display: none;
-}
-
-#inputOfPrefix, #inputOfAdmin, #inputOfBotName {
+#inputOfPrefix, #inputOfAdmin {
     padding: 18px;
     width: 100%;
     border: 1px solid #666666;
     border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
     background-color: rgba(30, 30, 30, 0.95);
     color: #ffffff;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-#inputOfPrefix:focus, #inputOfAdmin:focus, #inputOfBotName:focus {
+#inputOfPrefix:focus, #inputOfAdmin:focus {
     background-color: rgba(40, 40, 40, 0.95);
     border-color: #888888;
-}
-
-#listOfCommands, #listOfCommandsEvent, #prefixOfCommands, #adminOfCommands {
-    border: none !important;
-}
-
-#listOfCommands:not(.modal), #listOfCommandsEvent:not(.modal), #prefixOfCommands:not(.modal), #adminOfCommands:not(.modal) {
-    box-shadow: none !important;
-}
-
-p {
-    color: #ffffff;
-}
-
-@keyframes bounceIn {
-    0% { transform: scale(0.5); opacity: 0; }
-    50% { transform: scale(1.1); opacity: 1; }
-    100% { transform: scale(1); }
-}
-
-@keyframes glow {
-    0% { box-shadow: 0 0 5px #ff4b4b, 0 0 10px #ff4b4b, 0 0 20px #ff4b4b, 0 0 40px #ff4b4b; }
-    100% { box-shadow: 0 0 20px #ff4b4b, 0 0 40px #ff4b4b, 0 0 80px #ff4b4b, 0 0 160px #ff4b4b; }
-}
-
-h1, p, .btn-primary, .footer, .container, #result, .form-check {
-    animation: bounceIn 1s ease-in-out;
 }
 
 .glowing-text {
@@ -207,14 +123,19 @@ h1, p, .btn-primary, .footer, .container, #result, .form-check {
     animation: glow 1.5s ease-in-out infinite alternate;
 }
 
-@keyframes float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0); }
+@keyframes glow {
+    0% { box-shadow: 0 0 5px #ff4b4b, 0 0 10px #ff4b4b, 0 0 20px #ff4b4b, 0 0 40px #ff4b4b; }
+    100% { box-shadow: 0 0 20px #ff4b4b, 0 0 40px #ff4b4b, 0 0 80px #ff4b4b, 0 0 160px #ff4b4b; }
 }
 
 .floating-element {
     animation: float 2.5s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
 }
 
 .animated-border {
