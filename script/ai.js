@@ -1,27 +1,40 @@
 const axios = require('axios');
 
 module.exports.config = {
-    name: 'ai',
+    name: 'ai', 
     version: '1.0.0',
     role: 0,
     hasPrefix: false,
-    aliases: ['ai'],
-    description: 'Interact with the Hercai AI',
-    usage: 'ai [question]',
+    aliases: ['gemini'], 
+    description: 'Interact',
+    usage: 'ai [custom prompt] (attach image or not)',
     credits: 'churchill',
     cooldown: 3,
 };
 
-module.exports.run = async function({ api, event, args }) {
-    const question = args.join(' ');
+module.exports.run = async function({ api, event, args, Users }) {
+    const attachment = event.messageReply?.attachments[0] || event.attachments[0];
+    const customPrompt = args.join(' ');
 
-    if (!question) {
-        return api.sendMessage('Please provide a question, for example: ai what is love?', event.threadID, event.messageID);
+    if (!customPrompt && !attachment) {
+        return api.sendMessage('𝙿𝚕𝚎𝚊𝚜𝚎 𝙿𝚛𝚘𝚟𝚒𝚍𝚎 𝚊 𝚚𝚞𝚎𝚜𝚝𝚒𝚘𝚗 𝚎𝚡: ai pogi mo or reply to image', event.threadID, event.messageID);
     }
+
+    let apiUrl = 'https://ggwp-yyxy.onrender.com/gemini?';
+
+    if (attachment && attachment.type === 'photo') {
+        const prompt = customPrompt || 'describe this photo';
+        const imageUrl = attachment.url;
+        apiUrl += `prompt=${encodeURIComponent(prompt)}&url=${encodeURIComponent(imageUrl)}`;
+    } else {
+        apiUrl += `prompt=${encodeURIComponent(customPrompt)}`;
+    }
+
+    const startTime = Date.now(); 
 
     const initialMessage = await new Promise((resolve, reject) => {
         api.sendMessage({
-            body: '🤖 Ai answering...',
+            body: '🔍 Processing your request...',
             mentions: [{ tag: event.senderID, id: event.senderID }],
         }, event.threadID, (err, info) => {
             if (err) return reject(err);
@@ -30,26 +43,34 @@ module.exports.run = async function({ api, event, args }) {
     });
 
     try {
-        const response = await axios.get('https://hercai.onrender.com/v3/hercai', {
-            params: { question }
-        });
-        const aiResponse = response.data;
-        const responseString = aiResponse.reply ? aiResponse.reply : 'No result found.';
+        const response = await axios.get(apiUrl);
+        const aiResponse = response.data.gemini; 
+
+        const responseTime = ((Date.now() - startTime) / 1000).toFixed(2); 
+
+        const userName = (await Users.getName(event.senderID)) || 'Unknown User'; 
 
         const formattedResponse = `
-🤖 Hercai AI
+✨ | 𝙲𝙷𝙸𝙻𝙻𝙸 𝚁𝙴𝚂𝙿𝙾𝙽𝚂𝙴
 ━━━━━━━━━━━━━━━━━━
-${responseString}
+${aiResponse.trim()}
 ━━━━━━━━━━━━━━━━━━
--𝚆𝙰𝙶 𝙼𝙾 𝙲𝙾𝙿𝚈 𝙻𝙰𝙷𝙰𝚃 𝙽𝙶 𝚂𝙰𝙶𝙾𝚃 𝙺𝚄𝙽𝙶 𝙰𝚈𝙰𝚆 𝙼𝙾𝙽𝙶 𝙼𝙰𝙷𝙰𝙻𝙰𝚃𝙰
-━━━━━━━━━━━━━━━━━━
-If you want to donate for the server, just PM or Add the developer: [https://www.facebook.com/Churchill.Dev4100]
+👤𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${userName}
+⏱️ 𝚁𝚎𝚜𝚙𝚘𝚗𝚍 𝚃𝚒𝚖𝚎: ${responseTime} 𝚂𝚎𝚌𝚘𝚗𝚍𝚜
         `;
 
         await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
 
     } catch (error) {
         console.error('Error:', error);
-        await api.editMessage('An error occurred, please try again later.', initialMessage.messageID);
+
+        const errorMessage = `
+❌ An error occurred while processing your request.
+Please try using the \`ai2\` command.
+
+👤𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${(await Users.getName(event.senderID)) || 'Unknown User'}
+        `;
+
+        await api.editMessage(errorMessage.trim(), initialMessage.messageID);
     }
 };
