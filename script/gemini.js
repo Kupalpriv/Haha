@@ -1,39 +1,60 @@
 const axios = require('axios');
 
 module.exports.config = {
-    name: "gemini",
+    name: 'gemini',
+    version: '1.0.0',
     role: 0,
-    credits: "chill",
-    description: "Interact with Gemini",
     hasPrefix: false,
-    version: "1.0.0",
-    aliases: ["gemini"],
-    usage: "gemini [reply to photo]"
+    aliases: ['gemini'],
+    description: 'Interact with the Gemini AI using a custom prompt, with or without an image',
+    usage: 'gemini [custom prompt] (attach image or not)',
+    credits: 'churchill',
+    cooldown: 3,
 };
 
-module.exports.run = async function ({ api, event, args }) {
-    const prompt = args.join(" ");
+module.exports.run = async function({ api, event, args }) {
+    const attachment = event.messageReply?.attachments[0] || event.attachments[0];
+    const customPrompt = args.join(' ');
 
-    if (!prompt) {
-        return api.sendMessage('This cmd only works in photo.', event.threadID, event.messageID);
+    if (!customPrompt && !attachment) {
+        return api.sendMessage('Please provide a prompt or attach a photo for the AI to analyze.', event.threadID, event.messageID);
     }
 
-    if (event.type !== "message_reply" || !event.messageReply.attachments[0] || event.messageReply.attachments[0].type !== "photo") {
-        return api.sendMessage('Please reply to a photo with this command.', event.threadID, event.messageID);
+    let apiUrl = 'https://ggwp-yyxy.onrender.com/gemini?';
+
+    if (attachment && attachment.type === 'photo') {
+        const prompt = customPrompt || 'describe this photo';
+        const imageUrl = attachment.url;
+        apiUrl += `prompt=${encodeURIComponent(prompt)}&url=${encodeURIComponent(imageUrl)}`;
+    } else {
+        apiUrl += `prompt=${encodeURIComponent(customPrompt)}`;
     }
 
-    const url = encodeURIComponent(event.messageReply.attachments[0].url);
-    api.sendTypingIndicator(event.threadID);
+    const initialMessage = await new Promise((resolve, reject) => {
+        api.sendMessage({
+            body: '🔍 Processing your request...',
+            mentions: [{ tag: event.senderID, id: event.senderID }],
+        }, event.threadID, (err, info) => {
+            if (err) return reject(err);
+            resolve(info);
+        }, event.messageID);
+    });
 
     try {
-        await api.sendMessage('👽 𝑮𝑬𝑴𝑰𝑵𝑰\n━━━━━━━━━━━━━━━━━━\nGemini recognizing picture, please wait...\n━━━━━━━━━━━━━━━━━━', event.threadID);
+        const response = await axios.get(apiUrl);
+        const aiResponse = response.data.gemini; // Accessing the "gemini" key directly
 
-        const response = await axios.get(`https://ggwp-yyxy.onrender.com/gemini?prompt=${encodeURIComponent(prompt)}&url=${url}`);
-        const description = response.data.gemini;
+        const formattedResponse = `
+✨ 𝙶𝚎𝚖𝚒𝚗𝚒 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎
+━━━━━━━━━━━━━━━━━━
+${aiResponse.trim()}
+━━━━━━━━━━━━━━━━━━
+        `;
 
-        return api.sendMessage(`👽 𝑮𝑬𝑴𝑰𝑵𝑰\n━━━━━━━━━━━━━━━━━━\n${description}\n━━━━━━━━━━━━━━━━━━`, event.threadID, event.messageID);
+        await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
+
     } catch (error) {
-        console.error(error);
-        return api.sendMessage('❌ | An error occurred while processing your request.', event.threadID, event.messageID);
+        console.error('Error:', error);
+        await api.editMessage('An error occurred, please try again later.', initialMessage.messageID);
     }
 };
