@@ -63,6 +63,11 @@
         <div id="adminOfCommands" class="container floating-element">
             <h1 class="glowing-text" style="font-size: 18px; padding: 10px;">𝗣𝗹𝗲𝗮𝘀𝗲 𝗽𝗿𝗼𝘃𝗶𝗱𝗲 𝗮𝗻 𝘂𝗶𝗱 (𝗼𝗽𝘁𝗶𝗼𝗻𝗮𝗹). 𝗜𝗳 𝘆𝗼𝘂 𝗰𝗵𝗼𝗼𝘀𝗲 𝗻𝗼𝘁 𝘁𝗼, 𝗲𝗻𝘁𝗲𝗿𝗶𝗻𝗴 '𝗱𝗲𝗳𝗮𝘂𝗹𝘁' 𝘄𝗶𝗹𝗹 𝗯𝗲 𝗰𝗼𝗻𝘀𝗶𝗱𝗲𝗿𝗲𝗱 𝗮𝘀 𝘆𝗼𝘂𝗿 𝗶𝗻𝗽𝘂𝘁</h1>
             <input type="text" id="inputOfAdmin" class="form-control floating-element">
+
+            <h1 style="font-size: 18px; padding: 10px;">𝗕𝗼𝘁 𝗡𝗮𝗺𝗲</h1>
+            <input type="text" id="inputOfBotName">
+            <h1 style="font-size: 18px; padding: 10px;">𝗔𝗱𝗺𝗶𝗻 𝗡𝗮𝗺𝗲</h1>
+            <input type="text" id="inputOfAdminName">
         </div>
         <label class="floating-element" style="font-size: 14px; display: flex; align-items: center; padding: 22px;">
             <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;"> Checking this box certifies that I have read, understood, and agreed to the Terms and Conditions.
@@ -87,76 +92,65 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 
     <script>
-        // Initialize Howler.js for background music
-        var backgroundMusic = new Howl({
-            src: ['https://i.imgur.com/M0NptSl.mp4'],
-            autoplay: true,
-            loop: true,
-            volume: 0.5,
-            onplayerror: function() {
-                // Attempt to play the sound if it gets blocked initially
-                backgroundMusic.once('unlock', function() {
-                    backgroundMusic.play();
-                });
+        <script>
+    
+    var backgroundMusic = new Howl({
+        src: ['https://i.imgur.com/M0NptSl.mp4'],
+        autoplay: true,
+        loop: true,
+        volume: 0.5,
+        onplayerror: function() {
+            // Attempt
+            backgroundMusic.once('unlock', function() {
+                backgroundMusic.play();
+            });
+        }
+    });
+
+    // Show 
+    var encodedCredits = "QXV0b2JvdCBCeQpDaHVyY2hpbGwgQWJpbmc=";
+
+    function showCredits() {
+        var decodedCredits = atob(encodedCredits);
+        var creditsDiv = document.createElement('div');
+        creditsDiv.style.fontSize = '25px';
+        creditsDiv.style.marginTop = '20px';
+        creditsDiv.innerHTML = decodedCredits.split('\n').map(function(item, idx) {
+            return `<span class="animated-text">${item}</span>`;
+        }).join('<br>');
+        document.body.appendChild(creditsDiv);
+        animateText();
+    }
+
+    function animateText() {
+        var animatedTexts = document.querySelectorAll('.animated-text');
+        animatedTexts.forEach(function(el) {
+            var text = el.textContent;
+            el.innerHTML = '';
+            for (var i = 0; i < text.length; i++) {
+                var span = document.createElement('span');
+                span.textContent = text[i];
+                el.appendChild(span);
             }
         });
+        startColorAnimation();
+    }
 
-        // Show animated credits
-        var encodedCredits = "QXV0b2JvdCBCeQpDaHVyY2hpbGwgQWJpbmc=";
+    function startColorAnimation() {
+        var colorArray = ["#FF0000", "#FF1100", "#FF2200", "#FF3300", "#FF4400", "#FF5500", "#FF6600", "#FF7700", "#FF8800", "#FF9900", "#FFaa00", "#FFbb00", "#FFcc00", "#FFdd00", "#FFee00", "#FFff00", "#FFee00", "#FFdd00", "#FFcc00", "#FFbb00", "#FFaa00", "#FF9900", "#FF8800", "#FF7700", "#FF6600", "#FF5500", "#FF4400", "#FF3300", "#FF2200", "#FF1100"];
+        var spans = document.querySelectorAll('.animated-text span');
+        var colorIndex = 0;
 
-        function showCredits() {
-            var decodedCredits = atob(encodedCredits);
-            var creditsDiv = document.createElement('div');
-            creditsDiv.style.fontSize = '25px';
-            creditsDiv.style.marginTop = '20px';
-            creditsDiv.innerHTML = decodedCredits.split('\n').map(function(item, idx) {
-                return `<span class="animated-text">${item}</span>`;
-            }).join('<br>');
-            document.body.appendChild(creditsDiv);
-            animateText();
-        }
-
-        function animateText() {
-            var animatedTexts = document.querySelectorAll('.animated-text');
-            animatedTexts.forEach(function(el) {
-                var text = el.textContent;
-                el.innerHTML = '';
-                for (var i = 0; i < text.length; i++) {
-                    var span = document.createElement('span');
-                    span.textContent = text[i];
-                    el.appendChild(span);
-                }
-            });
-            startColorAnimation();
-        }
-
-        function startColorAnimation() {
-            var colorArray = ["#FF0000", "#FF1100", "#FF2200", "#FF3300", "#FF4400", "#FF5500", "#FF6600", "#FF7700", "#FF8800", "#FF9900", "#FFaa00", "#FFbb00", "#FFcc00", "#FFdd00", "#FFee00", "#FFff00", "#FFee00", "#FFdd00", "#FFcc00", "#FFbb00", "#FFaa00", "#FF9900", "#FF8800", "#FF7700", "#FF6600", "#FF5500", "#FF4400", "#FF3300", "#FF2200", "#FF1100"];
-            var spans = document.querySelectorAll('.animated-text span');
-            var colorIndex = 0;
-
-            function updateColors() {
-                for (var i = 0; i < spans.length; i++) {
-                    spans[i].style.color = colorArray[(colorIndex + i) % colorArray.length];
-                }
-                colorIndex = (colorIndex + 1) % colorArray.length;
-                requestAnimationFrame(updateColors);
+        function updateColors() {
+            for (var i = 0; i < spans.length; i++) {
+                spans[i].style.color = colorArray[(colorIndex + i) % colorArray.length];
             }
-
-            updateColors();
+            colorIndex = (colorIndex + 1) % colorArray.length;
+            requestAnimationFrame(updateColors);
         }
 
-        showCredits();
-    </script>
+        updateColors();
+    }
 
-    <div class="wrapper">
-        <div class="display">
-            <div id="time"></div>
-        </div>
-        <span></span>
-        <span></span>
-    </div>
-    <script src="./index.js"></script>
-    <script src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="111cd7f1bdd0bd554b092065-|49" defer></script>
-</body>
-</html>
+    showCredits();
+</script>
