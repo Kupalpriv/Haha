@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 body {
-    margin: 0;
+    margin: auto;
     padding: 20px;
     font-family: 'Poppins', sans-serif;
-    overflow-x: hidden;
+    overflow: auto;
     background: linear-gradient(135deg, #1e1e1e 0%, #2e2e2e 100%);
     color: #ffffff;
     animation: fadeIn 1s ease-in-out;
@@ -19,14 +19,14 @@ body {
     background: rgba(30, 30, 30, 0.95);
     border-radius: 15px;
     padding: 30px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-    margin: 30px auto;
-    max-width: 1200px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    margin-top: 30px;
+    margin-bottom: 30px;
     animation: slideIn 1s ease-in-out;
 }
 
 @keyframes slideIn {
-    from { transform: translateY(50px); opacity: 0; }
+    from { transform: translateY(30px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
 
@@ -46,12 +46,12 @@ label {
     color: #bbbbbb;
     font-weight: bold;
     margin-bottom: 12px;
-    display: inline-block;
 }
 
 .centered-textarea {
     color: #ffffff;
     background: rgba(40, 40, 40, 0.85);
+    display: flex;
     margin: 0 auto;
     width: 100%;
     min-height: 160px;
@@ -70,13 +70,19 @@ label {
     padding: 12px 25px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
-    font-weight: bold;
 }
 
 .btn-primary:hover {
     background-color: #004090;
-    border-color: #004090;
+    border: 1px solid #004090;
     transform: scale(1.05);
+    animation: buttonHover 0.3s ease-in-out;
+}
+
+@keyframes buttonHover {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 .footer {
@@ -103,6 +109,7 @@ label {
 
 .container-buttons .btn {
     margin: 7px;
+    animation: fadeIn 1.2s ease-in-out;
 }
 
 #result {
@@ -157,14 +164,23 @@ label {
     width: 100%;
     border: 1px solid #666666;
     border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
     background-color: rgba(30, 30, 30, 0.95);
     color: #ffffff;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 #inputOfPrefix:focus, #inputOfAdmin:focus, #inputOfBotName:focus {
     background-color: rgba(40, 40, 40, 0.95);
     border-color: #888888;
+}
+
+#listOfCommands, #listOfCommandsEvent, #prefixOfCommands, #adminOfCommands {
+    border: none !important;
+}
+
+#listOfCommands:not(.modal), #listOfCommandsEvent:not(.modal), #prefixOfCommands:not(.modal), #adminOfCommands:not(.modal) {
+    box-shadow: none !important;
 }
 
 p {
