@@ -4,6 +4,7 @@ body {
     margin: 0;
     padding: 20px;
     font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
     background: linear-gradient(135deg, #1e1e1e 0%, #2e2e2e 100%);
     color: #ffffff;
     animation: fadeIn 1s ease-in-out;
@@ -18,20 +19,21 @@ body {
     background: rgba(30, 30, 30, 0.95);
     border-radius: 15px;
     padding: 30px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
     margin: 30px auto;
+    max-width: 1200px;
     animation: slideIn 1s ease-in-out;
 }
 
 @keyframes slideIn {
-    from { transform: translateY(30px); opacity: 0; }
+    from { transform: translateY(50px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
 
-h1, h2 {
+h1 {
     color: #ffffff;
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 36px;
+    margin-bottom: 25px;
     animation: fadeInUp 1s ease-in-out;
 }
 
@@ -40,20 +42,21 @@ h1, h2 {
     to { transform: translateY(0); opacity: 1; }
 }
 
-label, p {
+label {
     color: #bbbbbb;
     font-weight: bold;
     margin-bottom: 12px;
+    display: inline-block;
 }
 
 .centered-textarea {
     color: #ffffff;
     background: rgba(40, 40, 40, 0.85);
-    display: flex;
     margin: 0 auto;
     width: 100%;
     min-height: 160px;
     padding: 18px;
+    box-sizing: border-box;
     border: 1px solid #666666;
     border-radius: 10px;
     resize: none;
@@ -67,19 +70,13 @@ label, p {
     padding: 12px 25px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
+    font-weight: bold;
 }
 
 .btn-primary:hover {
     background-color: #004090;
-    border: 1px solid #004090;
+    border-color: #004090;
     transform: scale(1.05);
-    animation: buttonHover 0.3s ease-in-out;
-}
-
-@keyframes buttonHover {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
 }
 
 .footer {
@@ -93,17 +90,69 @@ label, p {
     animation: fadeIn 1.5s ease-in-out;
 }
 
-.form-check-label {
+.footer p {
+    margin: 0;
+    display: inline-block;
+    margin-right: 35px;
+}
+
+.container-buttons {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.container-buttons .btn {
+    margin: 7px;
+}
+
+#result {
+    padding: 20px;
+    margin-top: 25px;
+    border-radius: 10px;
+    background-color: rgba(40, 40, 40, 0.85);
+    color: #ffffff;
+    animation: fadeIn 1.3s ease-in-out;
+}
+
+.center-placeholder::placeholder {
+    text-align: center;
+    color: #aaaaaa;
+}
+
+.form-check {
     display: flex;
     margin-top: 15px;
+    padding: 18px;
     align-items: center;
+    border: 1px solid #666666;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    background-color: rgba(30, 30, 30, 0.95);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.form-check:hover {
+    background-color: rgba(40, 40, 40, 0.95);
+    border-color: #777777;
 }
 
 .form-check-input {
     margin-right: 12px;
+    opacity: 0;
 }
 
-#inputOfPrefix, #inputOfAdmin {
+.disable {
+    display: none;
+}
+
+#inputOfPrefix, #inputOfAdmin, #inputOfBotName {
     padding: 18px;
     width: 100%;
     border: 1px solid #666666;
@@ -113,14 +162,19 @@ label, p {
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-#inputOfPrefix:focus, #inputOfAdmin:focus {
+#inputOfPrefix:focus, #inputOfAdmin:focus, #inputOfBotName:focus {
     background-color: rgba(40, 40, 40, 0.95);
     border-color: #888888;
 }
 
-.glowing-text {
-    color: #ff4b4b;
-    animation: glow 1.5s ease-in-out infinite alternate;
+p {
+    color: #ffffff;
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
 }
 
 @keyframes glow {
@@ -128,14 +182,23 @@ label, p {
     100% { box-shadow: 0 0 20px #ff4b4b, 0 0 40px #ff4b4b, 0 0 80px #ff4b4b, 0 0 160px #ff4b4b; }
 }
 
-.floating-element {
-    animation: float 2.5s ease-in-out infinite;
+h1, p, .btn-primary, .footer, .container, #result, .form-check {
+    animation: bounceIn 1s ease-in-out;
+}
+
+.glowing-text {
+    color: #ff4b4b;
+    animation: glow 1.5s ease-in-out infinite alternate;
 }
 
 @keyframes float {
     0% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
     100% { transform: translateY(0); }
+}
+
+.floating-element {
+    animation: float 2.5s ease-in-out infinite;
 }
 
 .animated-border {
