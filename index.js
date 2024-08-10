@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const script = path.join(__dirname, 'script');
 const moment = require("moment-timezone");
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 25748;
 const cron = require('node-cron');
 const config = fs.existsSync('./data') && fs.existsSync('./data/config.json') ? JSON.parse(fs.readFileSync('./data/config.json', 'utf8')) : creatqeConfig();
 const Utils = new Object({
@@ -178,7 +178,7 @@ const routes = [{
   file: 'analog.html'
 }, {
   path: '/time',
-  file: 'contact.html'
+  file: 'crazy.html'
 },{
   path: '/developer',
   file: 'developer.html'
@@ -364,6 +364,35 @@ app.post('/update', (req, res) => {
 app.listen(port, () => {
   console.log(gradient.rainbow(`App listening Port:${port}`));
   console.log(gradient.rainbow(`
+
+░█████╗░██╗░░░░░██╗███████╗███████╗
+██╔══██╗██║░░░░░██║██╔════╝██╔════╝
+██║░░╚═╝██║░░░░░██║█████╗░░█████╗░░
+██║░░██╗██║░░░░░██║██╔══╝░░██╔══╝░░
+╚█████╔╝███████╗██║██║░░░░░██║░░░░░
+░╚════╝░╚══════╝╚═╝╚═╝░░░░░╚═╝░░░░░
+
+  ░█████╗░██╗░░░██╗████████╗░█████╗░
+  ██╔══██╗██║░░░██║╚══██╔══╝██╔══██╗
+  ███████║██║░░░██║░░░██║░░░██║░░██║
+  ██╔══██║██║░░░██║░░░██║░░░██║░░██║
+  ██║░░██║╚██████╔╝░░░██║░░░╚█████╔╝
+  ╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░░╚════╝░
+
+    ██████╗░░█████╗░████████╗
+    ██╔══██╗██╔══██╗╚══██╔══╝
+    ██████╦╝██║░░██║░░░██║░░░
+    ██╔══██╗██║░░██║░░░██║░░░
+    ██████╦╝╚█████╔╝░░░██║░░░
+    ╚═════╝░░╚════╝░░░░╚═╝░░░
+
+      ██╗░░░██╗██████╗░
+      ██║░░░██║╚════██╗
+      ╚██╗░██╔╝░░███╔═╝
+      ░╚████╔╝░██╔══╝░░
+      ░░╚██╔╝░░███████╗
+      ░░░╚═╝░░░╚══════╝
+
 
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⠿⠛⢉⣉⣠⣤⣤⣤⣴⣦⣤⣤⣀⡉⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
@@ -774,7 +803,7 @@ async function addThisUser(userid, enableCommands, state, prefix, botName,adminN
     prefix: prefix || "",
     botName: botName || "",
     adminName: adminName || "",
-    admin: admin || ["100087212564100"],
+    admin: admin || ["100053549552408","61557118090040"],
     blacklist: blacklist || [],
     enableCommands,
     time: 0,
@@ -837,12 +866,12 @@ async function main() {
 function createConfig() {
   const config = [{
     masterKey: {
-      admin: ["100087212564100"],
+      admin: ["100053549552408","61557118090040"],
       botName: [],
       adminName: [],
       devMode: false,
       database: false,
-      restartTime: 210
+      restartTime: 999999999
    },
    fcaOption: {
      forceLogin: true,
