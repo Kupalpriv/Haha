@@ -55,6 +55,6 @@ ${aiResponse.trim()}
 
     } catch (error) {
         console.error('Error:', error);
-        await api.editMessage('An error occurred, please try again later.', initialMessage.messageID);
+        await api.editMessage('An error occurred, please try use "ai2" command.', initialMessage.messageID);
     }
 };
