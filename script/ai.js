@@ -1,23 +1,23 @@
 const axios = require('axios');
 
 module.exports.config = {
-    name: 'ai', 
+    name: 'ai',
     version: '1.0.0',
     role: 0,
     hasPrefix: false,
-    aliases: ['gemini'], 
-    description: 'Interact',
+    aliases: ['gemini'],
+    description: 'Interact with the Gemini AI using a custom prompt, with or without an image',
     usage: 'ai [custom prompt] (attach image or not)',
     credits: 'churchill',
     cooldown: 3,
 };
 
-module.exports.run = async function({ api, event, args, Users }) {
+module.exports.run = async function({ api, event, args }) {
     const attachment = event.messageReply?.attachments[0] || event.attachments[0];
     const customPrompt = args.join(' ');
 
     if (!customPrompt && !attachment) {
-        return api.sendMessage('𝙿𝚕𝚎𝚊𝚜𝚎 𝙿𝚛𝚘𝚟𝚒𝚍𝚎 𝚊 𝚚𝚞𝚎𝚜𝚝𝚒𝚘𝚗 𝚎𝚡: ai pogi mo or reply to image', event.threadID, event.messageID);
+        return api.sendMessage('usage: ai what is love? or reply to image ex:gemini anlyze this photo.', event.threadID, event.messageID);
     }
 
     let apiUrl = 'https://ggwp-yyxy.onrender.com/gemini?';
@@ -29,8 +29,6 @@ module.exports.run = async function({ api, event, args, Users }) {
     } else {
         apiUrl += `prompt=${encodeURIComponent(customPrompt)}`;
     }
-
-    const startTime = Date.now(); 
 
     const initialMessage = await new Promise((resolve, reject) => {
         api.sendMessage({
@@ -44,33 +42,19 @@ module.exports.run = async function({ api, event, args, Users }) {
 
     try {
         const response = await axios.get(apiUrl);
-        const aiResponse = response.data.gemini; 
-
-        const responseTime = ((Date.now() - startTime) / 1000).toFixed(2); 
-
-        const userName = (await Users.getName(event.senderID)) || 'Unknown User'; 
+        const aiResponse = response.data.gemini; // Accessing the "gemini" key directly
 
         const formattedResponse = `
-✨ | 𝙲𝙷𝙸𝙻𝙻𝙸 𝚁𝙴𝚂𝙿𝙾𝙽𝚂𝙴
+✨ 𝙲𝚑𝚒𝚕𝚕𝚒 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎
 ━━━━━━━━━━━━━━━━━━
 ${aiResponse.trim()}
 ━━━━━━━━━━━━━━━━━━
-👤𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${userName}
-⏱️ 𝚁𝚎𝚜𝚙𝚘𝚗𝚍 𝚃𝚒𝚖𝚎: ${responseTime} 𝚂𝚎𝚌𝚘𝚗𝚍𝚜
         `;
 
         await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
 
     } catch (error) {
         console.error('Error:', error);
-
-        const errorMessage = `
-❌ An error occurred while processing your request.
-Please try using the \`ai2\` command.
-
-👤𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${(await Users.getName(event.senderID)) || 'Unknown User'}
-        `;
-
-        await api.editMessage(errorMessage.trim(), initialMessage.messageID);
+        await api.editMessage('An error occurred, please try use "ai2".', initialMessage.messageID);
     }
 };
