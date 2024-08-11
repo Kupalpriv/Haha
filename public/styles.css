@@ -89,7 +89,7 @@ label {
     background-color: rgba(30, 30, 30, 0.95);
     padding: 20px;
     text-align: center;
-    font-size: 18px;
+    font-size: 16px; 
     color: #bbbbbb;
     margin-top: 60px;
     border-top: 1px solid #666666;
@@ -97,10 +97,16 @@ label {
 }
 
 .footer p {
-    margin: 0;
+    margin: 5px 0; 
     display: inline-block;
-    margin-right: 35px;
+    margin-right: 0; 
+    padding: 0 10px;
 }
+
+.footer span {
+    font-weight: bold; 
+}
+
 
 .container-buttons {
     margin-top: 25px;
