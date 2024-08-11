@@ -73,38 +73,31 @@
             <button class="btn btn-primary" onclick="State()" disabled id="submitButton" style="width: 100%">Submit</button>
         </div>
     </div>
-    
-
-    <div id="result" class="container text-center" style="display: none; color: #00ff00;"></div>
+    <div id="result" class="container text-center floating-element" style="display: none;"></div>
     <div class="footer">
-        <p>Churchill Abing Copyright © 2023-2024 All Rights Reserved.</p>
+        <p>© 2023 CHURCHILL DEV | All rights reserved.</p>
         <p>Time: <span id="time"></span></p>
         <p>Ping: <span id="ping"></span></p>
     </div>
 
-    
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            Swal.fire({
-                title: 'Important Notice',
-                html: `This website is not for sale. All the content here is free. 
-                       Contact me at <a href="https://www.facebook.com/Churchill.Dev4100" style="color: blue;">this contact</a> if someone is selling this.`,
-                icon: 'info',
-                confirmButtonText: 'Okay'
-            });
-        });
-    </script>
 
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+
+    <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+
     <script>
+        
         var backgroundMusic = new Howl({
             src: ['https://i.imgur.com/M0NptSl.mp4'],
             autoplay: true,
             loop: true,
             volume: 0.5,
             onplayerror: function() {
+                
                 backgroundMusic.once('unlock', function() {
                     backgroundMusic.play();
                 });
@@ -112,10 +105,13 @@
         });
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <div class="wrapper">
+        <div class="display">
+            <div id="time"></div>
+        </div>
+        <span></span>
+        <span></span>
+    </div>
     <script src="./index.js"></script>
     <script src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="111cd7f1bdd0bd554b092065-|49" defer></script>
 </body>
