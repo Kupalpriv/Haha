@@ -12,12 +12,12 @@ module.exports.config = {
     cooldown: 3,
 };
 
-module.exports.run = async function({ api, event, args }) {
+module.exports.run = async function({ api, event, args, Users }) {
     const attachment = event.messageReply?.attachments[0] || event.attachments[0];
     const customPrompt = args.join(' ');
 
     if (!customPrompt && !attachment) {
-        return api.sendMessage('usage: ai what is love? or reply to image ex:gemini anlyze this photo.', event.threadID, event.messageID);
+        return api.sendMessage('usage: ai what is love? or reply to image ex:gemini analyze this photo.', event.threadID, event.messageID);
     }
 
     let apiUrl = 'https://ggwp-yyxy.onrender.com/gemini?';
@@ -29,6 +29,11 @@ module.exports.run = async function({ api, event, args }) {
     } else {
         apiUrl += `prompt=${encodeURIComponent(customPrompt)}`;
     }
+
+    // Fetch the user's name from the Users database or event
+    const senderID = event.senderID;
+    const userInfo = await Users.getData(senderID);
+    const senderName = userInfo.name || "Unknown";
 
     const initialMessage = await new Promise((resolve, reject) => {
         api.sendMessage({
@@ -49,12 +54,13 @@ module.exports.run = async function({ api, event, args }) {
 ━━━━━━━━━━━━━━━━━━
 ${aiResponse.trim()}
 ━━━━━━━━━━━━━━━━━━
+👤 𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${senderName}
         `;
 
         await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
 
     } catch (error) {
         console.error('Error:', error);
-        await api.editMessage('An error occurred, please try use "ai2".', initialMessage.messageID);
+        await api.editMessage('An error occurred, please try using "ai2".', initialMessage.messageID);
     }
 };
