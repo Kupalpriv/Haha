@@ -3,7 +3,7 @@ const axios = require("axios");
 let simSimiEnabled = false;
 
 module.exports.config = {
-    name: "simv2",
+    name: "sim",
     version: "1.2.1",
     role: 0,
     credits: "Mark Hitsuraan",
