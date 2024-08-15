@@ -4,7 +4,7 @@ module.exports.config = {
     name: 'ai',
     version: '1.0.0',
     role: 0,
-    hasPrefix: false,
+    hasPrefix: true,
     aliases: ['gemini'],
     description: 'Interact with the Gemin',
     usage: 'ai [custom prompt] (attach image or not)',
