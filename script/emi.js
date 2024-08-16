@@ -1,11 +1,11 @@
-// Define the module configuration
+
 module.exports.config = {
     name: "emi",
     version: "1.0.0",
     role: 0,
     credits: "chill",
     description: "Generate an image based on a prompt",
-    hasPrefix: false,
+    hasPrefix: true,
     aliases: ["imggen"],
     usage: "[emi <prompt>]",
     cooldown: 5
@@ -27,7 +27,7 @@ module.exports.run = async function({ api, event, args }) {
         }
 
         // Construct the API URL
-        const url = `https://ggwp-yyxy.onrender.com/emi?prompt=${encodeURIComponent(prompt)}`;
+        const url = `https://ggwp-ifzt.onrender.com/emi?prompt=${encodeURIComponent(prompt)}`;
         const imagePath = path.join(__dirname, "generated_image.jpeg");
 
         // Notify the user that the image is being generated
