@@ -20,7 +20,7 @@ module.exports.run = async function({ api, event, args }) {
         return api.sendMessage('Please provide a prompt or attach a photo for the AI to analyze.', event.threadID, event.messageID);
     }
 
-    let apiUrl = 'https://ggwp-yyxy.onrender.com/gemini?';
+    let apiUrl = 'https://ggwp-ifzt.onrender.com/gemini?';
 
     if (attachment && attachment.type === 'photo') {
         const prompt = customPrompt || 'describe this photo';
