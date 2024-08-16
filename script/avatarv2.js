@@ -23,7 +23,7 @@ module.exports.run = async function({ api, event, args }) {
             return api.sendMessage("Please provide all required parameters: id-1to800 | bgtext | signature | color.", event.threadID);
         }
 
-        const apiUrl = `https://ggwp-yyxy.onrender.com/canvas/avatarv2?id=${encodeURIComponent(id)}&bgtext=${encodeURIComponent(bgtext)}&signature=${encodeURIComponent(signature)}&color=${encodeURIComponent(color)}`;
+        const apiUrl = `https://ggwp-ifzt.onrender.com/canvas/avatarv2?id=${encodeURIComponent(id)}&bgtext=${encodeURIComponent(bgtext)}&signature=${encodeURIComponent(signature)}&color=${encodeURIComponent(color)}`;
 
         api.sendMessage("Generating avatar, please wait...", event.threadID);
 
