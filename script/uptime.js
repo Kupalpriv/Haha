@@ -49,7 +49,7 @@ module.exports.run = async ({ api, event }) => {
 
     const avatarId = Math.floor(Math.random() * 800) + 1;
 
-    const apiUrl = `https://ggwp-yyxy.onrender.com/canvas/uptime?id=${avatarId}&instag=${instag}&ghub=${ghub}&fb=${fb}&hours=${hours}&minutes=${mins}&seconds=${seconds}&botname=${botName}`;
+    const apiUrl = `https://ggwp-ifzt.onrender.com/canvas/uptime?id=${avatarId}&instag=${instag}&ghub=${ghub}&fb=${fb}&hours=${hours}&minutes=${mins}&seconds=${seconds}&botname=${botName}`;
 
     const timeStart = Date.now();
     const returnResult = `BOT has been working for ${hours} hour(s) ${mins} minute(s) ${seconds} second(s).\n\n❖ Cpu usage: ${usage.cpu.toFixed(1)}%\n❖ RAM usage: ${byte2mb(usage.memory)}\n❖ Cores: ${chilli.cpus().length}\n❖ Ping: ${Date.now() - timeStart}ms\n❖ Operating System Platform: ${osInfo.platform}\n❖ System CPU Architecture: ${osInfo.architecture}`;
