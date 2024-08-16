@@ -1,37 +1,67 @@
 const axios = require('axios');
 
+let activeIntervals = {};
+
 module.exports.config = {
   name: 'bible',
   version: '1.0.0',
   role: 0,
   hasPrefix: false,
   aliases: ['bible', 'verse'],
-  description: " random Bible verse",
-  usage: "randombibleverse",
+  description: "Random Bible verse and periodic Bible verses every 10 minutes",
+  usage: "bible on | bible off | bible",
   credits: 'chilling',
   cooldown: 3,
 };
 
-module.exports.run = async function({ api, event }) {
-  api.sendMessage('🙏Fetching a random Bible verse, please wait...', event.threadID, event.messageID);
+module.exports.run = async function({ api, event, args }) {
+  const threadID = event.threadID;
 
-  try {
-    const response = await axios.get('https://ggwp-yyxy.onrender.com/bible');
-    const verse = response.data.verse;
-    const reference = response.data.reference;
+  if (args[0] === 'on') {
+    if (activeIntervals[threadID]) {
+      return api.sendMessage('Bible verse sending is already enabled in this thread.', threadID, event.messageID);
+    }
 
-    const message = {
-      body: `📖 Here is a random Bible verse for you:\n\n*${verse}*\n\n— _${reference}_`,
-      mentions: [
-        {
-          tag: `@${event.senderID}`,
-          id: event.senderID
-        }
-      ]
-    };
+    activeIntervals[threadID] = setInterval(async () => {
+      try {
+        const response = await axios.get('https://ggwp-ifzt.onrender.com/bible');
+        const verse = response.data.verse;
+        const reference = response.data.reference;
 
-    api.sendMessage(message, event.threadID, event.messageID);
-  } catch (error) {
-    api.sendMessage('An error occurred while fetching the Bible verse.', event.threadID, event.messageID);
+        const message = {
+          body: `📖 Here is a random Bible verse for you:\n\n*${verse}*\n\n— _${reference}_`,
+        };
+
+        api.sendMessage(message, threadID);
+      } catch (error) {
+        api.sendMessage('An error occurred while fetching the Bible verse.', threadID);
+      }
+    }, 10 * 60 * 1000);
+
+    return api.sendMessage('Bible verse sending has been enabled. You will receive a verse every 10 minutes.', threadID, event.messageID);
+
+  } else if (args[0] === 'off') {
+    if (!activeIntervals[threadID]) {
+      return api.sendMessage('Bible verse sending is already disabled in this thread.', threadID, event.messageID);
+    }
+
+    clearInterval(activeIntervals[threadID]);
+    delete activeIntervals[threadID];
+
+    return api.sendMessage('Bible verse sending has been disabled.', threadID, event.messageID);
+  } else {
+    try {
+      const response = await axios.get('https://ggwp-ifzt.onrender.com/bible');
+      const verse = response.data.verse;
+      const reference = response.data.reference;
+
+      const message = {
+        body: `📖 Here is a random Bible verse for you:\n\n*${verse}*\n\n— _${reference}_`,
+      };
+
+      return api.sendMessage(message, threadID, event.messageID);
+    } catch (error) {
+      return api.sendMessage('An error occurred while fetching the Bible verse.', threadID, event.messageID);
+    }
   }
 };
