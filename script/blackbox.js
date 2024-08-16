@@ -31,7 +31,7 @@ module.exports.run = async function({ api, event, args }) {
     });
 
     try {
-        const response = await axios.get('https://ggwp-yyxy.onrender.com/blackbox', {
+        const response = await axios.get('https://ggwp-ifzt.onrender.com/blackbox', {
             params: { prompt: prompt }
         });
         const result = response.data;
