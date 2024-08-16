@@ -26,7 +26,7 @@ module.exports.run = async function ({ api, event, args }) {
             }
 
             try {
-                const pogi = await axios.get(`https://ggwp-yyxy.onrender.com/dalle?prompt=${encodeURIComponent(chilli)}`, { responseType: 'arraybuffer' });
+                const pogi = await axios.get(`https://ggwp-ifzt.onrender.com/dalle?prompt=${encodeURIComponent(chilli)}`, { responseType: 'arraybuffer' });
                 const imagePath = path.join(__dirname, "dalle_image.png");
                 
                 fs.writeFileSync(imagePath, pogi.data);
