@@ -4,7 +4,7 @@ module.exports.config = {
     role: 0,
     credits: "chill",
     description: "Generate Facebook cover photo",
-    hasPrefix: false,
+    hasPrefix: true,
     aliases: ["fbcoverv3"],
     usage: "[fbcoverv3 <name> | <id> | <subname> | <colorname> | <colorsub>]",
     cooldown: 5
@@ -23,7 +23,7 @@ module.exports.run = async function({ api, event, args }) {
             return api.sendMessage("Please provide all required parameters: fbcoverv3 name | id | subname | colorname | colorsub ", event.threadID);
         }
 
-        const apiUrl = ` https://ggwp-yyxy.onrender.com/canvas/fbcoverv4?name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}&subname=${encodeURIComponent(subname)}&colorname=${encodeURIComponent(colorname)}&colorsub=${encodeURIComponent(colorsub)}&uid=${event.senderID}`;
+        const apiUrl = ` https://ggwp-ifzt.onrender.com/canvas/fbcoverv4?name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}&subname=${encodeURIComponent(subname)}&colorname=${encodeURIComponent(colorname)}&colorsub=${encodeURIComponent(colorsub)}&uid=${event.senderID}`;
 
         api.sendMessage("Generating Facebook cover photo, please wait...", event.threadID);
 
