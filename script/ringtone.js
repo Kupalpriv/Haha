@@ -6,7 +6,7 @@ module.exports.config = {
     name: 'ringtone',
     version: '1.0.0',
     role: 0,
-    hasPrefix: false,
+    hasPrefix: true,
     aliases: ['ringtone'],
     description: "bang bang",
     usage: "ringtone [query]",
@@ -25,7 +25,7 @@ module.exports.run = async function({ api, event, args }) {
     // Inform yung ngga user
     api.sendMessage('Searching for your ringtone, please wait...', event.threadID, event.messageID);
 
-    const url = `https://ggwp-yyxy.onrender.com/api/ringtone?q=${encodeURIComponent(query)}`;
+    const url = `https://ggwp-ifzt.onrender.com/api/ringtone?q=${encodeURIComponent(query)}`;
 
     try {
         const response = await axios.get(url);
