@@ -28,7 +28,7 @@ module.exports.run = async function({ api, event, args }) {
         }
 
      
-        const url = `https://hiroshi-rest-api.replit.app/canvas/avatarwibu?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}&signature=${encodeURIComponent(signature)}&color=${encodeURIComponent(color)}`;
+        const url = `https://deku-rest-api-3jvu.onrender.com/canvas/avatarwibu?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}&signature=${encodeURIComponent(signature)}&color=${encodeURIComponent(color)}`;
         const imagePath = path.join(__dirname, "avatarwibu.png");
 
    
