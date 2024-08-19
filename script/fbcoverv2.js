@@ -43,7 +43,7 @@ module.exports.run = async function({ api, event, args }) {
         writer.on('finish', async () => {
             try {
           
-                const apiUrl = `https://hiroshi-rest-api.replit.app/canvas/fbcoverv2?name=${encodeURIComponent(name)}&color=${encodeURIComponent(color)}&address=${encodeURIComponent(address)}&email=${encodeURIComponent(email)}&subname=${encodeURIComponent(subname)}&sdt=${encodeURIComponent(sdt)}&uid=${event.senderID}`;
+                const apiUrl = `https://deku-rest-api-3jvu.onrender.com/canvas/fbcoverv2?name=${encodeURIComponent(name)}&color=${encodeURIComponent(color)}&address=${encodeURIComponent(address)}&email=${encodeURIComponent(email)}&subname=${encodeURIComponent(subname)}&sdt=${encodeURIComponent(sdt)}&uid=${event.senderID}`;
 
                 api.sendMessage("Generating Facebook cover photo, please wait...", event.threadID);
 
