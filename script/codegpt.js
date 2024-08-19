@@ -19,7 +19,7 @@ module.exports.run = async function({ api, event, args }) {
         return api.sendMessage('Palihug og provide og code-related nga pangutana.', event.threadID, event.messageID);
     }
 
-    const chilliHotUrl = `https://ggwp-ifzt.onrender.com/api/codegpt?type=code&lang=nodejs&q=${encodeURIComponent(pangutana)}`;
+    const chilliHotUrl = `https://deku-rest-api-3jvu.onrender.com/api/codegpt?type=code&lang=nodejs&q=${encodeURIComponent(pangutana)}`;
 
     const bayotMessage = await new Promise((resolve, reject) => {  
         api.sendMessage({
