@@ -27,7 +27,7 @@ module.exports.run = async function ({ api, event, args }) {
             }
 
             try {
-                const response = await axios.get(`https://ggwp-ifzt.onrender.com/emoji2gif`, {
+                const response = await axios.get(`https://deku-rest-api-3jvu.onrender.com/emoji2gif`, {
                     params: { q: emoji },
                     responseType: 'arraybuffer'
                 });
