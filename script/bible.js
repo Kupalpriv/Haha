@@ -24,7 +24,7 @@ module.exports.run = async function({ api, event, args }) {
 
     activeIntervals[threadID] = setInterval(async () => {
       try {
-        const response = await axios.get('https://ggwp-ifzt.onrender.com/bible');
+        const response = await axios.get('https://deku-rest-api-3jvu.onrender.com/bible');
         const verse = response.data.verse;
         const reference = response.data.reference;
 
