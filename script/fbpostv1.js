@@ -74,6 +74,6 @@ module.exports.run = async function ({ api, event, args }) {
 
     } catch (error) {
         console.error('Error:', error);
-        api.sendMessage("An error occurred while processing the request.", event.threadID);
+        api.sendMessage("An error occurred try use fbpostv2.", event.threadID);
     }
 };
