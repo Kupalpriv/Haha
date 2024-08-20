@@ -16,7 +16,7 @@ module.exports.config = {
 
 module.exports.run = async function({ api, event }) {
     try {
-        const apiUrl = 'https://ggwp-ifzt.onrender.com/cdp';
+        const apiUrl = 'https://deku-rest-api-3jvu.onrender.com/cdp';
         api.sendMessage("𝚂𝙴𝙽𝙳𝙸𝙽𝙶 𝙲𝙳𝙿 𝙿𝙸𝙲...", event.threadID);
 
         const response = await axios.get(apiUrl);
