@@ -31,7 +31,7 @@ module.exports.run = async function({ api, event, args }) {
         const imageCount = count ? parseInt(count) : 10;
 
         // Construct the API URL with properly encoded parameters
-        const url = `https://hiroshi-rest-api.replit.app/search/pinterest?search=${encodeURIComponent(searchTerm)}`;
+        const url = `https://deku-rest-api-3jvu.onrender.com/api/pinterest?q=${encodeURIComponent(searchTerm)}`;
 
         // Notify the user that the images are being fetched
         api.sendMessage("Fetching images, please wait...", event.threadID);
