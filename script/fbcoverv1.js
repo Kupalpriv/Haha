@@ -1,13 +1,13 @@
 
 module.exports.config = {
-    name: "fbcoverv2",
+    name: "fbcoverv1",
     version: "1.0.0",
     role: 0,
     credits: "chill",
     description: "Generate a Facebook cover image",
     hasPrefix: true,
-    aliases: ["fbcoverv2"],
-    usage: "[fbcoverv2 <name> | <color> | <address> | <email> | <subname> | <sdt>]",
+    aliases: ["fbcoverv1"],
+    usage: "[fbcoverv1 <name> | <color> | <address> | <email> | <subname> | <sdt>]",
     cooldown: 5
 };
 
@@ -23,7 +23,7 @@ module.exports.run = async function({ api, event, args }) {
 
         
         if (!name || !color || !address || !email || !subname || !sdt) {
-            return api.sendMessage("Please provide all required parameters:fbcoverv2 name | color | address | email | nickname | number ", event.threadID);
+            return api.sendMessage("Please provide all required parameters:fbcoverv1 name | color | address | email | nickname | number ", event.threadID);
         }
 
         
