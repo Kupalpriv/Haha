@@ -1,12 +1,12 @@
 module.exports.config = {
-    name: "avatarv2",
+    name: "avatar",
     version: "1.0.0",
     role: 0,
     credits: "chill",
     description: "Generate avatar v2",
     hasPrefix: false,
-    aliases: ["avatarv2"],
-    usage: "[avatarv2 <id> | <bgtext> | <signature> | <color>]",
+    aliases: ["avatar"],
+    usage: "[avatar <id> | <bgtext> | <signature> | <color>]",
     cooldown: 5
 };
 
