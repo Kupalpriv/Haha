@@ -1,11 +1,11 @@
 module.exports.config = {
-    name: "fbcoverv3",
+    name: "fbcoverv2",
     version: "1.0.0",
     role: 0,
     credits: "chill",
     description: "Generate Facebook cover photo",
     hasPrefix: true,
-    aliases: ["fbcoverv3"],
+    aliases: ["fbcoverv2"],
     usage: "[fbcoverv3 <name> | <id> | <subname> | <colorname> | <colorsub>]",
     cooldown: 5
 };
@@ -20,7 +20,7 @@ module.exports.run = async function({ api, event, args }) {
         const [name, id, subname, colorname, colorsub] = input.split(" | ");
 
         if (!name || !id || !subname || !colorname || !colorsub) {
-            return api.sendMessage("Please provide all required parameters: fbcoverv3 name | id | subname | colorname | colorsub ", event.threadID);
+            return api.sendMessage("Please provide all required parameters: fbcoverv2 name | id | subname | colorname | colorsub ", event.threadID);
         }
 
         const apiUrl = ` https://deku-rest-api-3jvu.onrender.com/canvas/fbcoverv4?name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}&subname=${encodeURIComponent(subname)}&colorname=${encodeURIComponent(colorname)}&colorsub=${encodeURIComponent(colorsub)}&uid=${event.senderID}`;
