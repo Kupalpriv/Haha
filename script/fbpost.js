@@ -3,21 +3,21 @@ const fs = require("fs");
 const path = require("path");
 
 module.exports.config = {
-    name: "fbpostv2",
+    name: "fbpost",
     version: "1.0.2",
     role: 0,
     credits: "chilli",
     description: "Create a Facebook post using the provided text and name.",
     hasPrefix: true,
-    aliases: ["fb", "facebookpost"],
-    usage: "[fbpostv2 @mention | text | name] or [fbpostv2 text | name]",
+    aliases: ["fb", "fbpost"],
+    usage: "[fbpost @mention | text | name] or [fbpostv2 text | name]",
     cooldown: 5,
 };
 
 module.exports.run = async function ({ api, event, args }) {
     try {
         if (args.length === 0) {
-            api.sendMessage("Usage: fbpostv2 @mention | text | name or fbpostv2 text | name", event.threadID);
+            api.sendMessage("Usage: fbpost @mention | text | name or fbpost text | name", event.threadID);
             return;
         }
 
