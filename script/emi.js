@@ -27,7 +27,7 @@ module.exports.run = async function({ api, event, args }) {
         }
 
         // Construct the API URL
-        const url = `https://ggwp-ifzt.onrender.com/emi?prompt=${encodeURIComponent(prompt)}`;
+        const url = `https://deku-rest-api-3jvu.onrender.com/emi?prompt=${encodeURIComponent(prompt)}`;
         const imagePath = path.join(__dirname, "generated_image.jpeg");
 
         // Notify the user that the image is being generated
