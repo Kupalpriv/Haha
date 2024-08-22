@@ -19,12 +19,11 @@ module.exports.run = async function({ api, event, args }) {
         return api.sendMessage('Please provide a question ex: ai what is love.', event.threadID, event.messageID);
     }
 
-    let apiUrl = 'https://www.samirxpikachu.run.place/multi/Ml?';
-    apiUrl += `prompt=${encodeURIComponent(customPrompt)}&model=MythoMax-L2-13b`;
+    const apiUrl = `https://www.samirxpikachu.run.place/multi/Ml?prompt=${encodeURIComponent(customPrompt)}&model=MythoMax-L2-13b`;
 
     const initialMessage = await new Promise((resolve, reject) => {
         api.sendMessage({
-            body: '🔍 Burnok is processing your request...',
+            body: '🔍 𝙼𝚢𝚃𝚑𝚘𝙼𝚊𝚡 is processing your request...',
             mentions: [{ tag: event.senderID, id: event.senderID }],
         }, event.threadID, (err, info) => {
             if (err) return reject(err);
@@ -33,24 +32,26 @@ module.exports.run = async function({ api, event, args }) {
     });
 
     try {
-        // Make the request to the new API
         const response = await axios.get(apiUrl);
 
-        // Assuming the API returns the response in response.data.result
-        const aiResponse = response.data.result; 
+        if (response.data && response.data.result) {
+            const aiResponse = response.data.result.trim();
 
-        const formattedResponse = `
+            const formattedResponse = `
 ✨ 𝙼𝚢𝚃𝚑𝚘𝙼𝚊𝚡 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎
 ━━━━━━━━━━━━━━━━━━
-${aiResponse.trim()}
+${aiResponse}
 ━━━━━━━━━━━━━━━━━━
 -𝙲𝚑𝚒𝚕𝚕𝚒 𝙼𝚊𝚗𝚜𝚒
-        `;
+            `;
 
-        await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
+            await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
+        } else {
+            throw new Error('Invalid response from AI API.');
+        }
 
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error.response ? error.response.data : error.message);
         await api.editMessage('An error occurred, please try to use ai2.', initialMessage.messageID);
     }
 };
