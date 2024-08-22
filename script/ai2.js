@@ -4,7 +4,7 @@ module.exports.config = {
     name: 'ai2',
     version: '1.0.0',
     role: 0,
-    hasPrefix: true,
+    hasPrefix: false,
     aliases: ['ai2'],
     description: 'Interact with the Hercai AI',
     usage: 'ai2 [question]',
