@@ -1,13 +1,13 @@
 const axios = require('axios');
 
 module.exports.config = {
-    name: 'ai',
+    name: 'gemini',
     version: '1.0.0',
     role: 0,
     hasPrefix: true,
     aliases: ['gemini'],
     description: 'Interact with the Gemin',
-    usage: 'ai [custom prompt] (attach image or not)',
+    usage: 'gemini [custom prompt] (attach image or not)',
     credits: 'churchill',
     cooldown: 3,
 };
@@ -17,13 +17,13 @@ module.exports.run = async function({ api, event, args }) {
     const customPrompt = args.join(' ');
 
     if (!customPrompt && !attachment) {
-        return api.sendMessage('Please provide a prompt or attach a photo for the AI to analyze.', event.threadID, event.messageID);
+        return api.sendMessage('Please provide a prompt or attach a photo for the gemini to analyze.', event.threadID, event.messageID);
     }
 
     let apiUrl = 'https://deku-rest-api-3jvu.onrender.com/gemini?';
 
     if (attachment && attachment.type === 'photo') {
-        const prompt = customPrompt || 'describe this photo';
+        const prompt = customPrompt || 'answer this photo';
         const imageUrl = attachment.url;
         apiUrl += `prompt=${encodeURIComponent(prompt)}&url=${encodeURIComponent(imageUrl)}`;
     } else {
@@ -45,11 +45,11 @@ module.exports.run = async function({ api, event, args }) {
         const aiResponse = response.data.gemini; // Accessing the "gemini" key directly
 
         const formattedResponse = `
-✨ 𝙲𝚑𝚒𝚕𝚕𝚒 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎
+✨ 𝙶𝚎𝚖𝚒𝚗𝚒 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎
 ━━━━━━━━━━━━━━━━━━
 ${aiResponse.trim()}
 ━━━━━━━━━━━━━━━━━━
--𝙱𝚒𝚗𝚐 𝙲𝚑𝚞𝚛𝚌𝚑𝚒𝚕𝚕
+-𝙲𝚑𝚒𝚕𝚕𝚒 𝙼𝚊𝚗𝚜𝚒
         `;
 
         await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
