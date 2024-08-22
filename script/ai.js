@@ -2,28 +2,26 @@ const axios = require('axios');
 
 module.exports.config = {
     name: 'ai',
-    version: '1.0.0',
+    version: '1.0.2',
     role: 0,
     hasPrefix: false,
-    aliases: ['ai'],
-    description: 'Interact with the MythoMax-L2-13b model via text prompts',
-    usage: 'ai [custom prompt]',
-    credits: 'chilli',
+    aliases: ['ask'],
+    description: 'Interact with the MythoMax AI',
+    usage: 'ai [question]',
+    credits: 'churchill',
     cooldown: 3,
 };
 
 module.exports.run = async function({ api, event, args }) {
-    const customPrompt = args.join(' ');
+    const question = args.join(' ');
 
-    if (!customPrompt) {
-        return api.sendMessage('Please provide a question ex: ai what is love.', event.threadID, event.messageID);
+    if (!question) {
+        return api.sendMessage('Please provide a question, for example: askAI what is love?', event.threadID, event.messageID);
     }
-
-    const apiUrl = `https://www.samirxpikachu.run.place/multi/Ml?prompt=${encodeURIComponent(customPrompt)}&model=MythoMax-L2-13b`;
 
     const initialMessage = await new Promise((resolve, reject) => {
         api.sendMessage({
-            body: '🔍 𝙼𝚢𝚃𝚑𝚘𝙼𝚊𝚡 is processing your request...',
+            body: '𝙿𝚛𝚘𝚌𝚎𝚜𝚜𝚒𝚗𝚐...',
             mentions: [{ tag: event.senderID, id: event.senderID }],
         }, event.threadID, (err, info) => {
             if (err) return reject(err);
@@ -32,26 +30,24 @@ module.exports.run = async function({ api, event, args }) {
     });
 
     try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get('https://www.samirxpikachu.run.place/multi/Ml', {
+            params: { prompt: question, model: 'MythoMax-L2-13b' }
+        });
 
-        if (response.data && response.data.result) {
-            const aiResponse = response.data.result.trim();
+        const aiResponse = response.data.trim(); // Trim any leading/trailing whitespace
+        const responseString = aiResponse ? aiResponse : 'No result found.';
 
-            const formattedResponse = `
-✨ 𝙼𝚢𝚃𝚑𝚘𝙼𝚊𝚡 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎
+        const formattedResponse = 
+`🤯 | 𝙼𝚢𝚝𝚑 𝙰𝚒
 ━━━━━━━━━━━━━━━━━━
-${aiResponse}
+${responseString}
 ━━━━━━━━━━━━━━━━━━
--𝙲𝚑𝚒𝚕𝚕𝚒 𝙼𝚊𝚗𝚜𝚒
-            `;
+- 𝙼𝚢𝚝𝚑`;
 
-            await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
-        } else {
-            throw new Error('Invalid response from AI API.');
-        }
+        await api.editMessage(formattedResponse, initialMessage.messageID);
 
     } catch (error) {
-        console.error('Error:', error.response ? error.response.data : error.message);
-        await api.editMessage('An error occurred, please try to use ai2.', initialMessage.messageID);
+        console.error('Error:', error);
+        await api.editMessage('An error occurred, please try use ai2.', initialMessage.messageID);
     }
 };
