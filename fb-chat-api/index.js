@@ -173,6 +173,7 @@ function buildAPI(globalOptions, html, jar) {
     'changeThreadEmoji',
     'createNewGroup',
     'createPoll',
+	  'createPost',
     'deleteMessage',
     'deleteThread',
        'editMessage',
