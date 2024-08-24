@@ -15,24 +15,19 @@ module.exports.handleEvent = async function ({ api, event }) {
         for (let newParticipant of addedParticipants) {
             let userID = newParticipant.userFbId;
             
-        
             if (userID === api.getCurrentUserID()) continue;
-            
             
             const userInfo = await api.getUserInfo(userID);
             let name = userInfo[userID].name;
             
-        
             const maxLength = 15;
             if (name.length > maxLength) {
-                name = name.substring(0, maxLength - 3) + '...';
+                name = `${name.substring(0, maxLength - 3)}...`;
             }
 
-        
             const welcomeMessage = `👋 Hello ${name}! Welcome to ${groupName} 🤗, you're the ${memberCount}th member of this group. Enjoy!`;
 
-            
-            api.shareContact(welcomeMessage, userID, event.threadID);
+            api.sendMessage(welcomeMessage, event.threadID);
         }
     }
 };
