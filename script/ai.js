@@ -16,7 +16,7 @@ module.exports.run = async function({ api, event, args }) {
     const question = args.join(' ');
 
     if (!question) {
-        return api.sendMessage('Please provide a question, for example: askAI what is love?', event.threadID, event.messageID);
+        return api.sendMessage('Please provide a question, for example: ask what is love?', event.threadID, event.messageID);
     }
 
     const initialMessage = await new Promise((resolve, reject) => {
@@ -38,11 +38,11 @@ module.exports.run = async function({ api, event, args }) {
         const responseString = aiResponse ? aiResponse : 'No result found.';
 
         const formattedResponse = 
-`🤯 | 𝙼𝚢𝚝𝚑 𝙰𝚒
+`☠️ 𝙼𝚢𝚝𝚑𝚘𝙼𝚊𝚡 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎
 ━━━━━━━━━━━━━━━━━━
 ${responseString}
 ━━━━━━━━━━━━━━━━━━
-- 𝙼𝚢𝚝𝚑`;
+- 𝙼𝚢𝚝𝚑 𝙺𝚞𝚗`;
 
         await api.editMessage(formattedResponse, initialMessage.messageID);
 
