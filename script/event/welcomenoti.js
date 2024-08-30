@@ -30,7 +30,3 @@ module.exports.handleEvent = async function ({ api, event }) {
         }
     }
 };
-
-module.exports.run = function ({ api, event, args }) {
-    // This function can be left empty or used for other commands related to this module.
-};
