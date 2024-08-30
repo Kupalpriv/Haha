@@ -1,33 +1,36 @@
-const fs = require('fs');
-
 module.exports.config = {
     name: "welcomenoti",
-    version: "1.1.0",
+    version: "1.0.0",
 };
 
 module.exports.handleEvent = async function ({ api, event }) {
-    if (event.logMessageType === "log:subscribe") {
-        const addedParticipants = event.logMessageData.addedParticipants;
-        const threadInfo = await api.getThreadInfo(event.threadID);
-        const groupName = threadInfo.threadName || "this group";
-        const memberCount = threadInfo.participantIDs.length;
+    const logMessageType = event.logMessageType;
+    const threadID = event.threadID;
 
-        for (let newParticipant of addedParticipants) {
-            let userID = newParticipant.userFbId;
-            
-            if (userID === api.getCurrentUserID()) continue;
-            
-            const userInfo = await api.getUserInfo(userID);
-            let name = userInfo[userID].name;
-            
-            const maxLength = 15;
-            if (name.length > maxLength) {
-                name = `${name.substring(0, maxLength - 3)}...`;
+    // Check if the event is related to a new participant being added
+    if (logMessageType === "log:subscribe") {
+        try {
+            let { threadName, participantIDs } = await api.getThreadInfo(threadID);
+            let addedParticipants = event.logMessageData.addedParticipants;
+
+            for (let newParticipant of addedParticipants) {
+                let userID = newParticipant.userFbId;
+
+                // If the new participant is not the bot itself
+                if (userID !== api.getCurrentUserID()) {
+                    api.shareContact(
+                        `👋 Hello! Welcome to ${threadName || "this group"} 🤗, you're the ${participantIDs.length}th member on this group. Enjoy! 🤗`,
+                        userID,
+                        threadID
+                    );
+                }
             }
-
-            const welcomeMessage = `👋 Hello ${name}! Welcome to ${groupName} 🤗, you're the ${memberCount}th member of this group. Enjoy!`;
-
-            api.sendMessage(welcomeMessage, event.threadID);
+        } catch (e) {
+            console.error(e.message);
         }
     }
+};
+
+module.exports.run = function ({ api, event, args }) {
+    // This function can be left empty or used for other commands related to this module.
 };
