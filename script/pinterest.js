@@ -1,66 +1,44 @@
-const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
-
 module.exports.config = {
-    name: 'pinterest',
-    version: '1.0.0',
-    role: 0,
-    hasPrefix: false,
-    aliases: ['pin'],
-    description: 'Fetch and send Pinterest images based on a query',
-    usage: 'pinterest [search term] - [number of images]',
-    credits: 'churchill',
-    cooldown: 5,
+  name: "pinterest",
+  version: "1.0.0",
+  role: 0,
+  credits: "𝐌𝐀𝐑𝐉𝐇𝐔𝐍 𝐁𝐀𝐘𝐋𝐎𝐍",
+  description: "Image search",
+  hasPrefix: false,
+  commandCategory: "Search",
+  usages: "[Text]",
+  aliases: ["pin"],
+  cooldowns: 0,
 };
 
 module.exports.run = async function({ api, event, args }) {
-    const input = args.join(' ').split(' - ');
-    const query = input[0];
-    const imageCount = parseInt(input[1]);
+  const axios = require("axios");
+  const fs = require("fs-extra");
+  const request = require("request");
+  const keySearch = args.join(" ");
+  if (!keySearch.includes("-")) return api.sendMessage('𝙿𝙻𝙴𝙰𝚂𝙴 𝙴𝙽𝚃𝙴𝚁 𝙰 𝙿𝚁𝙾𝙼𝙿𝚃\n\n𝙴𝚇𝙰𝙼𝙿𝙻𝙴 : pinterest ivana alawi - 5', event.threadID, event.messageID);
+  const keySearchs = keySearch.substr(0, keySearch.indexOf('-'));
+  const numberSearch = keySearch.split("-").pop() || 6;
+  const res = await axios.get(`https://api.kenliejugarap.com/pinterestbymarjhun/?search=${encodeURIComponent(keySearchs)}`);
+  const data = res.data && res.data.data;
 
-    if (!query) {
-        return api.sendMessage('Please provide a search term, for example: pinterest Batman - 3', event.threadID, event.messageID);
-    }
+  var num = 0;
+  var imgData = [];
+  for (var i = 0; i < parseInt(numberSearch); i++) {
+    let path = __dirname + `/cache/${num+=1}.jpg`;
+    let getDown = (await axios.get(`${data[i]}`, { responseType: 'arraybuffer' })).data;
+    fs.writeFileSync(path, Buffer.from(getDown, 'utf-8'));
+    imgData.push(fs.createReadStream(__dirname + `/cache/${num}.jpg`));
+  }
 
-    if (isNaN(imageCount) || imageCount <= 0) {
-        return api.sendMessage('Please provide a valid number of images to send, for example: pinterest Batman - 3', event.threadID, event.messageID);
-    }
+  const count = data.length;
 
-    const apiUrl = `https://deku-rest-api.gleeze.com/api/pinterest?q=${encodeURIComponent(query)}`;
+  api.sendMessage({
+    attachment: imgData,
+    body: `${numberSearch} 𝙾𝚄𝚃 𝙾𝙵 ${count} 𝙿𝙸𝙲𝚂 𝙵𝙸𝙽𝙳𝙴𝙳\n✿━━━━━━━━━━✿\n𝚁𝙴𝚂𝚄𝙻𝚃𝚂 𝙾𝙵: ${keySearchs}`
+  }, event.threadID, event.messageID);
 
-    try {
-        const response = await axios.get(apiUrl);
-        const pinterestResults = response.data.result;
-
-        if (pinterestResults && pinterestResults.length > 0) {
-            const imagesToSend = pinterestResults.slice(0, imageCount);
-            const attachments = [];
-
-            for (const [index, url] of imagesToSend.entries()) {
-                const imagePath = path.resolve(__dirname, `./tempimage_${index}.jpg`);
-                const writer = fs.createWriteStream(imagePath);
-
-                const imageResponse = await axios.get(url, { responseType: 'stream' });
-                imageResponse.data.pipe(writer);
-
-                await new Promise((resolve, reject) => {
-                    writer.on('finish', resolve);
-                    writer.on('error', reject);
-                });
-
-                attachments.push(fs.createReadStream(imagePath));
-                fs.unlinkSync(imagePath);
-            }
-
-            await api.sendMessage({ body: '', attachment: attachments }, event.threadID);
-
-        } else {
-            await api.sendMessage('No images found for the given query.', event.threadID, event.messageID);
-        }
-
-    } catch (error) {
-        console.error('Error:', error);
-        await api.sendMessage('An error occurred while fetching images from Pinterest. Please try again later.', event.threadID, event.messageID);
-    }
+  for (let ii = 1; ii < parseInt(numberSearch); ii++) {
+    fs.unlinkSync(__dirname + `/cache/${ii}.jpg`)
+  }
 };
