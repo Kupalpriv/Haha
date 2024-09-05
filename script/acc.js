@@ -1,7 +1,7 @@
 const moment = require('moment-timezone');
 
 module.exports.config = {
-    name: 'acc',
+    name: 'accept',
     version: '1.0.0',
     role: 1, // Assuming 'accessableby: 1' refers to a role or permission level
     hasPrefix: false,
