@@ -6,7 +6,7 @@ const churchillitos = require('path');
 
 module.exports.config = {
     name: "uptime",
-    version: "1.0.2",
+    version: "1.0.3",
     role: 0,
     credits: "churchill",
     description: "uptime",
@@ -42,14 +42,9 @@ module.exports.run = async ({ api, event }) => {
         architecture: chilli.arch()
     };
 
-    const botName = "CHILLI BOT";
-    const instag = "chillimansi";
-    const ghub = "churchillitos";
-    const fb = "Churchill Ag";
+    const botName = "chilli bot"; // Set the bot name here
 
-    const avatarId = Math.floor(Math.random() * 800) + 1;
-
-    const apiUrl = `https://deku-rest-api-3jvu.onrender.com/canvas/uptime?id=${avatarId}&instag=${instag}&ghub=${ghub}&fb=${fb}&hours=${hours}&minutes=${mins}&seconds=${seconds}&botname=${botName}`;
+    const apiUrl = `https://deku-rest-api.gleeze.com/canvas/uptime2?hours=${hours}&minutes=${mins}&seconds=${seconds}&botname=${botName}`;
 
     const timeStart = Date.now();
     const returnResult = `BOT has been working for ${hours} hour(s) ${mins} minute(s) ${seconds} second(s).\n\n❖ Cpu usage: ${usage.cpu.toFixed(1)}%\n❖ RAM usage: ${byte2mb(usage.memory)}\n❖ Cores: ${chilli.cpus().length}\n❖ Ping: ${Date.now() - timeStart}ms\n❖ Operating System Platform: ${osInfo.platform}\n❖ System CPU Architecture: ${osInfo.architecture}`;
