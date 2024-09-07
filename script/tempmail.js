@@ -20,7 +20,7 @@ module.exports.config = {
 		usages: "[tempmail]",
 		hasPrefix: false,
 		cooldown: 5,
-		aliases: ["temp"]
+		aliases: ["tempmail"]
 };
 
 module.exports.run = async function ({ api, event }) {
