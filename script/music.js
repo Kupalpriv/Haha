@@ -1,62 +1,64 @@
-const chilli = require("axios");
-const bundat = require("path");
-const buang = require("fs");
+const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 
 module.exports.config = {
-  name: "music",
-  version: "1.0",
-  credits: "churchill",
-  description: "Search and download songs from Spotify",
-  commandCategory: "media",
-  aliases: ["song", "sing", "spotify"],
-  hasPermssion: 0,
-  cooldowns: 5,
-  usages: "[spotify <search text>]",
-  role: 0,
-  hasPrefix: false,
+    name: 'spotify',
+    version: '1.0.0',
+    role: 0,
+    hasPrefix: false,
+    aliases: ['song', 'music'],
+    description: 'Get a Spotify song and send as an mp3 voice attachment',
+    usage: 'spotify [song name]',
+    credits: 'churchill',
+    cooldown: 5,
 };
 
-module.exports.run = async function ({ api, args, event }) {
-  try {
-    const searchQuery = args.join(" ");
-    if (!searchQuery) {
-      api.sendMessage("Usage: spotify <search text>", event.threadID);
-      return;
+module.exports.run = async function({ api, event, args }) {
+    const chilli = args.join(' ');
+
+    if (!chilli) {
+        return api.sendMessage('Please provide a song, for example: spotify Selos', event.threadID, event.messageID);
     }
 
-    const calamansi = api.sendMessage(`🎵 Searching for '${searchQuery}', please wait...`, event.threadID);
+    const apiUrl = `https://hiroshi-api.onrender.com/tiktok/spotify?search=${encodeURIComponent(chilli)}`;
 
-    const response = await chilli.get(`https://hiroshi-api.onrender.com/tiktok/spotify?search=${encodeURIComponent(searchQuery)}`);
+    try {
+        const response = await axios.get(apiUrl);
+        const maanghang = response.data[0];
 
-    const data = response.data[0];
-    const songUrl = data.download;
-    const songTitle = data.name;
-    const songImage = data.image;
+        if (!maanghang || !maanghang.download) {
+            return api.sendMessage('No song found for your search. Please try again with a different query.', event.threadID, event.messageID);
+        }
 
-    const songPath = bundat.join(__dirname, "cache", "song.mp3");
-    const imagePath = bundat.join(__dirname, "cache", "song.jpg");
+        const bundat = maanghang.download;
+        const fileName = `${maanghang.name}.mp3`;
+        const filePath = path.join(__dirname, fileName);
 
-    const songResponse = await chilli.get(songUrl, { responseType: "arraybuffer" });
-    buang.writeFileSync(songPath, Buffer.from(songResponse.data));
+        const downloadResponse = await axios({
+            method: 'GET',
+            url: bundat,
+            responseType: 'stream',
+        });
 
-    const imageResponse = await chilli.get(songImage, { responseType: "arraybuffer" });
-    buang.writeFileSync(imagePath, Buffer.from(imageResponse.data));
+        const writer = fs.createWriteStream(filePath);
+        downloadResponse.data.pipe(writer);
 
-    api.sendMessage(
-      {
-        body: `🎶 Here is your song:\n\nTitle: ${songTitle}\nEnjoy!`,
-        attachment: [buang.createReadStream(songPath), buang.createReadStream(imagePath)],
-      },
-      event.threadID,
-      event.messageID
-    );
+        writer.on('finish', async () => {
+            api.sendMessage({
+                body: `🎶 Now playing: ${maanghang.name}\n\n🔗 Spotify Link: ${maanghang.track}`,
+                attachment: fs.createReadStream(filePath)
+            }, event.threadID, () => {
+                fs.unlinkSync(filePath);
+            });
+        });
 
-    buang.unlinkSync(songPath);
-    buang.unlinkSync(imagePath);
-
-    api.unsendMessage(calamansi.messageID);
-  } catch (error) {
-    api.sendMessage(`Error: ${error.message}`, event.threadID, event.messageID);
-    console.error(error);
-  }
+        writer.on('error', () => {
+            api.sendMessage('There was an error downloading the file. Please try again later.', event.threadID, event.messageID);
+        });
+    } catch (pogi) {
+        console.error('Error fetching song:', pogi);
+        api.sendMessage('An error occurred while fetching the song. Please try again later.', event.threadID, event.messageID);
+    }
 };
+ 
