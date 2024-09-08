@@ -4,7 +4,7 @@ const axios = require("axios");
 module.exports.config = {
 	name: "war",
 	version: "1.0.0",
-	role: 0,
+	role: 2,
 	credits: "cliff",
 	description: "War in the chat box",
 	hasPrefix: false,
