@@ -1,13 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 body {
-    margin: auto;
-    padding: 20px;
+    margin: 0;
+    padding: 0;
     font-family: 'Poppins', sans-serif;
-    overflow: auto;
-    background: linear-gradient(135deg, #1e1e1e 0%, #2e2e2e 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+    color: #f5f5f5;
     animation: fadeIn 1s ease-in-out;
+    height: 100vh;
+    overflow-x: hidden;
 }
 
 @keyframes fadeIn {
@@ -16,81 +17,83 @@ body {
 }
 
 .container {
-    background: rgba(30, 30, 30, 0.95);
+    background: rgba(45, 45, 45, 0.9);
     border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    margin-top: 30px;
-    margin-bottom: 30px;
+    padding: 25px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+    margin-bottom: 20px;
     animation: slideIn 1s ease-in-out;
+    transition: transform 0.3s ease;
+}
+
+.container:hover {
+    transform: translateY(-5px);
 }
 
 @keyframes slideIn {
-    from { transform: translateY(30px); opacity: 0; }
+    from { transform: translateY(50px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
 
 h1 {
-    color: #ffffff;
-    font-size: 36px;
-    margin-bottom: 25px;
+    color: #e0e0e0;
+    font-size: 32px;
+    margin-bottom: 15px;
     animation: fadeInUp 1s ease-in-out;
 }
 
 @keyframes fadeInUp {
-    from { transform: translateY(30px); opacity: 0; }
+    from { transform: translateY(40px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
 
 label {
-    color: #bbbbbb;
-    font-weight: bold;
-    margin-bottom: 12px;
+    color: #cccccc;
+    font-weight: 400;
+    margin-bottom: 10px;
 }
 
 .centered-textarea {
+    background: rgba(60, 60, 60, 0.85);
     color: #ffffff;
-    background: rgba(40, 40, 40, 0.85);
     display: flex;
     margin: 0 auto;
     width: 100%;
-    min-height: 160px;
-    padding: 18px;
+    min-height: 140px;
+    padding: 15px;
     box-sizing: border-box;
-    border: 1px solid #666666;
+    border: 1px solid #5c5c5c;
     border-radius: 10px;
     resize: none;
+    transition: border-color 0.3s ease;
+}
+
+.centered-textarea:focus {
+    border-color: #00b4d8;
 }
 
 .btn-primary {
-    background-color: #005bb5;
-    border: 1px solid #005bb5;
+    background-color: #008cba;
+    border: 1px solid #008cba;
     color: #ffffff;
-    border-radius: 10px;
-    padding: 12px 25px;
+    border-radius: 8px;
+    padding: 10px 20px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-primary:hover {
-    background-color: #004090;
-    border: 1px solid #004090;
-    transform: scale(1.05);
-    animation: buttonHover 0.3s ease-in-out;
-}
-
-@keyframes buttonHover {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+    background-color: #007299;
+    transform: translateY(-3px);
 }
 
 .footer {
-    background-color: rgba(20, 20, 20, 0.98);
-    padding: 8px 0; 
+    background-color: #232323;
+    padding: 10px 0;
     text-align: center;
-    font-size: 12px; 
-    color: #cccccc;
+    font-size: 12px;
+    color: #b5b5b5;
     position: fixed;
     left: 0;
     bottom: 0;
@@ -99,17 +102,11 @@ label {
 }
 
 .footer p {
-    margin: 4px 0; 
-    display: block; 
-    padding: 0;
-}
-
-.footer span {
-    font-weight: bold;
+    margin: 5px 0;
 }
 
 .footer a {
-    color: #bbbbbb;
+    color: #999999;
     text-decoration: none;
     transition: color 0.3s;
 }
@@ -118,133 +115,74 @@ label {
     color: #ffffff;
 }
 
-
-
-
-.container-buttons {
-    margin-top: 25px;
-    text-align: center;
+.form-check {
+    display: flex;
+    padding: 15px;
+    align-items: center;
+    border: 1px solid #666666;
+    border-radius: 8px;
+    background-color: rgba(50, 50, 50, 0.9);
+    margin-top: 15px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.container-buttons .btn {
-    margin: 7px;
-    animation: fadeIn 1.2s ease-in-out;
+.form-check:hover {
+    background-color: rgba(70, 70, 70, 0.9);
+    border-color: #777777;
+}
+
+#inputOfPrefix, #inputOfAdmin, #botName {
+    padding: 12px;
+    width: 100%;
+    border: 1px solid #5a5a5a;
+    border-radius: 8px;
+    background-color: rgba(50, 50, 50, 0.9);
+    color: #ffffff;
+    transition: border-color 0.3s ease;
+}
+
+#inputOfPrefix:focus, #inputOfAdmin:focus, #botName:focus {
+    border-color: #00b4d8;
 }
 
 #result {
     padding: 20px;
     margin-top: 25px;
-    border-radius: 10px;
-    background-color: rgba(40, 40, 40, 0.85);
-    color: #ffffff;
+    border-radius: 8px;
+    background-color: rgba(50, 50, 50, 0.85);
+    color: #f5f5f5;
     animation: fadeIn 1.3s ease-in-out;
 }
 
-.center-placeholder::placeholder {
-    text-align: center;
-    color: #aaaaaa;
-}
-
-.form-check {
-    display: flex;
-    margin-top: 15px;
-    padding: 18px;
-    align-items: center;
-    border: 1px solid #666666;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    background-color: rgba(30, 30, 30, 0.95);
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-.form-check:hover {
-    background-color: rgba(40, 40, 40, 0.95);
-    border-color: #777777;
-}
-
-.form-check-input {
-    margin-right: 12px;
-    opacity: 0;
-}
-
-.disable {
-    display: none;
-}
-
-#inputOfPrefix, #inputOfAdmin, #inputOfBotName {
-    padding: 18px;
-    width: 100%;
-    border: 1px solid #666666;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    background-color: rgba(30, 30, 30, 0.95);
-    color: #ffffff;
-}
-
-#inputOfPrefix:focus, #inputOfAdmin:focus, #inputOfBotName:focus {
-    background-color: rgba(40, 40, 40, 0.95);
-    border-color: #888888;
-}
-
-#listOfCommands, #listOfCommandsEvent, #prefixOfCommands, #adminOfCommands {
-    border: none !important;
-}
-
-#listOfCommands:not(.modal), #listOfCommandsEvent:not(.modal), #prefixOfCommands:not(.modal), #adminOfCommands:not(.modal) {
-    box-shadow: none !important;
-}
-
-p {
-    color: #ffffff;
-}
-
-@keyframes bounceIn {
-    0% { transform: scale(0.5); opacity: 0; }
-    50% { transform: scale(1.1); opacity: 1; }
-    100% { transform: scale(1); }
+.glowing-text {
+    color: #00b4d8;
+    animation: glow 2s ease-in-out infinite alternate;
 }
 
 @keyframes glow {
-    0% { box-shadow: 0 0 5px #ff4b4b, 0 0 10px #ff4b4b, 0 0 20px #ff4b4b, 0 0 40px #ff4b4b; }
-    100% { box-shadow: 0 0 20px #ff4b4b, 0 0 40px #ff4b4b, 0 0 80px #ff4b4b, 0 0 160px #ff4b4b; }
+    0% { text-shadow: 0 0 5px #00b4d8, 0 0 10px #00b4d8; }
+    100% { text-shadow: 0 0 10px #00b4d8, 0 0 20px #00b4d8; }
 }
 
-h1, p, .btn-primary, .footer, .container, #result, .form-check {
-    animation: bounceIn 1s ease-in-out;
-}
-
-.glowing-text {
-    color: #ff4b4b;
-    animation: glow 1.5s ease-in-out infinite alternate;
+.floating-element {
+    animation: float 3s ease-in-out infinite;
 }
 
 @keyframes float {
     0% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-8px); }
     100% { transform: translateY(0); }
-}
-
-.floating-element {
-    animation: float 2.5s ease-in-out infinite;
 }
 
 .animated-border {
     border: 2px solid;
     border-image-slice: 1;
-    border-image-source: linear-gradient(45deg, #ff4b4b, #00ff00, #0000ff);
+    border-image-source: linear-gradient(45deg, #00b4d8, #90e0ef, #0077b6);
     animation: borderAnimation 3s infinite;
 }
 
 @keyframes borderAnimation {
-    0% { border-image-source: linear-gradient(45deg, #ff4b4b, #00ff00, #0000ff); }
-    50% { border-image-source: linear-gradient(45deg, #0000ff, #ff4b4b, #00ff00); }
-    100% { border-image-source: linear-gradient(45deg, #00ff00, #0000ff, #ff4b4b); }
+    0% { border-image-source: linear-gradient(45deg, #00b4d8, #90e0ef, #0077b6); }
+    50% { border-image-source: linear-gradient(45deg, #0077b6, #00b4d8, #90e0ef); }
+    100% { border-image-source: linear-gradient(45deg, #90e0ef, #0077b6, #00b4d8); }
 }
