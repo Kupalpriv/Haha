@@ -43,24 +43,21 @@
 
     <div class="container animated-border">
         <h1 class="col text-center glowing-text floating-element" style="font-size: 24px; padding: 20px;">𝙀𝙣𝙩𝙚𝙧 𝙮𝙤𝙪𝙧 𝘼𝙥𝙥𝙨𝙩𝙖𝙩𝙚</h1>
-
+        
+        <!-- Form for Bot Name, Admin Name, and Cookie -->
         <form id="json-form" onsubmit="submitForm(event)">
             <div class="row">
                 <div class="col-md-12">
+                    <input type="text" id="bot-name" class="form-control floating-element" placeholder="Enter your bot name here...">
+                    <br>
+                    <input type="text" id="admin-name" class="form-control floating-element" placeholder="Enter your admin name here...">
+                    <br>
                     <textarea id="json-data" class="form-control centered-textarea center-placeholder floating-element" placeholder="Enter your c3cfbstate here..."></textarea>
-                </div>
-
-                <div class="col-md-12">
-                    <input type="text" id="botName" class="form-control floating-element" placeholder="Enter Bot Name">
-                </div>
-
-                <div class="col-md-12">
-                    <input type="text" id="adminName" class="form-control floating-element" placeholder="Enter Admin Name">
                 </div>
             </div>
         </form>
 
-        <p class="floating-element" style="margin-top: 10px; color: #FFFFFF">Greetings! Begin by entering your cookie. Scroll down to see other features</p>
+        <p class="floating-element" style="margin-top: 10px; color: #FFFFFF">Greetings! Begin by entering your cookie, bot name, and admin name. Scroll down to see other features.</p>
 
         <div id="listOfCommands" class="container floating-element">
             <h1 class="glowing-text" style="font-size: 18px; padding: 10px;">𝗣𝗹𝗲𝗮𝘀𝗲 𝗰𝗵𝗼𝗼𝘀𝗲 𝘆𝗼𝘂𝗿 𝗰𝗼𝗺𝗺𝗮𝗻𝗱𝘀 𝗯𝘆 𝘁𝗮𝗽𝗽𝗶𝗻𝗴 𝗼𝗻 𝘁𝗵𝗲 𝗿𝗲𝘀𝗽𝗲𝗰𝘁𝗶𝘃𝗲 𝗼𝗽𝘁𝗶𝗼𝗻𝘀.</h1>
@@ -73,7 +70,7 @@
         </div>
 
         <div id="prefixOfCommands" class="container floating-element">
-            <h1 class="glowing-text" style="font-size: 18px; padding: 10px;">Please provide a prefix (optional) (choose one) .$, #, @, &, !, ?, +, /, *, -, %, ✓, •, ×, }, {, ∆, §, ~, |, π, ÷, =, €</h1>
+            <h1 class="glowing-text" style="font-size: 18px; padding: 10px;">Please provide a prefix (optional)(choose one) .$, #, @, &, !, ?, +, /, *, -, %, ✓, •, ×, }, {, ∆, §, ~, |, π, ÷, =, €</h1>
             <input type="text" id="inputOfPrefix" class="form-control floating-element">
         </div>
 
@@ -98,19 +95,40 @@
         <p>Time: <span id="time"></span> | Ping: <span id="ping"></span></p>
     </div>
 
-    <div class="wrapper">
-        <div class="display">
-            <div id="time"></div>
-        </div>
-        <span></span>
-        <span></span>
-    </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <script src="script.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-    <script src="./index.js"></script>
+
+    <script>
+        // Initialize Howler for background music
+        var backgroundMusic = new Howl({
+            src: ['https://i.imgur.com/M0NptSl.mp4'],
+            autoplay: true,
+            loop: true,
+            volume: 0.5,
+            onplayerror: function() {
+                backgroundMusic.once('unlock', function() {
+                    backgroundMusic.play();
+                });
+            }
+        });
+
+        // Handle form submission
+        function submitForm(event) {
+            event.preventDefault();
+            const botName = document.getElementById('bot-name').value;
+            const adminName = document.getElementById('admin-name').value;
+            const jsonData = document.getElementById('json-data').value;
+
+            // Logic to handle the form data
+            console.log('Bot Name:', botName);
+            console.log('Admin Name:', adminName);
+            console.log('JSON Data:', jsonData);
+        }
+    </script>
 </body>
 
 </html>
