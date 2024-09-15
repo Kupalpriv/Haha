@@ -21,8 +21,8 @@ module.exports.run = async function({ api, event, args }) {
         return api.sendMessage('Please provide a song, for example: spotify Selos', event.threadID, event.messageID);
     }
 
-    
-    const loadingMessage = await api.sendMessage(` Searching for "${chilli}"...`, event.threadID, event.messageID);
+    // Send 'searching...' message first
+    api.sendMessage('Searching for your ${chilli}...', event.threadID, event.messageID);
 
     const apiUrl = `https://hiroshi-api.onrender.com/tiktok/spotify?search=${encodeURIComponent(chilli)}`;
 
@@ -62,8 +62,5 @@ module.exports.run = async function({ api, event, args }) {
     } catch (pogi) {
         console.error('Error fetching song:', pogi);
         api.sendMessage('An error occurred while fetching the song. Please try again later.', event.threadID, event.messageID);
-    } finally {
-        
-        api.unsendMessage(loadingMessage.messageID);
     }
 };
