@@ -415,10 +415,9 @@ axios.get(gifUrl, { responseType: 'arraybuffer' })
     .catch(error => {
         console.error(error);
     });
-
-								try {
-									const fs = require("fs-extra");
-									let { threadName, participantIDs } = await api.getThreadInfo(threadID);
+										} else {
+							try {
+									const fs = require("fs-extra");									let { threadName, participantIDs } = await api.getThreadInfo(threadID);
 
 									var mentions = [], nameArray = [], memLength = [], userID = [], i = 0;
 
