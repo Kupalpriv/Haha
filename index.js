@@ -394,29 +394,43 @@ async function accountLogin(state, enableCommands = [], prefix, admin = []) {
 							const { threadID } = event;
 
 					if (event.logMessageData.addedParticipants && Array.isArray(event.logMessageData.addedParticipants) && event.logMessageData.addedParticipants.some(i => i.userFbId == userid)) {
-    api.changeNickname(`》 ${prefix} ${botName}`, threadID, userid);
-				
-						let gifUrls = [ /* ... URLs */ ];
+					api.changeNickname(`> ${prefix} 𝐀𝐮𝐭𝐨𝐛𝐨𝐭`, threadID, userid);
+
+let gifUrls = [
+	'https://i.imgur.com/209z0iM.mp4',
+	'https://i.imgur.com/VTZWEmH.mp4',
+	'https://i.imgur.com/FO3UI1c.mp4',
+	'https://i.imgur.com/X34qKhJ.mp4',
+	'https://i.imgur.com/WK22w8v.mp4',
+	'https://i.imgur.com/tvVDuo6.mp4',
+	'https://i.imgur.com/3tgiqQd.mp4',
+	'https://i.imgur.com/AfkKH9h.mp4',
+	'https://i.imgur.com/wIGJBXq.mp4',
+	'https://i.imgur.com/lmMWsR8.mp4',
+  'https://i.imgur.com/x0c92nj.mp4'
+];
+
 let randomIndex = Math.floor(Math.random() * gifUrls.length);
 let gifUrl = gifUrls[randomIndex];
 let gifPath = __dirname + '/cache/connected.mp4';
 
 axios.get(gifUrl, { responseType: 'arraybuffer' })
-    .then(response => {
-        fs.writeFileSync(gifPath, response.data);
-        return api.sendMessage("𝗖𝗢𝗡𝗡𝗘𝗖𝗧𝗜𝗡𝗚...", event.threadID, () => 
-            api.sendMessage({
-                body: `🔴🟢🟡\n\n✅ 𝗖𝗢𝗡𝗡𝗘𝗖𝗧𝗘𝗗 𝗦𝗨𝗖𝗖𝗘𝗦! \n➭ Bot Prefix: ${prefix}\n➭ Admin: ${adminName}\n➭ Facebook: ‹https://www.facebook.com/${adminName}›\n➭ Use ${prefix}help to view command details\n➭ Added bot at: ⟨ ${time} ⟩〈 ${thu} 〉`,
-                attachment: fs.createReadStream(gifPath)
-            }, event.threadID)
-        );
-    })
-    .catch(error => {
-        console.error(error);
-    });
-										} else {
-							try {
-									const fs = require("fs-extra");									let { threadName, participantIDs } = await api.getThreadInfo(threadID);
+		.then(response => {
+				fs.writeFileSync(gifPath, response.data); 
+				return api.sendMessage("𝗖𝗢𝗡𝗡𝗘𝗖𝗧𝗜𝗡𝗚...", event.threadID, () => 
+						api.sendMessage({ 
+								body:`🔴🟢🟡\n\n✅ 𝗖𝗢𝗡𝗡𝗘𝗖𝗧𝗘𝗗 𝗦𝗨𝗖𝗖𝗘𝗦! \n➭ Bot Prefix: ${prefix}\n➭ Admin: ‹𝙲𝚑𝚞𝚛𝚌𝚑𝚒𝚕𝚕 𝙰𝚋𝚒𝚗𝚐›\n➭ Facebook: ‹https://www.facebook.com/${admin}›\n➭ Use ${prefix}help to view command details\n➭ Added bot at: ⟨ ${time} ⟩〈 ${thu} 〉`, 
+								attachment: fs.createReadStream(gifPath)
+						}, event.threadID)
+				);
+		})
+		.catch(error => {
+				console.error(error);
+		});
+							} else {
+								try {
+									const fs = require("fs-extra");
+									let { threadName, participantIDs } = await api.getThreadInfo(threadID);
 
 									var mentions = [], nameArray = [], memLength = [], userID = [], i = 0;
 
