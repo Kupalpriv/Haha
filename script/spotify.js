@@ -21,8 +21,8 @@ module.exports.run = async function({ api, event, args }) {
         return api.sendMessage('Please provide a song, for example: spotify Selos', event.threadID, event.messageID);
     }
 
-    // Send 'searching...' message first
-    api.sendMessage('Searching for your ${chilli}...', event.threadID, event.messageID);
+    // Send 'searching...' message first, with the song title enclosed in quotes
+    api.sendMessage(`🔍 Searching for your "${chilli}"...`, event.threadID, event.messageID);
 
     const apiUrl = `https://hiroshi-api.onrender.com/tiktok/spotify?search=${encodeURIComponent(chilli)}`;
 
