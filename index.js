@@ -395,7 +395,8 @@ async function accountLogin(state, enableCommands = [], prefix, admin = []) {
 
 					if (event.logMessageData.addedParticipants && Array.isArray(event.logMessageData.addedParticipants) && event.logMessageData.addedParticipants.some(i => i.userFbId == userid)) {
     api.changeNickname(`》 ${prefix} ${botName}`, threadID, userid);
-					}					
+}
+				
 						let gifUrls = [ /* ... URLs */ ];
 let randomIndex = Math.floor(Math.random() * gifUrls.length);
 let gifUrl = gifUrls[randomIndex];
