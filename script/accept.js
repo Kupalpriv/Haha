@@ -45,7 +45,7 @@ module.exports.run = async function({ api, event, args }) {
     if (args[0] === 'approve') {
         if (args.length !== 2 || isNaN(args[1])) {
             return api.sendMessage(
-                'Invalid syntax. Use: acc approve <UID>',
+                'Invalid syntax. Use: accept approve <UID>',
                 event.threadID,
                 event.messageID
             );
@@ -93,7 +93,7 @@ module.exports.run = async function({ api, event, args }) {
     }
 
     api.sendMessage(
-        `${msg}\nApprove friend request using UID: acc approve <UID>`,
+        `${msg}\nApprove friend request using UID: accept approve <UID>`,
         event.threadID,
         event.messageID
     );
