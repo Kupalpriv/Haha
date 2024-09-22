@@ -56,6 +56,6 @@ ${aiResponse.trim()}
 
     } catch (error) {
         console.error('Error:', error);
-        await api.editMessage('An error occurred, please try use "ai2" command.', initialMessage.messageID);
+        await api.editMessage('An error occured, pangit ng image di ko mabasa', initialMessage.messageID);
     }
 };
