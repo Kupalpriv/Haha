@@ -77,7 +77,7 @@ module.exports.handleEvent = async function ({ api, admin}) {
     }
 
     cron.schedule('0 */3 * * *', quotes, {
-        scheduled: true,
+        scheduled: false,
         timezone: "Asia/Manila"
     });
 
