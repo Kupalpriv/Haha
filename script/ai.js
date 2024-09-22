@@ -25,7 +25,7 @@ module.exports.run = async function({ api, event, args }) {
 
     const pangit = await new Promise((resolve, reject) => {
         api.sendMessage({
-            body: '𝙿𝚛𝚘𝚌𝚎𝚜𝚜𝚒𝚗𝚐...',
+            body: '𝘼𝙣𝙨𝙬𝙚𝙧𝙞𝙣𝙜 𝙥𝙡𝙨𝙨 𝙬𝙖𝙞𝙩....',
             mentions: [{ tag: lubot, id: pogi }],
         }, event.threadID, (err, info) => {
             if (err) return reject(err);
@@ -37,14 +37,14 @@ module.exports.run = async function({ api, event, args }) {
         if (err) console.error('Error reacting with loading emoji:', err);
     });
 
-    const apiUrl = `https://deku-rest-api.gleeze.com/gpt4?prompt=${encodeURIComponent(chilli)}&uid=${pogi}`;
+    const apiUrl = `https://markdevs-last-api-2epw.onrender.com/api/v3/gpt4?ask=${encodeURIComponent(chilli)}`;
 
     try {
         const response = await axios.get(apiUrl);
-        const gpt4Response = response.data.gpt4 || 'No response from GPT-4.';
+        const gpt4Response = response.data.answer || 'No response from GPT-4.';
 
         const formattedResponse = 
-` 𝙶𝚙𝚝4++ 𝙲𝚘𝚗𝚝𝚒𝚗𝚞𝚎𝚜
+` 🧩 | 𝘾𝙝𝙞𝙡𝙡𝙞 𝙂𝙥𝙩
 ━━━━━━━━━━━━━━━━━━
 ${gpt4Response}
 ━━━━━━━━━━━━━━━━━━
@@ -58,7 +58,7 @@ ${gpt4Response}
 
     } catch (maasim) {
         console.error('Error:', maasim);
-        await api.editMessage('An error occurred while getting a response from GPT-4. Please try again later.', pangit.messageID);
+        await api.editMessage('An error occurred plss try to use "ai2" or try again later', pangit.messageID);
 
         api.setMessageReaction('', event.messageID, (err) => {
             if (err) console.error('Error removing loading emoji:', err);
