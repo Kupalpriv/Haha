@@ -20,14 +20,13 @@ module.exports.run = async function({ api, event, args }) {
   }
 
   const responseMessage = await new Promise((resolve, reject) => {
-    
     api.sendMessage({
       body: '👄 𝐀𝐃𝐎𝐁𝐎 𝐀𝐈 // answering...',
       mentions: [{ tag: event.senderID, id: event.senderID }],
     }, event.threadID, (err, info) => {
       if (err) return reject(err);
-      resolve(info);
-    }, event.messageID); 
+      resolve(info); // Store the message info
+    }, event.messageID);
   });
 
   try {
@@ -36,22 +35,22 @@ module.exports.run = async function({ api, event, args }) {
     const response = await axios.get(apiUrl);
     const adoboResponse = response.data.result;
     const responseTime = ((Date.now() - startTime) / 1000).toFixed(2);
-    
+
     api.getUserInfo(event.senderID, async (err, userInfo) => {
       if (err) {
         console.error('Error fetching user info:', err);
-        return await api.editMessage('Error fetching user info.', responseMessage.messageID);
+        return await api.sendMessage('Error fetching user info.', event.threadID, event.messageID);
       }
 
       const userName = userInfo[event.senderID].name;
       const formattedResponse = `👄 𝐀𝐃𝐎𝐁𝐎 𝐀𝐈 // ${responseTime}s\n━━━━━━━━━━━━━━━━━━\n${adoboResponse}\n━━━━━━━━━━━━━━━━━━\n👤 𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${userName}`;
 
-   
-      await api.editMessage(formattedResponse.trim(), responseMessage.messageID);
+      // Send the AI response message
+      await api.sendMessage(formattedResponse.trim(), event.threadID);
 
+      // Auto-unsend the "answering..." message
+      api.unsendMessage(responseMessage.messageID);
     });
   } catch (error) {
     console.error('Error:', error);
-    await api.editMessage('Error: ' + error.message, responseMessage.messageID);
-  }
-};
+    await api.sendMessage('Error:
