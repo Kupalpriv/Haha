@@ -1,51 +1,41 @@
-const axios = require('axios');
-const path = require('path');
+const ugh = require("axios");
 
-module.exports.config = {
-    name: "shoti",
-    version: "1.0.0",
-    hasPermission: 0,
-    description: "random video from Shoti API By Lib API",
-    usePrefix: true,
-    credits: "Jonell Magallanes",
-    cooldowns: 10,
-    commandCategory: "Media",
+const sh = {};
+
+sh["config"] = {
+  name: "shoti",
+  version: "9",
+  credits: "Cliff",
+  description: "Generate random shoti 😝",
+  commandCategory: "media",
+  hasPermssion: 0,
+  cooldowns: 9,
+  usages: "[shot]",
+  role: 0,
+  hasPrefix: false,
 };
 
-module.exports.run = async function ({ api, event }) {
-    try {
-        const sending = await api.sendMessage("⏱️ | Sending Shoti Video Please Wait....", event.threadID, event.messageID);
-        
-        const response = await axios.get('https://shoti-api.adaptable.app/api/v1/request-f');
-        const data = response.data;
+sh["run"] = async function ({ api: a, event: e }) {
+  try {   
+    const l = await a.sendMessage(`Sending shoti, please wait...`, e.threadID);
 
-        if (data.code === 200 && data.message === "success") {
-            const videoInfo = data.data;
-            const { url, title, user, duration } = videoInfo;
-            const { username, nickname } = user;
+    const k = await ugh.get('https://betadash-shoti-yazky.vercel.app/shotizxx?apikey=shipazu');
+    const t = k.data.title;
+    const u = k.data.username;
+    const n = k.data.nickname;
+    const s = k.data.shotiurl;
 
-            
-            const videoStream = await axios({
-                url: url,
-                method: 'GET',
-                responseType: 'stream'
-            });
+    const v = await ugh.get(s, { responseType: "stream" });
 
-            api.unsendMessage(sending.messageID);
+    a.unsendMessage(l.messageID);
 
-            const message = `✅ 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆 𝗦𝗲𝗻𝘁 𝗦𝗵𝗼𝘁𝗶\n━━━━━━━━━━━━━━━━━━\nTitle: ${title}\nDuration: ${duration}\nUser: ${nickname} (@${username})\n`;
-
-            api.sendMessage({
-                body: message,
-                attachment: videoStream.data  
-            }, event.threadID, event.messageID);
-
-        } else {
-            api.sendMessage(data.message, event.threadID, event.messageID);
-        }
-
-    } catch (error) {
-        console.error('Error fetching video:', error);
-        api.sendMessage(error.message, event.threadID, event.messageID);
-    }
+    await a.sendMessage({
+      body: `Username: ${u}`,
+      attachment: v.data
+    }, e.threadID, e.messageID);
+  } catch (error) {
+    a.sendMessage(`𝙴𝚁𝚁𝙾𝚁: 𝙽𝚘 𝚜𝚑𝚊𝚠𝚝𝚢 𝚟𝚒𝚍𝚎𝚘 𝚏𝚘𝚞𝚗𝚍.`, e.threadID, e.messageID);
+  }
 };
+
+module.exports = sh;
