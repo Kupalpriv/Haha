@@ -26,7 +26,6 @@ module.exports.run = async function({ api, event, args }) {
     const pangit = await new Promise((resolve, reject) => {
         api.sendMessage({
             body: '𝘼𝙣𝙨𝙬𝙚𝙧𝙞𝙣𝙜 𝙥𝙡𝙨𝙨 𝙬𝙖𝙞𝙩....',
-            mentions: [{ tag: lubot, id: pogi }],
         }, event.threadID, (err, info) => {
             if (err) return reject(err);
             resolve(info);
@@ -37,11 +36,11 @@ module.exports.run = async function({ api, event, args }) {
         if (err) console.error('Error reacting with loading emoji:', err);
     });
 
-    const apiUrl = `https://markdevs-last-api-2epw.onrender.com/api/v3/gpt4?ask=${encodeURIComponent(chilli)}`;
+    const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt4?ask=${encodeURIComponent(chilli)}`;
 
     try {
         const response = await axios.get(apiUrl);
-        const gpt4Response = response.data.answer || 'No response from GPT-4.';
+        const gpt4Response = response.data.content || 'No response from GPT-4.';
 
         const formattedResponse = 
 ` 🧩 | 𝘾𝙝𝙞𝙡𝙡𝙞 𝙂𝙥𝙩
@@ -50,11 +49,8 @@ ${gpt4Response}
 ━━━━━━━━━━━━━━━━━━
 👤 𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${lubot}`;
 
-        // Mag-unsend ng naunang "Answering plss wait..." message
         await api.unsendMessage(pangit.messageID);
-
-        // Mag-send ng bagong message para sa GPT-4 response
-        await api.sendMessage(formattedResponse, event.threadID);
+        await api.sendMessage(formattedResponse, event.threadID, event.messageID);
 
         api.setMessageReaction('✅', event.messageID, (err) => {
             if (err) console.error('Error reacting with check emoji:', err);
@@ -62,7 +58,7 @@ ${gpt4Response}
 
     } catch (maasim) {
         console.error('Error:', maasim);
-        await api.sendMessage('An error occurred plss try to use "ai2" or try again later', event.threadID);
+        await api.sendMessage('An error occurred plss try to use "ai2" or try again later', event.threadID, event.messageID);
 
         api.setMessageReaction('', event.messageID, (err) => {
             if (err) console.error('Error removing loading emoji:', err);
