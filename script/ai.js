@@ -50,7 +50,11 @@ ${gpt4Response}
 ━━━━━━━━━━━━━━━━━━
 👤 𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${lubot}`;
 
-        await api.editMessage(formattedResponse, pangit.messageID);
+        // Mag-unsend ng naunang "Answering plss wait..." message
+        await api.unsendMessage(pangit.messageID);
+
+        // Mag-send ng bagong message para sa GPT-4 response
+        await api.sendMessage(formattedResponse, event.threadID);
 
         api.setMessageReaction('✅', event.messageID, (err) => {
             if (err) console.error('Error reacting with check emoji:', err);
@@ -58,7 +62,7 @@ ${gpt4Response}
 
     } catch (maasim) {
         console.error('Error:', maasim);
-        await api.editMessage('An error occurred plss try to use "ai2" or try again later', pangit.messageID);
+        await api.sendMessage('An error occurred plss try to use "ai2" or try again later', event.threadID);
 
         api.setMessageReaction('', event.messageID, (err) => {
             if (err) console.error('Error removing loading emoji:', err);
