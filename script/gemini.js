@@ -42,7 +42,7 @@ module.exports.run = async function({ api, event, args }) {
 
     try {
         const response = await axios.get(apiUrl);
-        const aiResponse = response.data.gemini; // Accessing the "gemini" key directly
+        const aiResponse = response.data.gemini;
 
         const formattedResponse = `
 ✨ 𝙶𝚎𝚖𝚒𝚗𝚒 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎
@@ -52,10 +52,10 @@ ${aiResponse.trim()}
 -𝙲𝚑𝚒𝚕𝚕𝚒 𝙼𝚊𝚗𝚜𝚒
         `;
 
-        await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
+        await api.sendMessage(formattedResponse.trim(), event.threadID);
 
     } catch (error) {
         console.error('Error:', error);
-        await api.editMessage('An error occured, pangit ng image di ko mabasa', initialMessage.messageID);
+        await api.sendMessage('An error occurred, pangit ng image di ko mabasa', event.threadID);
     }
 };
