@@ -14,6 +14,7 @@ module.exports.config = {
 
 module.exports.run = async function({ api, event, args }) {
     const question = args.join(' ');
+    const userId = event.senderID;
 
     if (!question) {
         return api.sendMessage('Please provide a question, for example: ai2 what is love?', event.threadID, event.messageID);
@@ -22,7 +23,6 @@ module.exports.run = async function({ api, event, args }) {
     const initialMessage = await new Promise((resolve, reject) => {
         api.sendMessage({
             body: '🤖 Ai answering...',
-            mentions: [{ tag: event.senderID, id: event.senderID }],
         }, event.threadID, (err, info) => {
             if (err) return reject(err);
             resolve(info);
@@ -30,6 +30,9 @@ module.exports.run = async function({ api, event, args }) {
     });
 
     try {
+        const userInfo = await api.getUserInfo(userId);
+        const userName = userInfo[userId].name;
+
         const response = await axios.get('https://hercai.onrender.com/v3/hercai', {
             params: { question }
         });
@@ -41,15 +44,18 @@ module.exports.run = async function({ api, event, args }) {
 ━━━━━━━━━━━━━━━━━━
 ${responseString}
 ━━━━━━━━━━━━━━━━━━
--𝚆𝙰𝙶 𝙼𝙾 𝙲𝙾𝙿𝚈 𝙻𝙰𝙷𝙰𝚃 𝙽𝙶 𝚂𝙰𝙶𝙾𝚃 𝙺𝚄𝙽𝙶 𝙰𝚈𝙰𝚆 𝙼𝙾𝙽𝙶 𝙼𝙰𝙷𝙰𝙻𝙰𝚃𝙰
-━━━━━━━━━━━━━━━━━━
-If you want to donate for the server, just PM or Add the developer: [https://www.facebook.com/Churchill.Dev4100]
+👤 Asked by: ${userName}
         `;
 
-        await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
+        await api.unsendMessage(initialMessage.messageID);
+
+        await api.sendMessage(formattedResponse.trim(), event.threadID, event.messageID);
 
     } catch (error) {
         console.error('Error:', error);
-        await api.editMessage('An error occurred, please try again later.', initialMessage.messageID);
+        
+        await api.unsendMessage(initialMessage.messageID);
+
+        await api.sendMessage('An error occurred, please try again later.', event.threadID, event.messageID);
     }
 };
