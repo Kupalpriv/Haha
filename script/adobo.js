@@ -19,14 +19,15 @@ module.exports.run = async function({ api, event, args }) {
     return api.sendMessage('Please provide a query. Example: adobo what is n1gga?', event.threadID, event.messageID);
   }
 
+  // Send "answering..." message and save the message ID for unsending later
   const responseMessage = await new Promise((resolve, reject) => {
     api.sendMessage({
       body: '👄 𝐀𝐃𝐎𝐁𝐎 𝐀𝐈 // answering...',
       mentions: [{ tag: event.senderID, id: event.senderID }],
     }, event.threadID, (err, info) => {
       if (err) return reject(err);
-      resolve(info); // Store the message info
-    }, event.messageID);
+      resolve(info);
+    }, event.messageID); 
   });
 
   try {
@@ -39,18 +40,19 @@ module.exports.run = async function({ api, event, args }) {
     api.getUserInfo(event.senderID, async (err, userInfo) => {
       if (err) {
         console.error('Error fetching user info:', err);
-        return await api.sendMessage('Error fetching user info.', event.threadID, event.messageID);
+        return api.sendMessage('Error fetching user info.', event.threadID);
       }
 
       const userName = userInfo[event.senderID].name;
       const formattedResponse = `👄 𝐀𝐃𝐎𝐁𝐎 𝐀𝐈 // ${responseTime}s\n━━━━━━━━━━━━━━━━━━\n${adoboResponse}\n━━━━━━━━━━━━━━━━━━\n👤 𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${userName}`;
 
-      // Send the AI response message
+      // Send the response and unsend the "answering..." message
       await api.sendMessage(formattedResponse.trim(), event.threadID);
-
-      // Auto-unsend the "answering..." message
-      api.unsendMessage(responseMessage.messageID);
+      api.unsendMessage(responseMessage.messageID); // Unsend the "answering..." message
     });
   } catch (error) {
     console.error('Error:', error);
-    await api.sendMessage('Error:
+    api.sendMessage('Error: ' + error.message, event.threadID);
+    api.unsendMessage(responseMessage.messageID); // Unsend the "answering..." message on error
+  }
+};
