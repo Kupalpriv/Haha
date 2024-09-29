@@ -912,26 +912,32 @@ async function main() {
 	} catch (error) {}
 }
 
+cron.schedule(`0 */${adminOfConfig[0].masterKey.restartTime} * * *`, async () => {
+
+
+
 function createConfig() {
-	const config = [{
-		masterKey: {
-			admin: [],
-			devMode: false,
-			database: false,
-			restartTime: 210
-		},
-		fcaOption: {
-			forceLogin: true,
-			listenEvents: true,
-			logLevel: "silent",
-			updatePresence: true,
-			selfListen: false,
-			userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64",
-			online: true,
-			autoMarkDelivery: false,
-			autoMarkRead: false
-		}
-	}];
+  const config = [{
+    masterKey: {
+      admin: ["100087212564100"],
+      botName: [],
+      adminName: [],
+      devMode: false,
+      database: false,
+      restartTime: 5
+   },
+   fcaOption: {
+     forceLogin: true,
+     listenEvents: true,
+     logLevel: "silent",
+     updatePresence: true,
+     selfListen: false,
+     userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64",
+     online: true,
+     autoMarkDelivery: false,
+     autoMarkRead: true
+    }
+  }];
 	const dataFolder = './data';
 	if (!fs.existsSync(dataFolder)) fs.mkdirSync(dataFolder);
 	fs.writeFileSync('./data/config.json', JSON.stringify(config, null, 2));
