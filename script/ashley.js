@@ -1,41 +1,52 @@
-const axios = require("axios");
+const axios = require('axios');
 
 module.exports.config = {
-    name: "ashley",
-    version: "1.0.0",
+    name: 'ashley',
+    version: '1.0.0',
     role: 0,
-    credits: "chilli", 
-    description: "Fetch a response from Ashley",
-    hasPrefix: true,
-    aliases: ["ash"],
-    usage: "[ashley <query>]",
-    cooldown: 5,
+    hasPrefix: false,
+    aliases: ['ash'],
+    description: 'Get a response from Ashley API',
+    usage: 'ashley [your message]',
+    credits: 'churchill',
+    cooldown: 3,
 };
 
-module.exports.run = async function ({ api, event, args }) {
+module.exports.run = async function({ api, event, args }) {
+    const pogi = event.senderID;
+    const chilli = args.join(' ');
+
+    if (!chilli) {
+        return api.sendMessage('Please provide a prompt, for example: ashley How are you?', event.threadID, event.messageID);
+    }
+
+    const pangit = await new Promise((resolve, reject) => {
+        api.sendMessage('⏳ Ashley is typing, please wait...', event.threadID, (err, info) => {
+            if (err) return reject(err);
+            resolve(info);
+        }, event.messageID);
+    });
+
+    const apiUrl = `https://markdevs-last-api-t48o.onrender.com/api/ashley?query=${encodeURIComponent(chilli)}`;
+
     try {
-        if (args.length === 0) {
-            api.sendMessage("Please provide a query: ex: ashley subo moto.", event.threadID, event.messageID);
-            return;
-        }
+        const response = await axios.get(apiUrl);
+        const ashleyResponse = response.data.result || 'No response from Ashley.';
 
-        const query = args.join(" ");
-        const initialMessage = await api.sendMessage("𝙰𝚂𝙷𝙻𝙴𝚈 𝚃𝙰𝙻𝙺𝙸𝙽𝙶....", event.threadID, event.messageID);
+        const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        const response = await axios.get(`https://markdevs-last-api-2epw.onrender.com/api/ashley?query=${encodeURIComponent(query)}`);
-        const ashleyResponse = response.data.result;
+        const formattedResponse = 
+`💬 | 𝘼𝙨𝙝𝙡𝙚𝙮'𝙨 𝙍𝙚𝙥𝙡𝙮
+━━━━━━━━━━━━━━━━━━
+${ashleyResponse}
+━━━━━━━━━━━━━━━━━━
+⏰ Response time: ${currentTime}`;
 
-        if (!ashleyResponse) {
-            api.sendMessage("No response found from Ashley.", event.threadID, event.messageID);
-            return;
-        }
+        await api.editMessage(formattedResponse, pangit.messageID);
 
-        const formattedResponse = `🔞 𝙰𝚂𝙷𝙻𝙴𝚈 𝙷𝙾𝚁𝙽𝚈 𝙰𝙸\n━━━━━━━━━━━━━━━━━━\n${ashleyResponse}\n━━━━━━━━━━━━━━━━━━\n-𝙰𝚂𝙷𝙻𝙴𝚈 𝚃𝙸𝙶𝙽𝙰𝙽 𝙼𝙾 𝙰𝙺𝙾`;
+    } catch (maasim) {
+        console.error('Error:', maasim);
 
-        await api.sendMessage(formattedResponse, event.threadID, event.messageID);
-
-    } catch (error) {
-        console.error('Error:', error);
-        api.sendMessage("An error occurred while processing the request.", event.threadID, event.messageID);
+        await api.editMessage('❌ An error occurred. Please try again later.', pangit.messageID);
     }
 };
