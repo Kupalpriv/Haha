@@ -32,10 +32,6 @@ module.exports.run = async function({ api, event, args }) {
         }, event.messageID);
     });
 
-    api.setMessageReaction('⏳', event.messageID, (err) => {
-        if (err) console.error('Error reacting with loading emoji:', err);
-    });
-
     const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt4?ask=${encodeURIComponent(chilli)}`;
 
     try {
@@ -43,25 +39,16 @@ module.exports.run = async function({ api, event, args }) {
         const gpt4Response = response.data.content || 'No response from GPT-4.';
 
         const formattedResponse = 
-` 🧩 | 𝘾𝙝𝙞𝙡𝙡𝙞 𝙂𝙥𝙩
+`🧩 | 𝘾𝙝𝙞𝙡𝙡𝙞 𝙂𝙥𝙩
 ━━━━━━━━━━━━━━━━━━
 ${gpt4Response}
 ━━━━━━━━━━━━━━━━━━
 👤 𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${lubot}`;
 
-        await api.unsendMessage(pangit.messageID);
-        await api.sendMessage(formattedResponse, event.threadID, event.messageID);
-
-        api.setMessageReaction('✅', event.messageID, (err) => {
-            if (err) console.error('Error reacting with check emoji:', err);
-        });
+        await api.editMessage(formattedResponse, pangit.messageID);
 
     } catch (maasim) {
         console.error('Error:', maasim);
-        await api.sendMessage('An error occurred plss try to use "ai2" or try again later', event.threadID, event.messageID);
-
-        api.setMessageReaction('', event.messageID, (err) => {
-            if (err) console.error('Error removing loading emoji:', err);
-        });
+        await api.editMessage('An error occurred. Please try again later.', pangit.messageID);
     }
 };
