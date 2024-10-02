@@ -15,37 +15,37 @@ const convertToGothic = (text) => {
 
 module.exports.config = {
     name: 'blackbox',
-    version: '1.0.1',
+    version: '1.0.0',
     role: 0,
     hasPrefix: false,
     aliases: ['bb'],
-    description: 'Get a response from Blackbox and convert to Gothic font',
+    description: 'Get a response from Blackbox',
     usage: 'bb [your message]',
     credits: 'churchill',
     cooldown: 3,
 };
 
 module.exports.run = async function({ api, event, args }) {
-    const pogi = event.senderID;
-    const chilli = args.join(' ');
+    const senderID = event.senderID;
+    const query = args.join(' ');
 
-    if (!chilli) {
-        return api.sendMessage('Please provide a prompt, for example: bb What is AI?', event.threadID, event.messageID);
+    if (!query) {
+        return api.sendMessage('Please provide a query, for example: bb Explain the word "hi"', event.threadID, event.messageID);
     }
 
-    const bayot = await api.getUserInfo(pogi);
-    const lubot = bayot[pogi].name;
+    const userInfo = await api.getUserInfo(senderID);
+    const userName = userInfo[senderID].name;
 
-    const searchingMessage = await new Promise((resolve, reject) => {
+    const initialMessage = await new Promise((resolve, reject) => {
         api.sendMessage({
-            body: `⚫ Blackbox is searching for "${chilli}"...`,
+            body: '🟢 𝔽𝕖𝕥𝕔𝕙𝕚𝕟𝕘 𝕣𝕖𝕤𝕡𝕠𝕟𝕤𝕖 𝕗𝕣𝕠𝕞 𝔹𝕝𝕒𝕔𝕜𝕓𝕠𝕩...'
         }, event.threadID, (err, info) => {
             if (err) return reject(err);
             resolve(info);
         }, event.messageID);
     });
 
-    const apiUrl = `https://betadash-api-swordslush.vercel.app/blackbox?ask=${encodeURIComponent(chilli)}`;
+    const apiUrl = `https://betadash-api-swordslush.vercel.app/blackboxv2?question=${encodeURIComponent(query)}`;
 
     try {
         const response = await axios.get(apiUrl);
@@ -54,14 +54,16 @@ module.exports.run = async function({ api, event, args }) {
         const gothicResponse = convertToGothic(blackboxResponse);
 
         const formattedResponse = 
-`${gothicResponse}
+`🔲 | 𝘽𝙡𝙖𝙘𝙠𝙗𝙤𝙭 𝙍𝙚𝙨𝙥𝙤𝙣𝙨𝙚
+━━━━━━━━━━━━━━━━━━
+${gothicResponse}
+━━━━━━━━━━━━━━━━━━
+👤 𝚀𝚞𝚎𝚜𝚝𝚒𝚘𝚗 𝚋𝚢: ${userName}`;
 
-👤 Asked by: ${lubot}`;
-
-        await api.editMessage(searchingMessage.messageID, formattedResponse);
+        await api.editMessage(formattedResponse, initialMessage.messageID);
 
     } catch (error) {
         console.error('Error:', error);
-        await api.editMessage(searchingMessage.messageID, 'An error occurred while fetching data from Blackbox. Please try again later.');
+        await api.editMessage('❌ An error occurred while fetching the response. Please try again later.', initialMessage.messageID);
     }
 };
