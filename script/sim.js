@@ -7,7 +7,7 @@ module.exports.config = {
     credits: "Mark Hitsuraan",
     info: "SimSimi reply on command",
     usages: ["message"],
-    cd: 2
+    cd: 1
 };
 
 module.exports.run = async function({ api, event, args }) {
