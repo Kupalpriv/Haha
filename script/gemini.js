@@ -23,7 +23,7 @@ module.exports.run = async function({ api, event, args }) {
     let apiUrl = 'https://deku-rest-api-3jvu.onrender.com/gemini?';
 
     if (attachment && attachment.type === 'photo') {
-        const prompt = customPrompt || 'Analyze this photo';
+        const prompt = customPrompt || 'Anwer this photo';
         const imageUrl = attachment.url;
         apiUrl += `prompt=${encodeURIComponent(prompt)}&url=${encodeURIComponent(imageUrl)}`;
     } else {
