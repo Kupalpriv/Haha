@@ -6,7 +6,7 @@ module.exports.config = {
     role: 0,
     hasPrefix: true,
     aliases: ['gemini'],
-    description: 'Interact with the Gemin',
+    description: 'Interact with the Gemini AI',
     usage: 'gemini [custom prompt] (attach image or not)',
     credits: 'churchill',
     cooldown: 3,
@@ -17,13 +17,13 @@ module.exports.run = async function({ api, event, args }) {
     const customPrompt = args.join(' ');
 
     if (!customPrompt && !attachment) {
-        return api.sendMessage('Please provide a prompt or attach a photo for the gemini to analyze.', event.threadID, event.messageID);
+        return api.sendMessage('Please provide a prompt or attach a photo for the Gemini to analyze.', event.threadID, event.messageID);
     }
 
     let apiUrl = 'https://deku-rest-api-3jvu.onrender.com/gemini?';
 
     if (attachment && attachment.type === 'photo') {
-        const prompt = customPrompt || 'answer this photo';
+        const prompt = customPrompt || 'Analyze this photo';
         const imageUrl = attachment.url;
         apiUrl += `prompt=${encodeURIComponent(prompt)}&url=${encodeURIComponent(imageUrl)}`;
     } else {
@@ -52,10 +52,15 @@ ${aiResponse.trim()}
 -𝙲𝚑𝚒𝚕𝚕𝚒 𝙼𝚊𝚗𝚜𝚒
         `;
 
-        await api.sendMessage(formattedResponse.trim(), event.threadID);
+        await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
 
     } catch (error) {
         console.error('Error:', error);
-        await api.sendMessage('An error occurred, pangit ng image di ko mabasa', event.threadID);
+        let errorMessage = 'An error occurred, could not process your request.';
+        if (error.response && error.response.data) {
+            errorMessage += `\nDetails: ${error.response.data.message || 'Unknown error'}`;
+        }
+
+        await api.editMessage(errorMessage, initialMessage.messageID);
     }
 };
