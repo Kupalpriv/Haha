@@ -50,7 +50,7 @@ module.exports.run = async function({ api, event, args }) {
 
     try {
         const response = await axios.get(apiUrl);
-        const gpt4Response = response.data.content || 'No response from GPT-4.';
+        const gpt4Response = response.data.message || 'No response from GPT-4.';
 
         const gothicResponse = convertToGothic(gpt4Response);
 
@@ -65,6 +65,6 @@ ${gothicResponse}
 
     } catch (maasim) {
         console.error('Error:', maasim);
-        await api.editMessage('An error occurred. Please try again later.', pangit.messageID);
+        await api.editMessage('An error occurred. Please try again later or use ai2.', pangit.messageID);
     }
 };
