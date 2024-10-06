@@ -45,7 +45,8 @@ module.exports.run = async function({ api, event, args }) {
         }, event.messageID);
     });
 
-    const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt4?ask=${encodeURIComponent(chilli)}`;
+    
+    const apiUrl = `https://rest-api-production-5054.up.railway.app/gpt4om?prompt=${encodeURIComponent(chilli)}&uid=${pogi}`;
 
     try {
         const response = await axios.get(apiUrl);
