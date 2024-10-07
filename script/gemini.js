@@ -17,13 +17,13 @@ module.exports.run = async function({ api, event, args }) {
     const customPrompt = args.join(' ');
 
     if (!customPrompt && !attachment) {
-        return api.sendMessage('Please provide a prompt or attach a photo for the Gemini to analyze.', event.threadID, event.messageID);
+        return api.sendMessage('Please provide a prompt or attach a photo for Gemini to analyze.', event.threadID, event.messageID);
     }
 
     let apiUrl = 'https://deku-rest-api.gleeze.com/gemini?';
 
     if (attachment && attachment.type === 'photo') {
-        const prompt = customPrompt || 'Anwer this photo';
+        const prompt = customPrompt || 'describe this photo';
         const imageUrl = attachment.url;
         apiUrl += `prompt=${encodeURIComponent(prompt)}&url=${encodeURIComponent(imageUrl)}`;
     } else {
