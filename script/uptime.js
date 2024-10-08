@@ -44,7 +44,7 @@ module.exports.run = async ({ api, event }) => {
 
     const botName = "chilli bot"; // Set the bot name here
 
-    const apiUrl = `https://deku-rest-api.gleeze.com/canvas/uptime2?hours=${hours}&minutes=${mins}&seconds=${seconds}&botname=${botName}`;
+    const apiUrl = `https://deku-rest-apis.ooguy.com/canvas/uptime2?hours=${hours}&minutes=${mins}&seconds=${seconds}&botname=${botName}`;
 
     const timeStart = Date.now();
     const returnResult = `BOT has been working for ${hours} hour(s) ${mins} minute(s) ${seconds} second(s).\n\n❖ Cpu usage: ${usage.cpu.toFixed(1)}%\n❖ RAM usage: ${byte2mb(usage.memory)}\n❖ Cores: ${chilli.cpus().length}\n❖ Ping: ${Date.now() - timeStart}ms\n❖ Operating System Platform: ${osInfo.platform}\n❖ System CPU Architecture: ${osInfo.architecture}`;
