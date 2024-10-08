@@ -4,7 +4,7 @@ const path = require('path');
 
 module.exports.config = {
     name: 'slap',
-    version: '1.0.1',
+    version: '1.0.2',
     role: 0,
     hasPrefix: false,
     aliases: ['slap'],
@@ -17,10 +17,8 @@ module.exports.config = {
 module.exports.run = async function({ api, event, args }) {
     let targetID;
     if (event.type === 'message_reply') {
-        // If the command is used in reply to a message, use the sender ID of the replied message
         targetID = event.messageReply.senderID;
     } else {
-        // Otherwise, use the mentioned user
         if (event.mentions && Object.keys(event.mentions).length > 0) {
             targetID = Object.keys(event.mentions)[0];
         } else {
@@ -29,12 +27,10 @@ module.exports.run = async function({ api, event, args }) {
     }
 
     const userID = event.senderID;
-
-    // Get names of the sender and the target
     const senderName = (await api.getUserInfo(userID))[userID].name;
     const targetName = (await api.getUserInfo(targetID))[targetID].name;
 
-    const imageUrl = `https://deku-rest-api.gleeze.com/canvas/slap?uid=${userID}&uid2=${targetID}`;
+    const imageUrl = `https://api-canvass.vercel.app/slap?batman=${userID}&superman=${targetID}`;
     const filePath = path.resolve(__dirname, 'slap.png');
 
     try {
@@ -50,7 +46,6 @@ module.exports.run = async function({ api, event, args }) {
                 body: `${senderName} slapped ${targetName}! 👋`,
                 attachment: fs.createReadStream(filePath),
             }, event.threadID, () => {
-                // Delete the image file after sending
                 fs.unlinkSync(filePath);
             }, event.messageID);
         });
