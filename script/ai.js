@@ -25,18 +25,18 @@ module.exports.run = async function({ api, event, args }) {
 
     const pangit = await new Promise((resolve, reject) => {
         api.sendMessage({
-            body: 'Answering please wait...',
+            body: `🔍 : "${chilli}"...`,
         }, event.threadID, (err, info) => {
             if (err) return reject(err);
             resolve(info);
         }, event.messageID);
     });
 
-    const apiUrl = `https://kaizenji-rest-api.gleeze.com/gpt4?ask=${encodeURIComponent(chilli)}`;
+    const apiUrl = `https://hiroshi-api.onrender.com/ai/cohere?ask=${encodeURIComponent(chilli)}`;
 
     try {
         const response = await axios.get(apiUrl);
-        const gpt4Response = response.data.answer || 'No response from GPT-4.';
+        const gpt4Response = response.data.response || 'No response from GPT-4.';
 
         const formattedResponse = 
 `🧩 | Chilli Gpt
