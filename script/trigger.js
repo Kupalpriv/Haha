@@ -28,7 +28,7 @@ module.exports.run = async function({ api, event, args }) {
         userId = event.senderID;
     }
 
-    const apiUrl = `https://deku-rest-api.gleeze.com/canvas/trigger?uid=${userId}`;
+    const apiUrl = `https://deku-rest-apis.ooguy.com/canvas/trigger?uid=${userId}`;
 
     try {
         const response = await axios({
