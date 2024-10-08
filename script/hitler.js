@@ -25,7 +25,7 @@ module.exports.run = async function({ api, event, args }) {
 
   const uid = mention || replyMessage.senderID || event.senderID; // Use mentioned user ID, reply sender ID, or sender ID
 
-  const apiUrl = `https://deku-rest-api.gleeze.com/canvas/hitler?uid=${uid}`;
+  const apiUrl = `https://deku-rest-apis.ooguy.com/canvas/hitler?uid=${uid}`;
   
   try {
     const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
