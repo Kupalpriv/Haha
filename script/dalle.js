@@ -26,7 +26,7 @@ module.exports.run = async function ({ api, event, args }) {
             }
 
             try {
-                const pogi = await axios.get(`https://deku-rest-api-3jvu.onrender.com/dalle?prompt=${encodeURIComponent(chilli)}`, { responseType: 'arraybuffer' });
+                const pogi = await axios.get(`https://deku-rest-apis.ooguy.com/dalle?prompt=${encodeURIComponent(chilli)}`, { responseType: 'arraybuffer' });
                 const imagePath = path.join(__dirname, "dalle_image.png");
                 
                 fs.writeFileSync(imagePath, pogi.data);
