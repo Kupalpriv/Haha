@@ -39,7 +39,7 @@ module.exports.run = async function({ api, event }) {
     });
 
     try {
-        const apiUrl = `https://deku-rest-api.gleeze.com/canvas/delete?uid=${chilli}`;
+        const apiUrl = `https://deku-rest-apis.ooguy.com/canvas/delete?uid=${chilli}`;
         const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
 
         const imagePath = path.join(__dirname, 'trash.jpg');
