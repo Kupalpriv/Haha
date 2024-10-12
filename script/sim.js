@@ -4,7 +4,7 @@ module.exports.config = {
     name: "sim",
     version: "1.2.1",
     role: 0,
-    credits: "Mark Hitsuraan",
+    credits: "chilli",
     info: "SimSimi reply on command",
     usages: ["message"],
     cd: 1
@@ -18,11 +18,11 @@ module.exports.run = async function({ api, event, args }) {
     }
 
     const content = encodeURIComponent(args.join(" "));
-    const apiUrl = `https://markdevs-last-api-2epw.onrender.com/sim?q=${content}`;
+    const apiUrl = `https://hiroshi-api.onrender.com/other/sim?ask=${content}`;
 
     try {
         const res = await axios.get(apiUrl);
-        const respond = res.data.response;
+        const respond = res.data.answer;
 
         if (res.data.error) {
             api.sendMessage(`Error: ${res.data.error}`, threadID, messageID);
