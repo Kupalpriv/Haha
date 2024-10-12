@@ -21,8 +21,7 @@ module.exports.run = async function({ api, event, args }) {
         return api.sendMessage('Please provide a song, for example: spotify Selos', event.threadID, event.messageID);
     }
 
-    // Send 'searching...' message first, with the song title enclosed in quotes
-    api.sendMessage(`🔍 Searching for your "${chilli}"...`, event.threadID, event.messageID);
+    const searchMessage = await api.sendMessage(`🔍 Searching for your "${chilli}"...`, event.threadID, event.messageID);
 
     const apiUrl = `https://hiroshi-api.onrender.com/tiktok/spotify?search=${encodeURIComponent(chilli)}`;
 
@@ -48,12 +47,16 @@ module.exports.run = async function({ api, event, args }) {
         downloadResponse.data.pipe(writer);
 
         writer.on('finish', async () => {
+            api.sendMessage(`🎶 Now playing: ${maanghang.name}\n\n🔗 Spotify Link: ${maanghang.track}`, event.threadID, event.messageID);
+            
             api.sendMessage({
-                body: `🎶 Now playing: ${maanghang.name}\n\n🔗 Spotify Link: ${maanghang.track}`,
+                body: '',
                 attachment: fs.createReadStream(filePath)
             }, event.threadID, () => {
                 fs.unlinkSync(filePath);
             });
+
+            api.unsendMessage(searchMessage.messageID);
         });
 
         writer.on('error', () => {
