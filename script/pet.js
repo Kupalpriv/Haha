@@ -27,7 +27,7 @@ module.exports.run = async function({ api, event, args }) {
     }
 
     if (mentionedUser === ownerUID) {
-        return api.sendMessage(` You can't pet my sensei! 😎`, event.threadID, event.messageID);
+        return api.sendMessage(`You can't pet my sensei! 😎`, event.threadID, event.messageID);
     }
 
     const apiUrl = `https://api-canvass.vercel.app/pet?userid=${mentionedUser}`;
@@ -47,10 +47,14 @@ module.exports.run = async function({ api, event, args }) {
 
         writer.on('finish', async () => {
             await api.sendMessage({
-                body: `Here’s a pet GIF for <@${mentionedUser}>! 🐾`,
                 attachment: fs.createReadStream(filePath)
             }, event.threadID, event.messageID);
-            fs.unlinkSync(filePath);
+
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.error('Error deleting file:', err);
+                }
+            });
         });
 
         writer.on('error', () => {
