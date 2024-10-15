@@ -20,21 +20,34 @@ module.exports.run = async function({ api, event }) {
         return api.sendMessage('Please provide a question.', event.threadID, event.messageID);
     }
 
-    const apiUrl = `https://www.vertearth.cloud/api/gpt4?prompt=${encodeURIComponent(userPrompt)}`;
+    const apiUrl = `https://markdevs69v2-679r.onrender.com/new/gpt4?query=${encodeURIComponent(userPrompt)}`;
 
-    
+    // Send initial "searching" message
     api.sendMessage(`🔍 Searching for: "${userPrompt}"... Please wait.`, event.threadID, (err, info) => {
         if (err) return console.error(err);
 
-        
+        const messageID = info.messageID; 
+
         axios.get(apiUrl)
             .then((response) => {
-                const answer = response.data.response.answer;
-                api.sendMessage(`🤖 AI Answer: ${answer}`, event.threadID);
+                const answer = response.data.response.respond;
+
+            
+                api.editMessage(answer, event.threadID, messageID, (err) => {
+                    if (err) {
+                        console.error('Error editing the message:', err);
+                        api.sendMessage('Failed to update the message. Here is the response: ' + answer, event.threadID);
+                    }
+                });
             })
             .catch((error) => {
                 console.error('Error fetching from API:', error);
-                api.sendMessage('There was an error fetching the information. Please try again later.', event.threadID, event.messageID);
+                api.editMessage('There was an error fetching the information. Please try again later.', event.threadID, messageID, (err) => {
+                    if (err) {
+                        console.error('Error editing the message:', err);
+                        api.sendMessage('There was an error fetching the information. Please try again later.', event.threadID);
+                    }
+                });
             });
     });
 };
