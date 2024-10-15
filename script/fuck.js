@@ -31,7 +31,6 @@ module.exports.run = async function({ api, event, args }) {
     }
 
     try {
-        // Get the names of the sender and the mentioned user
         const senderName = (await api.getUserInfo(event.senderID))[event.senderID].name;
         const mentionedName = (await api.getUserInfo(mentionedUser))[mentionedUser].name;
 
@@ -59,6 +58,7 @@ module.exports.run = async function({ api, event, args }) {
 
         writer.on('error', () => {
             api.sendMessage('There was an error creating the fuck image. Please try again later.', event.threadID, event.messageID);
+            fs.unlinkSync(filePath);
         });
     } catch (error) {
         console.error('Error fetching fuck image or names:', error);
