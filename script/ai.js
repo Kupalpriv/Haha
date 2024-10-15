@@ -2,52 +2,53 @@ const axios = require('axios');
 
 module.exports.config = {
     name: 'ai',
-    version: '1.0.0',
+    version: '1.0.1',
     role: 0,
     hasPrefix: false,
-    aliases: ['ai'],
-    description: 'Ask a question to the AI using the provided API.',
-    usage: 'ai <question>',
-    credits: 'chilli',
+    aliases: ['gpt4'],
+    description: 'Get a response from GPT-4',
+    usage: 'ai [your message]',
+    credits: 'churchill',
     cooldown: 3,
 };
 
-module.exports.run = async function({ api, event }) {
-    
-    const userPrompt = event.body;
-    
-    if (!userPrompt) {
-        return api.sendMessage('Please provide a question.', event.threadID, event.messageID);
+module.exports.run = async function({ api, event, args }) {
+    const pogi = event.senderID;
+    const chilli = args.join(' ');
+
+    if (!chilli) {
+        return api.sendMessage('Please provide a prompt, for example: ai What is the meaning of life?', event.threadID, event.messageID);
     }
 
-    const apiUrl = `https://markdevs69v2-679r.onrender.com/new/gpt4?query=${encodeURIComponent(userPrompt)}`;
+    const bayot = await api.getUserInfo(pogi);
+    const lubot = bayot[pogi].name;
 
-    // Send initial "searching" message
-    api.sendMessage(`🔍 Searching for: "${userPrompt}"... Please wait.`, event.threadID, (err, info) => {
-        if (err) return console.error(err);
-
-        const messageID = info.messageID; 
-
-        axios.get(apiUrl)
-            .then((response) => {
-                const answer = response.data.response.respond;
-
-            
-                api.editMessage(answer, event.threadID, messageID, (err) => {
-                    if (err) {
-                        console.error('Error editing the message:', err);
-                        api.sendMessage('Failed to update the message. Here is the response: ' + answer, event.threadID);
-                    }
-                });
-            })
-            .catch((error) => {
-                console.error('Error fetching from API:', error);
-                api.editMessage('There was an error fetching the information. Please try again later.', event.threadID, messageID, (err) => {
-                    if (err) {
-                        console.error('Error editing the message:', err);
-                        api.sendMessage('There was an error fetching the information. Please try again later.', event.threadID);
-                    }
-                });
-            });
+    const pangit = await new Promise((resolve, reject) => {
+        api.sendMessage({
+            body: `🔍 : "${chilli}"...`,
+        }, event.threadID, (err, info) => {
+            if (err) return reject(err);
+            resolve(info);
+        }, event.messageID);
     });
+
+    const apiUrl = `https://markdevs69v2-679r.onrender.com/new/gpt4?query=${encodeURIComponent(chilli)}`;
+
+    try {
+        const response = await axios.get(apiUrl);
+        const gpt4Response = response.data.respond || 'No response from GPT-4.';
+
+        const formattedResponse = 
+`🧩 | Chilli Gpt
+━━━━━━━━━━━━━━━━━━
+${gpt4Response}
+━━━━━━━━━━━━━━━━━━
+👤 Asked by: ${lubot}`;
+
+        await api.editMessage(formattedResponse, pangit.messageID);
+
+    } catch (error) {
+        console.error('Error:', error);
+        await api.editMessage('An error occurred. Please try again later or use ai2.', pangit.messageID);
+    }
 };
