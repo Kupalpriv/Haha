@@ -36,16 +36,20 @@ module.exports.run = async function({ api, event, args }) {
 
         const apiUrl = `https://api-canvass.vercel.app/fuck?one=${event.senderID}&two=${mentionedUser}`;
 
+        const cacheDir = path.join(__dirname, 'cache');
+        if (!fs.existsSync(cacheDir)) {
+            fs.mkdirSync(cacheDir);
+        }
+
+        const fileName = `fuck_${Date.now()}.png`;
+        const filePath = path.join(cacheDir, fileName);
         const response = await axios({
             method: 'GET',
             url: apiUrl,
             responseType: 'stream',
         });
 
-        const fileName = `fuck_${event.senderID}_${mentionedUser}.png`;
-        const filePath = path.join(__dirname, fileName);
         const writer = fs.createWriteStream(filePath);
-
         response.data.pipe(writer);
 
         writer.on('finish', async () => {
@@ -53,12 +57,17 @@ module.exports.run = async function({ api, event, args }) {
                 body: `💥 ${senderName} fucked ${mentionedName}!`,
                 attachment: fs.createReadStream(filePath)
             }, event.threadID, event.messageID);
-            fs.unlinkSync(filePath);
+
+            fs.unlink(filePath, (err) => {
+                if (err) console.error('Error deleting file:', err);
+            });
         });
 
         writer.on('error', () => {
             api.sendMessage('There was an error creating the fuck image. Please try again later.', event.threadID, event.messageID);
-            fs.unlinkSync(filePath);
+            fs.unlink(filePath, (err) => {
+                if (err) console.error('Error deleting file:', err);
+            });
         });
     } catch (error) {
         console.error('Error fetching fuck image or names:', error);
