@@ -32,11 +32,11 @@ module.exports.run = async function({ api, event, args }) {
         }, event.messageID);
     });
 
-    const apiUrl = `https://markdevs69v2.onrender.com/new/gpt4?query=${encodeURIComponent(chilli)}`;
+    const apiUrl = `https://ryuu-rest-apis.onrender.com/api/chatgpt?question=${encodeURIComponent(chilli)}`;
 
     try {
         const response = await axios.get(apiUrl);
-        const gpt4Response = response.data.respond || 'No response from GPT-4.';
+        const gpt4Response = response.data.content || 'No response from GPT-4.';
 
         const formattedResponse = 
 `🧩 | Chilli Gpt
