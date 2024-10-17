@@ -53,18 +53,23 @@ module.exports.run = async function({ api, event, args }) {
         response.data.pipe(writer);
 
         writer.on('finish', async () => {
+            // Send the image in the chat
             await api.sendMessage({
                 body: `💥 ${senderName} fucked ${mentionedName}!`,
                 attachment: fs.createReadStream(filePath)
             }, event.threadID, event.messageID);
 
+            // Delete the file after sending
             fs.unlink(filePath, (err) => {
-                if (err) console.error('Error deleting file:', err);
+                if (err) {
+                    console.error('Error deleting file:', err);
+                }
             });
         });
 
         writer.on('error', () => {
             api.sendMessage('There was an error creating the fuck image. Please try again later.', event.threadID, event.messageID);
+            // Ensure file cleanup even on error
             fs.unlink(filePath, (err) => {
                 if (err) console.error('Error deleting file:', err);
             });
