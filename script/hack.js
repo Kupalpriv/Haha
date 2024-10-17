@@ -1,52 +1,75 @@
 const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 
 module.exports.config = {
     name: 'hack',
     version: '1.0.0',
     role: 0,
     hasPrefix: false,
-    aliases: [],
-    description: 'Pretend to hack a user by mentioning them or replying to their message.',
-    usage: 'hack [mention] or reply to a message',
+    aliases: ['hackuser'],
+    description: 'Fake hack command that generates a mock hack screen.',
+    usage: 'hack [mention]',
     credits: 'chilli',
     cooldown: 5,
 };
 
 module.exports.run = async function({ api, event, args }) {
-    let targetUser;
+    let mentionedUser;
 
-    // Check if the user is mentioned or if this is a reply
     if (Object.keys(event.mentions).length > 0) {
-        targetUser = {
-            name: event.mentions[Object.keys(event.mentions)[0]].replace('@', ''),
-            uid: Object.keys(event.mentions)[0],
-        };
+        mentionedUser = Object.keys(event.mentions)[0];
     } else if (event.messageReply && event.messageReply.senderID) {
-        targetUser = {
-            name: event.messageReply.senderID, // Replace with real name logic if necessary
-            uid: event.messageReply.senderID,
-        };
+        mentionedUser = event.messageReply.senderID;
     } else {
-        return api.sendMessage('Please mention or reply to someone to hack!', event.threadID, event.messageID);
+        return api.sendMessage('Please mention or reply to a user’s message to use this command.', event.threadID, event.messageID);
     }
 
-    // Hack API URL
-    const apiUrl = `https://api-canvass.vercel.app/hack?name=${encodeURIComponent(targetUser.name)}&uid=${targetUser.uid}`;
-
-    // Sending an initial message
-    api.sendMessage(`Hacking ${targetUser.name}... Please wait!`, event.threadID, () => {}, event.messageID);
-
     try {
-        const response = await axios.get(apiUrl);
+        const userInfo = await api.getUserInfo(mentionedUser);
+        const userName = userInfo[mentionedUser].name;
+        const apiUrl = `https://api-canvass.vercel.app/hack?name=${encodeURIComponent(userName)}&uid=${mentionedUser}`;
 
-        // Simulate a result message with data from the API
-        api.sendMessage(
-            `Successfully hacked ${targetUser.name}! 🎉\n\nHacked Info:\n${response.data}`, 
-            event.threadID, 
-            event.messageID
-        );
+        const cacheDir = path.join(__dirname, 'cache');
+        if (!fs.existsSync(cacheDir)) {
+            fs.mkdirSync(cacheDir);
+        }
+
+        const fileName = `hack_${Date.now()}.png`;
+        const filePath = path.join(cacheDir, fileName);
+        const response = await axios({
+            method: 'GET',
+            url: apiUrl,
+            responseType: 'stream',
+        });
+
+        const writer = fs.createWriteStream(filePath);
+        response.data.pipe(writer);
+
+        writer.on('finish', async () => {
+            // Send the fake hack screen in the chat
+            await api.sendMessage({
+                body: `🚨 Hacked ${userName}! 🚨`,
+                attachment: fs.createReadStream(filePath)
+            }, event.threadID, event.messageID);
+
+            // Delete the file after sending
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.error('Error deleting file:', err);
+                }
+            });
+        });
+
+        writer.on('error', () => {
+            api.sendMessage('There was an error creating the fake hack image. Please try again later.', event.threadID, event.messageID);
+            // Ensure file cleanup even on error
+            fs.unlink(filePath, (err) => {
+                if (err) console.error('Error deleting file:', err);
+            });
+        });
     } catch (error) {
-        console.error('Error with hack API:', error);
-        api.sendMessage('Failed to hack the user. Please try again later.', event.threadID, event.messageID);
+        console.error('Error fetching fake hack image:', error);
+        api.sendMessage('An error occurred while generating the fake hack image. Please try again later.', event.threadID, event.messageID);
     }
 };
