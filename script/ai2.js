@@ -6,56 +6,29 @@ module.exports.config = {
     role: 0,
     hasPrefix: false,
     aliases: ['ai2'],
-    description: 'Interact with the Hercai AI',
-    usage: 'ai2 [question]',
+    description: 'Get a response from GPT-4v2',
+    usage: 'ai2 [your message]',
     credits: 'churchill',
     cooldown: 3,
 };
 
 module.exports.run = async function({ api, event, args }) {
-    const question = args.join(' ');
-    const userId = event.senderID;
+    const userQuery = args.join(' ');
 
-    if (!question) {
-        return api.sendMessage('Please provide a question, for example: ai2 what is love?', event.threadID, event.messageID);
+    if (!userQuery) {
+        return api.sendMessage('Please provide a prompt, for example: ai2 What is the meaning of life?', event.threadID, event.messageID);
     }
 
-    const initialMessage = await new Promise((resolve, reject) => {
-        api.sendMessage({
-            body: '🤖 Ai answering...',
-        }, event.threadID, (err, info) => {
-            if (err) return reject(err);
-            resolve(info);
-        }, event.messageID);
-    });
+    const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4o-freev2?ask=${encodeURIComponent(userQuery)}`;
 
     try {
-        const userInfo = await api.getUserInfo(userId);
-        const userName = userInfo[userId].name;
+        const response = await axios.get(apiUrl);
+        const gpt4Response = response.data.message || 'No response from GPT-4v2.';
 
-        const response = await axios.get('https://hercai.onrender.com/v3/hercai', {
-            params: { question }
-        });
-        const aiResponse = response.data;
-        const responseString = aiResponse.reply ? aiResponse.reply : 'No result found.';
-
-        const formattedResponse = `
-🤖 Hercai AI
-━━━━━━━━━━━━━━━━━━
-${responseString}
-━━━━━━━━━━━━━━━━━━
-👤 Asked by: ${userName}
-        `;
-
-        await api.unsendMessage(initialMessage.messageID);
-
-        await api.sendMessage(formattedResponse.trim(), event.threadID, event.messageID);
+        await api.sendMessage(gpt4Response, event.threadID, event.messageID);
 
     } catch (error) {
         console.error('Error:', error);
-        
-        await api.unsendMessage(initialMessage.messageID);
-
-        await api.sendMessage('An error occurred, please try again later.', event.threadID, event.messageID);
+        await api.sendMessage('An error occurred while fetching the response. Please try again later.', event.threadID, event.messageID);
     }
 };
