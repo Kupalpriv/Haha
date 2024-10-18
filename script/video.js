@@ -27,7 +27,7 @@ module.exports.run = async function ({ api, args, event }) {
 
     api.setMessageReaction("🕥", event.messageID, (err) => {}, true);
 
-    const response = await axios.get(`https://yt-video-production.up.railway.app/yt?search=${encodeURIComponent(searchQuery)}`);
+    const response = await axios.get(`https://betadash-search-download.vercel.app/video?search=${encodeURIComponent(searchQuery)}`);
 
     const data = response.data;
     const videoUrl = data.downloadUrl;
