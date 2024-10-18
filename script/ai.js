@@ -32,11 +32,11 @@ module.exports.run = async function({ api, event, args }) {
         }, event.messageID);
     });
 
-    const apiUrl = `https://markdevs69v2-679r.onrender.com/new/gpt4?query=${encodeURIComponent(chilli)}`;
+    const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4o-mini?ask=${encodeURIComponent(chilli)}`;
 
     try {
         const response = await axios.get(apiUrl);
-        const gpt4Response = response.data.respond || 'No response from GPT-4.';
+        const gpt4Response = response.data.message || 'No response from GPT-4.';
 
         const formattedResponse = 
 `🧩 | Chilli Gpt
@@ -49,6 +49,6 @@ ${gpt4Response}
 
     } catch (error) {
         console.error('Error:', error);
-        await api.editMessage('An error occurred. Please try again later or use ai2.', pangit.messageID);
+        await api.editMessage('An error occurred. Please try again later or use gpt4o.', pangit.messageID);
     }
 };
