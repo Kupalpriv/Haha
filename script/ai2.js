@@ -28,11 +28,11 @@ module.exports.run = async function({ api, event, args }) {
         }, event.messageID);
     });
 
-    const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4o-freev2?ask=${encodeURIComponent(chilli)}`;
+    const apiUrl = `https://appjonellccapis.zapto.org/api/gpt4o-v2?prompt=${encodeURIComponent(chilli)}`;
 
     try {
         const response = await axios.get(apiUrl);
-        const gpt4Response = response.data.message || 'No response from GPT-4v2.';
+        const gpt4Response = response.data.response || 'No response from GPT-4v2.';
 
         await api.editMessage(gpt4Response, pogi.messageID);
 
