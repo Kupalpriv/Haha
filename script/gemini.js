@@ -20,7 +20,7 @@ module.exports.run = async function({ api, event, args }) {
         return api.sendMessage('Please provide a prompt or attach a photo for Gemini to analyze.', event.threadID, event.messageID);
     }
 
-    let apiUrl = 'https://deku-rest-apis.ooguy.com/gemini?';
+    let apiUrl = 'https://joshweb.click/gemini?';
 
     if (attachment && attachment.type === 'photo') {
         const prompt = customPrompt || 'describe this photo';
