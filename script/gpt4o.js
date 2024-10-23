@@ -39,7 +39,7 @@ module.exports.run = async function({ api, event, args }) {
         }, event.messageID);
     });
 
-    const apiUrl = `https://deku-rest-apis.ooguy.com/api/gpt-4o?q=${encodeURIComponent(chilli)}&uid=1`;
+    const apiUrl = `https://joshweb.click/api/gpt-4o?q=${encodeURIComponent(chilli)}&uid=1`;
 
     try {
         const hot = await axios.get(apiUrl);
