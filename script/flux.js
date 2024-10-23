@@ -37,7 +37,7 @@ module.exports.run = async function({ api, event, args }) {
 
     const prompt = args.join(' ');
 
-    const apiUrl = `https://deku-rest-apis.ooguy.com/api/flux?prompt=${encodeURIComponent(prompt)}&model=${model}`;
+    const apiUrl = `https://joshweb.click/api/flux?prompt=${encodeURIComponent(prompt)}&model=${model}`;
 
     api.sendMessage('Generating image... Please wait.', event.threadID, () => {}, event.messageID);
 
