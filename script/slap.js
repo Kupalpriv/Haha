@@ -34,7 +34,7 @@ module.exports.run = async function({ api, event, args }) {
     const senderName = (await api.getUserInfo(userID))[userID].name;
     const targetName = (await api.getUserInfo(targetID))[targetID].name;
 
-    const imageUrl = `https://deku-rest-apis.ooguy.com/canvas/slap?uid=${userID}&uid2=${targetID}`;
+    const imageUrl = `https://joshweb.click/canvas/slap?uid=${userID}&uid2=${targetID}`;
     const filePath = path.resolve(__dirname, 'slap.png');
 
     try {
