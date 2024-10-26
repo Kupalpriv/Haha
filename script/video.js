@@ -26,8 +26,15 @@ module.exports.run = async function({ api, event, args }) {
 
     try {
         // Send "searching" message
-        const searchingMessage = await api.sendMessage(`🔍 Searching video: ${searchTerm}`, event.threadID);
+        const searchingMessage = await api.sendMessage(`🔍 Searching for video: ${searchTerm}`, event.threadID);
         searchingMessageID = searchingMessage.messageID;
+
+        // Unsend "searching" message after 5 seconds
+        setTimeout(() => {
+            if (searchingMessageID) {
+                api.unsendMessage(searchingMessageID);
+            }
+        }, 5000);
 
         const response = await axios.get(apiUrl);
         const { title, downloadUrl } = response.data;
@@ -53,13 +60,7 @@ module.exports.run = async function({ api, event, args }) {
                 attachment: fs.createReadStream(filePath),
             },
             event.threadID,
-            event.messageID,
-            () => {
-                // Unsend the "searching" message after sending the video
-                if (searchingMessageID) {
-                    api.unsendMessage(searchingMessageID);
-                }
-            }
+            event.messageID
         );
 
         fs.unlinkSync(filePath);
