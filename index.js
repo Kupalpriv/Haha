@@ -207,139 +207,48 @@ app.post('/login', async (req, res) => {
 		prefix,
 		admin
 	} = req.body;
-const fs = require('fs');
-const path = require('path');
-const login = require('./fb-chat-api/index');
-const express = require('express');
-const app = express();
-const chalk = require('chalk');
-const bodyParser = require('body-parser');
-const axios = require('axios');
-const script = path.join(__dirname, 'script');
-const moment = require("moment-timezone");
-const cron = require('node-cron');
-const config = fs.existsSync('./data') && fs.existsSync('./data/config.json') ? JSON.parse(fs.readFileSync('./data/config.json', 'utf8')) : createConfig();
-const Utils = {
-  commands: new Map(),
-  handleEvent: new Map(),
-  account: new Map(),
-  ObjectReply: new Map(),
-  handleReply: [],
-  cooldowns: new Map(),
-};
-
-fs.readdirSync(script).forEach((file) => {
-  const scripts = path.join(script, file);
-  const stats = fs.statSync(scripts);
-  if (stats.isDirectory()) {
-    fs.readdirSync(scripts).forEach((file) => {
-      try {
-        const { config, run, handleEvent, handleReply } = require(path.join(scripts, file));
-        if (config) {
-          const { name = [], role = '0', version = '1.0.0', hasPrefix = true, aliases = [], description = '', usage = '', credits = '', cooldown = '5' } =
-            Object.fromEntries(Object.entries(config).map(([key, value]) => [key.toLowerCase(), value]));
-          aliases.push(name);
-          if (run) {
-            Utils.commands.set(aliases, { name, role, run, aliases, description, usage, version, hasPrefix, credits, cooldown });
-          }
-          if (handleEvent) {
-            Utils.handleEvent.set(aliases, { name, handleEvent, role, description, usage, version, hasPrefix, credits, cooldown });
-          }
-          if (handleReply) {
-            Utils.ObjectReply.set(aliases, { name, handleReply });
-          }
-        }
-      } catch (error) {
-        console.error(chalk.red(`Error installing command from file ${file}: ${error.message}`));
-      }
-    });
-  } else {
-    try {
-      const { config, run, handleEvent, handleReply } = require(scripts);
-      if (config) {
-        const { name = [], role = '0', version = '1.0.0', hasPrefix = true, aliases = [], description = '', usage = '', credits = '', cooldown = '5' } =
-          Object.fromEntries(Object.entries(config).map(([key, value]) => [key.toLowerCase(), value]));
-        aliases.push(name);
-        if (run) {
-          Utils.commands.set(aliases, { name, role, run, aliases, description, usage, version, hasPrefix, credits, cooldown });
-        }
-        if (handleEvent) {
-          Utils.handleEvent.set(aliases, { name, handleEvent, role, description, usage, version, hasPrefix, credits, cooldown });
-        }
-        if (handleReply) {
-          Utils.ObjectReply.set(aliases, { name, handleReply });
-        }
-      }
-    } catch (error) {
-      console.error(chalk.red(`Error installing command from file ${file}: ${error.message}`));
-    }
-  }
+	try {
+		if (!state) {
+			throw new Error('Missing app state data');
+		}
+		const cUser = state.find(item => item.key === 'c_user');
+		if (cUser) {
+			const existingUser = Utils.account.get(cUser.value);
+			if (existingUser) {
+				console.log(`User ${cUser.value} is already logged in`);
+				return res.status(400).json({
+					error: false,
+					message: "Active user session detected; already logged in",
+					user: existingUser
+				});
+			} else {
+				try {
+					await accountLogin(state, commands, prefix, [admin]);
+					res.status(200).json({
+						success: true,
+						message: 'Authentication process completed successfully; login achieved.'
+					});
+				} catch (error) {
+					console.error(error);
+					res.status(400).json({
+						error: true,
+						message: error.message
+					});
+				}
+			}
+		} else {
+			return res.status(400).json({
+				error: true,
+				message: "There's an issue with the appstate data; it's invalid."
+			});
+		}
+	} catch (error) {
+		return res.status(400).json({
+			error: true,
+			message: "There's an issue with the appstate data; it's invalid."
+		});
+	}
 });
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.json());
-app.use(express.json());
-
-const routes = [
-  { path: '/', file: 'index.html' },
-  { path: '/step_by_step_guide', file: 'guide.html' },
-  { path: '/online_user', file: 'online.html' },
-  { path: '/contact', file: 'contact.html' },
-  { path: '/developer', file: 'developer.html' },
-];
-
-routes.forEach(route => {
-  app.get(route.path, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', route.file));
-  });
-});
-
-app.get('/info', (req, res) => {
-  const data = Array.from(Utils.account.values()).map(account => ({
-    name: account.name,
-    profileUrl: account.profileUrl,
-    thumbSrc: account.thumbSrc,
-    time: account.time
-  }));
-  res.json(JSON.parse(JSON.stringify(data, null, 2)));
-});
-
-app.get('/commands', (req, res) => {
-  const command = new Set();
-  const commands = [...Utils.commands.values()].map(({ name }) => (command.add(name), name));
-  const handleEvent = [...Utils.handleEvent.values()].map(({ name }) => command.has(name) ? null : (command.add(name), name)).filter(Boolean);
-  const role = [...Utils.commands.values()].map(({ role }) => (command.add(role), role));
-  const aliases = [...Utils.commands.values()].map(({ aliases }) => (command.add(aliases), aliases));
-  res.json(JSON.parse(JSON.stringify({ commands, handleEvent, role, aliases }, null, 2)));
-});
-
-app.post('/login', async (req, res) => {
-  const { state, commands, prefix, admin } = req.body;
-  try {
-    if (!state) throw new Error('Missing app state data');
-    const cUser = state.find(item => item.key === 'c_user');
-    if (cUser) {
-      const existingUser = Utils.account.get(cUser.value);
-      if (existingUser) {
-        console.log(`User ${cUser.value} is already logged in`);
-        return res.status(400).json({ error: false, message: "Active user session detected; already logged in", user: existingUser });
-      } else {
-        try {
-          await accountLogin(state, commands, prefix, [admin]);
-          res.status(200).json({ success: true, message: 'Authentication process completed successfully; login achieved.' });
-        } catch (error) {
-          console.error(error);
-          res.status(400).json({ error: true, message: error.message });
-        }
-      }
-    } else {
-      return res.status(400).json({ error: true, message: "There's an issue with the appstate data; it's invalid." });
-    }
-  } catch (error) {
-    return res.status(400).json({ error: true, message: "There's an issue with the appstate data; it's invalid." });
-  }
-});
-
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
 	console.log(`
