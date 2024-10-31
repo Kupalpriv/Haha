@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { markApi } = require('../api'); 
 
 module.exports.config = {
     name: 'ashley',
@@ -20,6 +21,7 @@ module.exports.run = async function({ api, event, args }) {
         return api.sendMessage('Please provide a prompt, for example: ashley How are you?', event.threadID, event.messageID);
     }
 
+    // Send a typing indicator
     const pangit = await new Promise((resolve, reject) => {
         api.sendMessage('⏳ Ashley is typing, please wait...', event.threadID, (err, info) => {
             if (err) return reject(err);
@@ -27,7 +29,7 @@ module.exports.run = async function({ api, event, args }) {
         }, event.messageID);
     });
 
-    const apiUrl = `https://markdevs-last-api-t48o.onrender.com/api/ashley?query=${encodeURIComponent(chilli)}`;
+    const apiUrl = `${markApi}/new/api/ashley?query=${encodeURIComponent(chilli)}`;
 
     try {
         const response = await axios.get(apiUrl);
@@ -46,7 +48,6 @@ ${ashleyResponse}
 
     } catch (maasim) {
         console.error('Error:', maasim);
-
         await api.editMessage('❌ An error occurred. Please try again later.', pangit.messageID);
     }
 };
