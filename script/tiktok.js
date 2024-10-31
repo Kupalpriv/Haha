@@ -2,7 +2,7 @@ module.exports.config = {
 	name: "tiktok",
 	version: "1.0.0",
 	role: 0,
-	credits: "Jonell Magallanes", //original code Kim Joseph DG Bien
+	credits: "Jonell Magallanes", 
 	description: "tiktok search",
 	hasPrefix: false,
 	aliases: ["tik"],
@@ -25,7 +25,7 @@ module.exports.run = async function({ api, event, args }) {
 
 		api.sendMessage("🤳 | Searching, please wait...", event.threadID);
 
-		const response = await axios.get(`${markApi}/new/api/tiksearch?search=${encodeURIComponent(searchQuery)}`);
+		const response = await axios.get(`${markApi}/api/tiksearch?search=${encodeURIComponent(searchQuery)}`);
 
 		const videos = response.data.data.videos;
 
