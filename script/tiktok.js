@@ -13,6 +13,7 @@ module.exports.config = {
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const { markApi } = require('../api'); 
 
 module.exports.run = async function({ api, event, args }) {
 	try {
@@ -24,7 +25,7 @@ module.exports.run = async function({ api, event, args }) {
 
 		api.sendMessage("🤳 | Searching, please wait...", event.threadID);
 
-		const response = await axios.get(`https://markdevs69v2-679r.onrender.com/new/api/tiksearch?search=${encodeURIComponent(searchQuery)}`);
+		const response = await axios.get(`${markApi}/new/api/tiksearch?search=${encodeURIComponent(searchQuery)}`);
 
 		const videos = response.data.data.videos;
 
