@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { jonel } = require('../api'); 
 
 module.exports.config = {
     name: 'ai',
@@ -32,11 +33,11 @@ module.exports.run = async function({ api, event, args }) {
         }, event.messageID);
     });
 
-    const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4o-mini?ask=${encodeURIComponent(chilli)}`;
+    const apiUrl = `${jonel}/api/gpt4o?ask=${encodeURIComponent(chilli)}&id=1`;
 
     try {
         const response = await axios.get(apiUrl);
-        const gpt4Response = response.data.message || 'No response from GPT-4.';
+        const gpt4Response = response.data.response || 'No response from GPT-4.';
 
         const formattedResponse = 
 `🧩 | Chilli Gpt
