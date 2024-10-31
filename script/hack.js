@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const { canvas } = require('../api'); 
 
 module.exports.config = {
     name: 'hack',
@@ -28,7 +29,7 @@ module.exports.run = async function({ api, event, args }) {
     try {
         const userInfo = await api.getUserInfo(mentionedUser);
         const userName = userInfo[mentionedUser].name;
-        const apiUrl = `https://api-canvass.vercel.app/hack?name=${encodeURIComponent(userName)}&uid=${mentionedUser}`;
+        const apiUrl = `${canvas}/hack?name=${encodeURIComponent(userName)}&uid=${mentionedUser}`;
 
         const cacheDir = path.join(__dirname, 'cache');
         if (!fs.existsSync(cacheDir)) {
