@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const { josh } = require('../api'); 
 
 module.exports.config = {
     name: 'slap',
@@ -34,7 +35,7 @@ module.exports.run = async function({ api, event, args }) {
     const senderName = (await api.getUserInfo(userID))[userID].name;
     const targetName = (await api.getUserInfo(targetID))[targetID].name;
 
-    const imageUrl = `https://joshweb.click/canvas/slap?uid=${userID}&uid2=${targetID}`;
+    const imageUrl = `${josh}/canvas/slap?uid=${userID}&uid2=${targetID}`;
     const filePath = path.resolve(__dirname, 'slap.png');
 
     try {
