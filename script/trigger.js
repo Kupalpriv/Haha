@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const { josh } = require('../api'); 
 
 module.exports.config = {
     name: 'trigger',
@@ -28,7 +29,7 @@ module.exports.run = async function({ api, event, args }) {
         userId = event.senderID;
     }
 
-    const apiUrl = `https://joshweb.click/canvas/trigger?uid=${userId}`;
+    const apiUrl = `${josh}/canvas/trigger?uid=${userId}`;
 
     try {
         const response = await axios({
