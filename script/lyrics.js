@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { markApi } = require('../api'); 
 
 module.exports.config = {
     name: "lyrics",
@@ -24,7 +25,7 @@ module.exports.run = async function ({ api, event, args }) {
             }
 
             try {
-                const response = await axios.get(`https://markdevs-last-api-2epw.onrender.com/search/lyrics?q=${encodeURIComponent(query)}`);
+                const response = await axios.get(`${markApi}/search/lyrics?q=${encodeURIComponent(query)}`);
                 const { lyrics, title, artist, image } = response.data.result;
 
                 if (!lyrics || !title || !artist || !image) {
