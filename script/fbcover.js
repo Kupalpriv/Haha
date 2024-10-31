@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const { josh } = require('../api'); 
 
 module.exports.config = {
     name: 'fbcover',
@@ -22,7 +23,7 @@ module.exports.run = async function({ api, event, args }) {
     }
 
     const [name, subname, sdt, address, email, color] = input;
-    const apiUrl = `https://joshweb.click/canvas/fbcover?name=${encodeURIComponent(name)}&subname=${encodeURIComponent(subname)}&sdt=${encodeURIComponent(sdt)}&address=${encodeURIComponent(address)}&email=${encodeURIComponent(email)}&uid=${event.senderID}&color=${encodeURIComponent(color)}`;
+    const apiUrl = `${josh}/canvas/fbcover?name=${encodeURIComponent(name)}&subname=${encodeURIComponent(subname)}&sdt=${encodeURIComponent(sdt)}&address=${encodeURIComponent(address)}&email=${encodeURIComponent(email)}&uid=${event.senderID}&color=${encodeURIComponent(color)}`;
 
     try {
         const response = await axios({
