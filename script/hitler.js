@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const { josh } = require('../api'); 
 
 module.exports.config = {
   name: 'hitler',
@@ -25,7 +26,7 @@ module.exports.run = async function({ api, event, args }) {
 
   const uid = mention || replyMessage.senderID || event.senderID; // Use mentioned user ID, reply sender ID, or sender ID
 
-  const apiUrl = `https://joshweb.click/canvas/hitler?uid=${uid}`;
+  const apiUrl = `${josh}/canvas/hitler?uid=${uid}`;
   
   try {
     const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
