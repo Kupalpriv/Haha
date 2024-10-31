@@ -13,6 +13,7 @@ module.exports.config = {
 const chilli = require("axios");
 const pogi = require("fs");
 const pangit = require("path");
+const { josh } = require('../api'); 
 
 module.exports.run = async function({ api, event, args }) {
     try {
@@ -24,7 +25,7 @@ module.exports.run = async function({ api, event, args }) {
 
         api.sendMessage("🤖 | Synthesizing voice, please wait...", event.threadID);
 
-        const response = await chilli.get(`https://joshweb.click/new/voicevox-synthesis?id=1&text=${encodeURIComponent(cutemochill)}`, {
+        const response = await chilli.get(`${josh}/new/voicevox-synthesis?id=1&text=${encodeURIComponent(cutemochill)}`, {
             responseType: 'arraybuffer'
         });
 
