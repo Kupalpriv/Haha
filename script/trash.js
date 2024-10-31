@@ -1,6 +1,7 @@
 const axios = require("axios");
 const fs = require('fs');
 const path = require('path');
+const { josh } = require('../api'); 
 
 module.exports.config = {
     name: "trash",
@@ -39,7 +40,7 @@ module.exports.run = async function({ api, event }) {
     });
 
     try {
-        const apiUrl = `https://joshweb.click/canvas/delete?uid=${chilli}`;
+        const apiUrl = `${josh}/canvas/delete?uid=${chilli}`;
         const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
 
         const imagePath = path.join(__dirname, 'trash.jpg');
