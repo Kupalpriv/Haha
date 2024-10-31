@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { josh } = require('../api'); 
 
 module.exports.config = {
     name: 'codegpt',
@@ -19,7 +20,7 @@ module.exports.run = async function({ api, event, args }) {
         return api.sendMessage('Palihug og provide og code-related nga pangutana.', event.threadID, event.messageID);
     }
 
-    const chilliHotUrl = `https://deku-rest-apis.ooguy.com/api/codegpt?type=code&lang=nodejs&q=${encodeURIComponent(pangutana)}`;
+    const chilliHotUrl = `${josh}/api/codegpt?type=code&lang=nodejs&q=${encodeURIComponent(pangutana)}`;
 
     const bayotMessage = await new Promise((resolve, reject) => {  
         api.sendMessage({
