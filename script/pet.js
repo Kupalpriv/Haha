@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const { canvas } = require('../api'); 
 
 module.exports.config = {
     name: 'pet',
@@ -30,7 +31,7 @@ module.exports.run = async function({ api, event, args }) {
         return api.sendMessage(`You can't pet my sensei! 😎`, event.threadID, event.messageID);
     }
 
-    const apiUrl = `https://api-canvass.vercel.app/pet?userid=${mentionedUser}`;
+    const apiUrl = `${canvas}/pet?userid=${mentionedUser}`;
 
     try {
         const response = await axios({
