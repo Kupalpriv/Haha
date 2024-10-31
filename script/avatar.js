@@ -13,6 +13,7 @@ module.exports.config = {
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const { josh } = require('../api'); 
 
 module.exports.run = async function({ api, event, args }) {
     try {
@@ -23,7 +24,7 @@ module.exports.run = async function({ api, event, args }) {
             return api.sendMessage("Please provide all required parameters: id-1to800 | bgtext | signature | color.", event.threadID);
         }
 
-        const apiUrl = `https://joshweb.click/canvas/avatarv2?id=${encodeURIComponent(id)}&bgtext=${encodeURIComponent(bgtext)}&signature=${encodeURIComponent(signature)}&color=${encodeURIComponent(color)}`;
+        const apiUrl = `${josh}canvas/avatarv2?id=${encodeURIComponent(id)}&bgtext=${encodeURIComponent(bgtext)}&signature=${encodeURIComponent(signature)}&color=${encodeURIComponent(color)}`;
 
         api.sendMessage("Generating avatar, please wait...", event.threadID);
 
