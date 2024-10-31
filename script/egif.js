@@ -1,6 +1,7 @@
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const { josh } = require('../api'); 
 
 module.exports.config = {
     name: "egif",
@@ -27,7 +28,7 @@ module.exports.run = async function ({ api, event, args }) {
             }
 
             try {
-                const response = await axios.get(`https://joshweb.click/emoji2gif`, {
+                const response = await axios.get(`${josh}/emoji2gif`, {
                     params: { q: emoji },
                     responseType: 'arraybuffer'
                 });
