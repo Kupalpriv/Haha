@@ -1,6 +1,7 @@
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const { josh } = require('../api'); 
 
 module.exports.config = {
     name: "dalle",
@@ -26,7 +27,7 @@ module.exports.run = async function ({ api, event, args }) {
             }
 
             try {
-                const pogi = await axios.get(`https://deku-rest-apis.ooguy.com/dalle?prompt=${encodeURIComponent(chilli)}`, { responseType: 'arraybuffer' });
+                const pogi = await axios.get(`${josh}/dalle?prompt=${encodeURIComponent(chilli)}`, { responseType: 'arraybuffer' });
                 const imagePath = path.join(__dirname, "dalle_image.png");
                 
                 fs.writeFileSync(imagePath, pogi.data);
