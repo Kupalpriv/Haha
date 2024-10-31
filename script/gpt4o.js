@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { josh } = require('../api'); 
 
 const gothicFont = {
   A: "𝖠", B: "𝖡", C: "𝖢", D: "𝖣", E: "𝖤", F: "𝖥", G: "𝖦", H: "𝖧", I: "𝖨", J: "𝖩", K: "𝖪", L: "𝖫", M: "𝖬", N: "𝖭", O: "𝖮", P: "𝖯", Q: "𝖰", R: "𝖱",
@@ -39,7 +40,7 @@ module.exports.run = async function({ api, event, args }) {
         }, event.messageID);
     });
 
-    const apiUrl = `https://joshweb.click/api/gpt-4o?q=${encodeURIComponent(chilli)}&uid=1`;
+    const apiUrl = `${josh}/api/gpt-4o?q=${encodeURIComponent(chilli)}&uid=1`;
 
     try {
         const hot = await axios.get(apiUrl);
