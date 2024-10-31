@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { josh } = require('../api'); 
 
 module.exports.config = {
     name: 'gemini',
@@ -20,7 +21,7 @@ module.exports.run = async function({ api, event, args }) {
         return api.sendMessage('Please provide a prompt or attach a photo for Gemini to analyze.', event.threadID, event.messageID);
     }
 
-    let apiUrl = 'https://joshweb.click/gemini?';
+    let apiUrl = '${josh}/gemini?';
 
     if (attachment && attachment.type === 'photo') {
         const prompt = customPrompt || 'describe this photo';
