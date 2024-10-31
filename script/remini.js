@@ -1,5 +1,6 @@
 const axios = require('axios');
 const fs = require('fs-extra');
+const { markApi } = require('../api'); 
 
 module.exports.config = {
   name: "remini",
@@ -19,7 +20,7 @@ module.exports.run = async ({ api, event, args }) => {
 
   try {
     api.sendMessage("Generating...", threadID, messageID);
-    const response = await axios.get(`https://markdevs69v2-679r.onrender.com/new/api/remini?inputImage=${encodeURIComponent(mark)}`);
+    const response = await axios.get(`${markApi}/new/api/remini?inputImage=${encodeURIComponent(mark)}`);
     const processedImageURL = response.data.image_data;
 
     const img = (await axios.get(processedImageURL, { responseType: "arraybuffer"})).data;
