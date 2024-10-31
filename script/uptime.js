@@ -3,6 +3,7 @@ const bingchilling = require('pidusage');
 const chungkilss = require('axios');
 const pogi = require('fs');
 const churchillitos = require('path');
+const { josh } = require('../api'); 
 
 module.exports.config = {
     name: "uptime",
@@ -44,7 +45,7 @@ module.exports.run = async ({ api, event }) => {
 
     const botName = "chilli bot"; // Set the bot name here
 
-    const apiUrl = `https://joshweb.click/canvas/uptime2?hours=${hours}&minutes=${mins}&seconds=${seconds}&botname=${botName}`;
+    const apiUrl = `${josh}/canvas/uptime2?hours=${hours}&minutes=${mins}&seconds=${seconds}&botname=${botName}`;
 
     const timeStart = Date.now();
     const returnResult = `BOT has been working for ${hours} hour(s) ${mins} minute(s) ${seconds} second(s).\n\n❖ Cpu usage: ${usage.cpu.toFixed(1)}%\n❖ RAM usage: ${byte2mb(usage.memory)}\n❖ Cores: ${chilli.cpus().length}\n❖ Ping: ${Date.now() - timeStart}ms\n❖ Operating System Platform: ${osInfo.platform}\n❖ System CPU Architecture: ${osInfo.architecture}`;
