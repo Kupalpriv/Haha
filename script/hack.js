@@ -1,7 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
-const { canvas } = require('../api'); 
+const { canvas } = require('../api');
 
 module.exports.config = {
     name: 'hack',
@@ -36,8 +36,9 @@ module.exports.run = async function({ api, event, args }) {
             fs.mkdirSync(cacheDir);
         }
 
-        const fileName = `hack_${Date.now()}.png`;
+        const fileName = `hack_${Date.now()}.jpeg`; // Changed to JPEG
         const filePath = path.join(cacheDir, fileName);
+
         const response = await axios({
             method: 'GET',
             url: apiUrl,
@@ -48,7 +49,6 @@ module.exports.run = async function({ api, event, args }) {
         response.data.pipe(writer);
 
         writer.on('finish', async () => {
-            // Send the fake hack screen in the chat
             await api.sendMessage({
                 body: `🚨 Hacked ${userName}! 🚨`,
                 attachment: fs.createReadStream(filePath)
@@ -62,11 +62,12 @@ module.exports.run = async function({ api, event, args }) {
             });
         });
 
-        writer.on('error', () => {
+        writer.on('error', (err) => {
+            console.error('File writing error:', err);
             api.sendMessage('There was an error creating the fake hack image. Please try again later.', event.threadID, event.messageID);
-            // Ensure file cleanup even on error
+            // Ensure file cleanup on error
             fs.unlink(filePath, (err) => {
-                if (err) console.error('Error deleting file:', err);
+                if (err) console.error('Error deleting file after error:', err);
             });
         });
     } catch (error) {
