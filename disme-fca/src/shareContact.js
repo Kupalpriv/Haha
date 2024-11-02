@@ -1,19 +1,10 @@
 "use strict";
 
-
 var utils = require("../utils");
-
 var log = require("npmlog");
-
 
 module.exports = function (defaultFuncs, api, ctx) {
 	return async function shareContact(text, senderID, threadID, callback) {
-await utils.parseAndCheckLogin(ctx, defaultFuncs);
-        const mqttClient = ctx.mqttClient;
-
-        if (!mqttClient) {
-            throw new Error("Not connected to MQTT");
-        }
 		var resolveFunc = function () { };
 		var rejectFunc = function () { };
 		var returnPromise = new Promise(function (resolve, reject) {
@@ -48,7 +39,7 @@ await utils.parseAndCheckLogin(ctx, defaultFuncs);
 						"request_id": ++count_req,
 						"type": 3
 				});
-		mqttClient.publish('/ls_req',form)
+		ctx.mqttClient.publish('/ls_req',form)
 
 		return returnPromise;
 	};
