@@ -18,6 +18,7 @@ const Utils = new Object({
   handleReply: [],
 	cooldowns: new Map(),
 });
+
 fs.readdirSync(script).forEach((file) => {
 	const scripts = path.join(script, file);
 	const stats = fs.statSync(scripts);
@@ -63,12 +64,12 @@ fs.readdirSync(script).forEach((file) => {
 						});
 					}
 					if (handleReply) {
-							Utils.ObjectReply.set(aliases, {
-								name,
-								handleReply,
-							});
-						}
+						Utils.ObjectReply.set(aliases, {
+							name,
+							handleReply,
+						});
 					}
+				}
 			} catch (error) {
 				console.error(chalk.red(`Error installing command from file ${file}: ${error.message}`));
 			}
@@ -114,20 +115,22 @@ fs.readdirSync(script).forEach((file) => {
 					});
 				}
 				if (handleReply) {
-						Utils.ObjectReply.set(aliases, {
-							name,
-							handleReply,
-						});
-					}
+					Utils.ObjectReply.set(aliases, {
+						name,
+						handleReply,
+					});
 				}
+			}
 		} catch (error) {
 			console.error(chalk.red(`Error installing command from file ${file}: ${error.message}`));
 		}
 	}
 });
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(express.json());
+
 const routes = [{
 	path: '/',
 	file: 'index.html'
@@ -137,34 +140,14 @@ const routes = [{
 }, {
 	path: '/online_user',
 	file: 'online.html'
-},{
+}, {
 	path: '/contact',
 	file: 'contact.html'
-},{
-	path: '/random_shoti',
-	file: 'shoti.html'
 }, {
-	path: '/analog',
-	file: 'analog.html'
-}, {
-	path: '/clock',
-	file: 'clock.html'
-},{
-	path: '/time',
-	file: 'crazy.html'
-},{
 	path: '/developer',
 	file: 'developer.html'
-},{
-	path: '/random',
-	file: 'random.html'
-},{
-	path: '/spotify',
-	file: 'spotify.html'
-},{
-  path: '/allinone',
-	file: 'allinone.html'
-}, ];
+}];
+
 routes.forEach(route => {
 	app.get(route.path, (req, res) => {
 		res.sendFile(path.join(__dirname, 'public', route.file));
