@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { josh } = require('../api'); 
+const { josh } = require('../api');
 
 module.exports.config = {
     name: 'gemini',
@@ -21,7 +21,7 @@ module.exports.run = async function({ api, event, args }) {
         return api.sendMessage('Please provide a prompt or attach a photo for Gemini to analyze.', event.threadID, event.messageID);
     }
 
-    let apiUrl = '${josh}/gemini?';
+    let apiUrl = `${josh}/gemini?`;
 
     if (attachment && attachment.type === 'photo') {
         const prompt = customPrompt || 'describe this photo';
@@ -32,10 +32,7 @@ module.exports.run = async function({ api, event, args }) {
     }
 
     const initialMessage = await new Promise((resolve, reject) => {
-        api.sendMessage({
-            body: '🔍 Processing your request...',
-            mentions: [{ tag: event.senderID, id: event.senderID }],
-        }, event.threadID, (err, info) => {
+        api.sendMessage('🔍 Processing your request...', event.threadID, (err, info) => {
             if (err) return reject(err);
             resolve(info);
         }, event.messageID);
