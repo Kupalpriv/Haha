@@ -1,6 +1,8 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const { kenlie, neth } = require('../api'); 
+
 
 module.exports.config = {
     name: 'video',
@@ -20,7 +22,7 @@ module.exports.run = async function({ api, event, args }) {
     }
 
     const searchTerm = args.join(' ');
-    const searchApiUrl = `https://nethwieginedev.vercel.app/api/ytsearch2?name=${encodeURIComponent(searchTerm)}`;
+    const searchApiUrl = `${neth}/api/ytsearch2?name=${encodeURIComponent(searchTerm)}`;
 
     let searchingMessageID;
 
@@ -38,7 +40,7 @@ module.exports.run = async function({ api, event, args }) {
         const videoData = searchResponse.data.result[0];
         const { title, url } = videoData;
 
-        const convertApiUrl = `https://apiv2.kenliejugarap.com/video?url=${encodeURIComponent(url)}`;
+        const convertApiUrl = `${kenlie}/video?url=${encodeURIComponent(url)}`;
         const convertResponse = await axios.get(convertApiUrl);
         const downloadUrl = convertResponse.data.response;
 
