@@ -1,7 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
-const { kenlie, neth } = require('../api'); 
+const { neth, kenlie } = require('../api');
 
 module.exports.config = {
     name: 'video',
