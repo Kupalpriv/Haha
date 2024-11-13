@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const { neth } = require('../api'); 
 
 module.exports.config = {
     name: 'video',
@@ -16,11 +17,11 @@ module.exports.config = {
 
 module.exports.run = async function({ api, event, args }) {
     if (args.length === 0) {
-        return api.sendMessage('Please provide a search term. Usage: video [search term]', event.threadID, event.messageID);
+        return api.sendMessage('Please provide a search term.\n\nEx: video apt', event.threadID, event.messageID);
     }
 
     const searchTerm = args.join(' ');
-    const searchApiUrl = `https://nethwieginedev.vercel.app/api/ytsearch2?name=${encodeURIComponent(searchTerm)}`;
+    const searchApiUrl = `${neth}/api/ytsearch2?name=${encodeURIComponent(searchTerm)}`;
 
     let searchingMessageID;
 
