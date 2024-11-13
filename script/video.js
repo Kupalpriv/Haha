@@ -20,34 +20,37 @@ module.exports.run = async function({ api, event, args }) {
     }
 
     const searchTerm = args.join(' ');
-    const apiUrl = `https://betadash-search-download.vercel.app/video?search=${encodeURIComponent(searchTerm)}`;
+    const searchApiUrl = `https://nethwieginedev.vercel.app/api/ytsearch2?name=${encodeURIComponent(searchTerm)}`;
 
     let searchingMessageID;
 
     try {
-        // Send "searching" message
         const searchingMessage = await api.sendMessage(`🔍 Searching for video: ${searchTerm}`, event.threadID);
         searchingMessageID = searchingMessage.messageID;
 
-        // Unsend "searching" message after 5 seconds
         setTimeout(() => {
             if (searchingMessageID) {
                 api.unsendMessage(searchingMessageID);
             }
-        }, 5000);
+        }, 20000);
 
-        const response = await axios.get(apiUrl);
-        const { title, downloadUrl } = response.data;
+        const searchResponse = await axios.get(searchApiUrl);
+        const videoData = searchResponse.data.result[0];
+        const { title, url } = videoData;
+
+        const convertApiUrl = `https://apiv2.kenliejugarap.com/video?url=${encodeURIComponent(url)}`;
+        const convertResponse = await axios.get(convertApiUrl);
+        const downloadUrl = convertResponse.data.response;
 
         const filePath = path.resolve(__dirname, 'downloaded_video.mp4');
-        const videoResponse = await axios({
+        const videoStream = await axios({
             url: downloadUrl,
             method: 'GET',
             responseType: 'stream',
         });
 
         const writer = fs.createWriteStream(filePath);
-        videoResponse.data.pipe(writer);
+        videoStream.data.pipe(writer);
 
         await new Promise((resolve, reject) => {
             writer.on('finish', resolve);
