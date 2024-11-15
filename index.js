@@ -234,7 +234,60 @@ app.post('/login', async (req, res) => {
 });
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-	console.log(`RUNNING ON PORT ${port}`);
+	console.log(`
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⠿⠛⢉⣉⣠⣤⣤⣤⣴⣦⣤⣤⣀⡉⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⠋⢁⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⡟⠁⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠿⠿⠿⠂⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⡟⠀⣼⣿⣿⡏⢉⣁⣀⣀⣤⣤⣄⠀⣴⣿⣿⡇⢠⣶⣶⠒⠲⡆⢀⠈⢿⣿⣿⣿⣿⣿⣿⣿
+⣿⠁⣼⣿⣿⣿⠀⢿⣿⣿⣏⣀⣹⠟⢀⣿⣿⣿⣷⡈⠛⠿⠃⢀⣠⣿⣆⠈⣿⣿⣿⣿⣿⣿⣿
+⡇⢠⣿⣿⣿⣿⣧⣀⠉⠛⠛⠉⣁⣠⣾⣿⣿⣿⣿⣿⣷⣶⠾⠿⠿⣿⣿⡄⢸⣿⣿⣿⣿⣿⣿
+⡇⢸⣿⣿⣿⣿⡿⠿⠟⠛⠛⠛⢉⣉⣉⣉⣉⣩⣤⣤⣤⣤⠀⣴⣶⣿⣿⡇⠀⣿⣿⣿⣿⣿⣿
+⠅⢸⣿⣿⣿⣷⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⢸⣿⣿⣿⠃⢸⣿⣿⣿⠛⢻⣿
+⣇⠈⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠉⣿⡟⢀⣾⣿⠟⠁⣰⣿⣿⣿⡿⠀⠸⣿
+⣿⣆⠀⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠙⣠⣾⠟⠁⣠⣾⣿⣿⣿⣿⠀⣶⠂⣽
+⣿⣿⣷⣄⡈⠙⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⣴⠆⠀⠋⢀⣴⣿⣿⡿⠟⠛⠉⠀⢂⣡⣾⣿
+⣿⣿⣿⣿⣿⠇⢀⣄⣀⡉⠉⠉⠉⠉⠉⣉⠤⠈⢁⣤⣶⠀⠾⠟⣋⡡⠔⢊⣠⣴⣾⣿⣿⣿⣿
+⣿⣿⣿⣿⠏⢠⣿⣿⡿⠛⢋⣠⠴⠚⢉⣥⣴⣾⣿⣿⣿⠀⠴⠛⣉⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⡏⢀⣿⣿⣯⠴⠛⠉⣠⣴⣾⣿⣿⣿⣿⣿⣿⣿⠀⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⡟⠀⣼⣿⣿⣧⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⠃⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⡟⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⠃⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣷⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱
+
+███████╗██╗░░░██╗░█████╗░██╗░░██╗
+██╔════╝██║░░░██║██╔══██╗██║░██╔╝
+█████╗░░██║░░░██║██║░░╚═╝█████═╝░
+██╔══╝░░██║░░░██║██║░░██╗██╔═██╗░
+██║░░░░░╚██████╔╝╚█████╔╝██║░╚██╗
+╚═╝░░░░░░╚═════╝░░╚════╝░╚═╝░░╚═╝
+
+██╗░░░██╗░█████╗░██╗░░░██╗
+╚██╗░██╔╝██╔══██╗██║░░░██║
+░╚████╔╝░██║░░██║██║░░░██║
+░░╚██╔╝░░██║░░██║██║░░░██║
+░░░██║░░░╚█████╔╝╚██████╔╝
+░░░╚═╝░░░░╚════╝░░╚═════╝░ 
+
+"✖ [░░░░░░░░░░░░░░░]",
+"✖ [■░░░░░░░░░░░░░░]",
+"✖ [■■░░░░░░░░░░░░░]",
+"✖ [■■■░░░░░░░░░░░░]",
+"✖ [■■■■░░░░░░░░░░░]",
+"✖ [■■■■■░░░░░░░░░░]",
+"✖ [■■■■■■░░░░░░░░░]",
+"✖ [■■■■■■■░░░░░░░░]",
+"✖ [■■■■■■■■░░░░░░░]",
+"✖ [■■■■■■■■■░░░░░░]",
+"✖ [■■■■■■■■■■░░░░░]",
+"✖ [■■■■■■■■■■■░░░░]",
+"✖ [■■■■■■■■■■■■░░░]",
+"✖ [■■■■■■■■■■■■■░░]",
+"✖ [■■■■■■■■■■■■■■░]",
+"✖ [■■■■■■■■■■■■■■■]"
+${port}`);
 });
 process.on('unhandledRejection', (reason) => {
 	console.error('Unhandled Promise Rejection:', reason);
@@ -378,49 +431,84 @@ axios.get(gifUrl, { responseType: 'arraybuffer' })
 		});
 							} else {
 								try {
-								let addedParticipants1 = event.logMessageData.addedParticipants;
-for (let newParticipant of addedParticipants1) {
-    let userID = newParticipant.userFbId;
-    api.getUserInfo(parseInt(userID), (err, data) => {
-        if (err) { return console.log(err); }
-        var obj = Object.keys(data);
-        var userName = data[obj].name.replace("@", "");
-        if (userID !== api.getCurrentUserID()) {
-            nameArray.push(userName);
-            mentions.push({ tag: userName, id: userID, fromIndex: 0 });
-            memLength.push(participantIDs.length - i++);
-            memLength.sort((a, b) => a - b);
-            (typeof threadID.customJoin == "undefined") ? msg = "🌟 Hi!, {uName}\n┌────── ～●～ ──────┐\n----- Welcome to {threadName} -----\n└────── ～●～ ──────┘\nYou're the {soThanhVien} member of this group, please enjoy! 🥳♥" : msg = threadID.customJoin;
-            msg = msg
-                .replace(/\{uName}/g, nameArray.join(', '))
-                .replace(/\{type}/g, (memLength.length > 1) ? 'you' : 'Friend')
-                .replace(/\{soThanhVien}/g, memLength.join(', '))
-                .replace(/\{threadName}/g, threadName);
-            const bayot = [
-                'https://i.ibb.co/0jfD13g/5bf47044-0957-4f8a-a166-9bca3f4aa7cd.jpg',
-                'https://i.ibb.co/jhgc8Kj/ad523982-a45e-41db-836c-f76b5aaa4f9c.jpg',
-                'https://i.ibb.co/vwMwRkn/aa13cba8-1c81-4062-87d0-272fcaf88212.jpg',
-                'https://i.ibb.co/HC9wQVT/351c6943-dd38-4833-a1af-f06dafa4277f.jpg',
-                'https://i.ibb.co/mNGVcRM/Background-Designs-de-Rise-of-the-Teenage-Mutant-Ninja-Turtles-THECAB.jpg'
-            ];
-            const sheshh = bayot[Math.floor(Math.random() * bayot.length)];
-            const lubot = [
-                'https://i.postimg.cc/LszC2cBQ/received-3344157609215944.jpg',
-                'https://i.postimg.cc/yYHFzDrK/received-1142561846900818.jpg',
-                'https://i.postimg.cc/fbnsHhR8/received-954065659759363.jpg',
-                'https://i.postimg.cc/nzXqvNMH/received-709365284696128.jpg',
-                'https://i.postimg.cc/CLSz0WYz/orca-image-1580944726.jpg',
-                'https://i.postimg.cc/Y9Db71LS/orca-image-361667317.jpg',
-                'https://i.postimg.cc/W3xYrGNH/orca-image-1197286104.jpg'
-            ];
-            const yawa = lubot[Math.floor(Math.random() * lubot.length)];
-            let callback = function() {
-                return api.sendMessage({ body: msg, attachment: fs.createReadStream(__dirname + `/cache/come.jpg`), mentions }, event.threadID, () => fs.unlinkSync(__dirname + `/cache/come.jpg`))
-            };
-            request(encodeURI(`https://api.popcat.xyz/welcomecard?background=${sheshh}&text1=${userName}&text2=Welcome+To+${threadName}&text3=You+Are+The${participantIDs.length}th+Member&avatar=${yawa}`)).pipe(fs.createWriteStream(__dirname + `/cache/come.jpg`)).on("close", callback);
-        }
-    })
-}
+									const fs = require("fs-extra");
+									let { threadName, participantIDs } = await api.getThreadInfo(threadID);
+
+									var mentions = [], nameArray = [], memLength = [], userID = [], i = 0;
+
+									let addedParticipants1 = event.logMessageData.addedParticipants;
+									for (let newParticipant of addedParticipants1) {
+										let userID = newParticipant.userFbId;
+										api.getUserInfo(parseInt(userID), (err, data) => {
+											if (err) { return console.log(err); }
+											var obj = Object.keys(data);
+											var userName = data[obj].name.replace("@", "");
+											if (userID !== api.getCurrentUserID()) {
+
+												nameArray.push(userName);
+												mentions.push({ tag: userName, id: userID, fromIndex: 0 });
+
+												memLength.push(participantIDs.length - i++);
+												memLength.sort((a, b) => a - b);
+
+													(typeof threadID.customJoin == "undefined") ? msg = "🌟 Hi!, {uName}\n┌────── ～●～ ──────┐\n----- Welcome to {threadName} -----\n└────── ～●～ ──────┘\nYou're the {soThanhVien} member of this group, please enjoy! 🥳♥" : msg = threadID.customJoin;
+													msg = msg
+														.replace(/\{uName}/g, nameArray.join(', '))
+														.replace(/\{type}/g, (memLength.length > 1) ? 'you' : 'Friend')
+														.replace(/\{soThanhVien}/g, memLength.join(', '))
+														.replace(/\{threadName}/g, threadName);
+
+const bayot = [
+  'https://i.ibb.co/0jfD13g/5bf47044-0957-4f8a-a166-9bca3f4aa7cd.jpg',
+  'https://i.ibb.co/jhgc8Kj/ad523982-a45e-41db-836c-f76b5aaa4f9c.jpg',
+  'https://i.ibb.co/vwMwRkn/aa13cba8-1c81-4062-87d0-272fcaf88212.jpg',
+	'https://i.ibb.co/HC9wQVT/351c6943-dd38-4833-a1af-f06dafa4277f.jpg',
+	'https://i.ibb.co/mNGVcRM/Background-Designs-de-Rise-of-the-Teenage-Mutant-Ninja-Turtles-THECAB.jpg'
+];
+const sheshh = bayot[Math.floor(Math.random() * bayot.length)];
+
+const lubot = [
+  'https://i.postimg.cc/LszC2cBQ/received-3344157609215944.jpg',
+	'https://i.postimg.cc/yYHFzDrK/received-1142561846900818.jpg',
+	'https://i.postimg.cc/fbnsHhR8/received-954065659759363.jpg',
+	'https://i.postimg.cc/nzXqvNMH/received-709365284696128.jpg',
+	'https://i.postimg.cc/CLSz0WYz/orca-image-1580944726.jpg',
+	'https://i.postimg.cc/Y9Db71LS/orca-image-361667317.jpg',
+	'https://i.postimg.cc/W3xYrGNH/orca-image-1197286104.jpg'
+];
+const yawa = lubot[Math.floor(Math.random() * lubot.length)];
+												
+													let callback = function() {
+														return api.sendMessage({ body: msg, attachment: fs.createReadStream(__dirname + `/cache/come.jpg`), mentions }, event.threadID, () => fs.unlinkSync(__dirname + `/cache/come.jpg`))
+													};
+												request(encodeURI(`https://api.popcat.xyz/welcomecard?background=${sheshh}&text1=${userName}&text2=Welcome+To+${threadName}&text3=You+Are+The${participantIDs.length}th+Member&avatar=${yawa}`)).pipe(fs.createWriteStream(__dirname + `/cache/come.jpg`)).on("close", callback);
+																			}
+																		})
+																	}
+																} catch (err) {
+																	return console.log("ERROR: " + err);
+						}
+					 }
+					}
+					}
+					if (event.body !== null) {
+							if (event.logMessageType === "log:unsubscribe") {
+									api.getThreadInfo(event.threadID).then(({ participantIDs }) => {
+											let leaverID = event.logMessageData.leftParticipantFbId;
+											api.getUserInfo(leaverID, (err, userInfo) => {
+													if (err) {
+															return console.error('Failed to get user info:', err);
+													}
+													const name = userInfo[leaverID].name;
+													const type = (event.author == event.logMessageData.leftParticipantFbId) ? "left the group." : "was kicked by Admin of the group";
+
+													const link = ["https://i.imgur.com/dVw3IRx.gif"];
+													const gifPath = __dirname + "/cache/leave.gif";
+
+													// Assuming the file exists, send the message with the GIF
+													api.sendMessage({ body: `${name} ${type}, There are now ${participantIDs.length} members in the group, please enjoy!`, attachment: fs.createReadStream(gifPath) }, event.threadID);
+											});
+									});
 							}
 					}
 					const regex = [
