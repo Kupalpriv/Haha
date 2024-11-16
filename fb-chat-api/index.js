@@ -180,7 +180,6 @@ function buildAPI(globalOptions, html, jar) {
     'getFriendsList',
     'getThreadHistory',
     'getThreadInfo',
-    'getThreadList',
     'getThreadPictures',
     'getUserID',
     'getUserInfo',
