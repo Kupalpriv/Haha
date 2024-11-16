@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js"
   },
-  "keywords": [],
+  "keywords": ["fca-horizon-remastered"],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -23,6 +23,7 @@
     "cheerio": "^0.22.0",
     "child_process": "^1.0.2",
     "express": "^4.18.2",
+    "fca-unofficial": "^1.0.11",
     "fs": "^0.0.1-security",
     "fs-extra": "^11.1.1",
     "g4f": "^1.4.2",
@@ -33,6 +34,7 @@
     "moment-timezone": "^0.5.45",
     "mqtt": "^3.0.0",
     "node-cron": "^3.0.3",
+    "npm": "^10.9.0",
     "npmlog": "^1.2.0",
     "os": "^0.1.2",
     "pastebin-api": "^7.0.0",
