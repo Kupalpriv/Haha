@@ -1,48 +1,58 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
-const { jonel } = require('../api');
+const { jonel } = require('../api'); 
 
 module.exports.config = {
     name: 'flux',
     version: '1.0.0',
     role: 0,
-    hasPrefix: false,
-    aliases: ['generate', 'fluximage'],
-    description: 'Generate an image from a prompt using Flux API.',
-    usage: 'Reply with a prompt (e.g., "flux cat").',
-    credits: 'Chilli',
+    hasPrefix: true,
+    aliases: [],
+    description: 'Generate an image using the Flux API based on the provided prompt.',
+    usage: 'flux [prompt]',
+    credits: 'chilli',
     cooldown: 5,
 };
 
-module.exports.run = async function({ api, event }) {
-    if (!event.messageReply || !event.messageReply.body) {
-        return api.sendMessage('Please provide a prompt for the image generation. Example: "flux cat".', event.threadID, event.messageID);
+module.exports.run = async function({ api, event, args }) {
+    if (args.length === 0) {
+        return api.sendMessage('Please provide a prompt to generate the image.\n\nEx: flux dog', event.threadID, event.messageID);
     }
 
-    const prompt = event.messageReply.body.trim();
+    const prompt = args.join(' ');
     const apiUrl = `${jonel}/api/flux?prompt=${encodeURIComponent(prompt)}`;
 
-    api.sendMessage('Generating image... Please wait.', event.threadID, event.messageID);
+    let waitingMessageID;
 
     try {
-        const response = await axios({
-            method: 'GET',
-            url: apiUrl,
-            responseType: 'arraybuffer',
-        });
+        const waitingMessage = await api.sendMessage(`🔍 Generating image for: "${prompt}"`, event.threadID);
+        waitingMessageID = waitingMessage.messageID;
 
-        const filePath = path.join(__dirname, 'cache', `flux_${Date.now()}.jpg`);
-        fs.writeFileSync(filePath, response.data);
+        setTimeout(() => {
+            if (waitingMessageID) {
+                api.unsendMessage(waitingMessageID);
+            }
+        }, 15000);
 
-        await api.sendMessage({
-            body: `Here is the generated image for prompt: "${prompt}"`,
-            attachment: fs.createReadStream(filePath),
-        }, event.threadID, event.messageID);
+        const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
+        const buffer = Buffer.from(response.data, 'binary');
 
-        fs.unlinkSync(filePath);
+        const tempFilePath = path.resolve(__dirname, 'flux_generated_image.jpg');
+        fs.writeFileSync(tempFilePath, buffer);
+
+        await api.sendMessage(
+            {
+                body: `🎨 Here is the generated image for: "${prompt}"`,
+                attachment: fs.createReadStream(tempFilePath),
+            },
+            event.threadID,
+            event.messageID
+        );
+
+        fs.unlinkSync(tempFilePath);
     } catch (error) {
-        console.error('Error during image generation:', error.message);
-        api.sendMessage('An error occurred while generating the image. Please try again later.', event.threadID, event.messageID);
+        console.error('Error generating image:', error);
+        api.sendMessage('Failed to generate the image. Please try again later.', event.threadID, event.messageID);
     }
 };
