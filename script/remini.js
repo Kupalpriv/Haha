@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const { kenlie } = require('../api'); 
 
 module.exports.config = {
     name: 'remini',
@@ -10,7 +11,7 @@ module.exports.config = {
     aliases: [],
     description: 'Enhance an image by replying with "remini" to an image attachment.',
     usage: 'Reply to an image with "remini".',
-    credits: 'User Request',
+    credits: 'chill',
     cooldown: 5,
 };
 
@@ -26,12 +27,12 @@ module.exports.run = async function({ api, event }) {
     }
 
     const imageUrl = attachment.url;
-    const apiUrl = `https://api.kenliejugarap.com/imgrestore/?imgurl=${encodeURIComponent(imageUrl)}`;
+    const apiUrl = `${kenlie}/imgrestore/?imgurl=${encodeURIComponent(imageUrl)}`;
 
     api.sendMessage('Enhancing the image... Please wait.', event.threadID, event.messageID);
 
     try {
-        // Call the API to enhance the image
+        
         const response = await axios.get(apiUrl);
         if (!response.data.status || !response.data.response) {
             return api.sendMessage('The enhancement API failed to process the image. Please try again later.', event.threadID, event.messageID);
