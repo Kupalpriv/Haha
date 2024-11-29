@@ -7,7 +7,7 @@ module.exports.config = {
     version: '1.0.0',
     role: 0,
     hasPrefix: false,
-    aliases: ['song', 'music'],
+    aliases: ['song'],
     description: 'Get a Spotify song and send as an mp3 voice attachment',
     usage: 'spotify [song name]',
     credits: 'churchill',
