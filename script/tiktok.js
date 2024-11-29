@@ -1,17 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const { jonel } = require('../api');
+const { cliff } = require('../api');
 
 module.exports.config = {
-    name: 'tiksearch',
+    name: 'tiktok',
     version: '1.0.0',
     role: 0,
     hasPrefix: false,
-    aliases: ['tiktoksearch'],
+    aliases: ['tiksearch'],
     description: 'Search and fetch TikTok videos.',
-    usage: 'tiksearch [keywords]',
-    credits: 'jonel',
+    usage: 'tiktok [keywords]',
+    credits: 'chilli',
     cooldown: 5,
 };
 
@@ -23,22 +23,26 @@ module.exports.run = async function({ api, event, args }) {
         return api.sendMessage('❌ | Please provide keywords to search for TikTok videos.', event.threadID, event.messageID);
     }
 
-    const loadingMessage = await api.sendMessage({
-        body: `🔍 | Searching for TikTok videos...`,
-    }, event.threadID, event.messageID);
-
+    let loadingMessageID;
     try {
-        const tiktokUrl = `${jonel}/tiktok/searchvideo?keywords=${encodeURIComponent(pogi)}`;
+        const loadingMessage = await api.sendMessage({
+            body: `🔍 | Searching for TikTok videos...`,
+        }, event.threadID, event.messageID);
+
+        loadingMessageID = loadingMessage.messageID;
+
+    
+        const tiktokUrl = `${cliff}/tiktok/searchvideo?keywords=${encodeURIComponent(pogi)}&count=1`;
         const { data } = await axios.get(tiktokUrl);
 
-        if (!data.data || !data.data.videos.length) {
-            await api.editMessage('❌ | No videos found. Please try different keywords.', loadingMessage.messageID);
+        if (!data.data || !data.data.length) {
+            await api.sendMessage('❌ | No videos found. Please try different keywords.', event.threadID, event.messageID);
             return;
         }
 
-        const tiktokVideo = data.data.videos[0];
-        const videoPath = path.join(__dirname, `${tiktokVideo.video_id}.mp4`);
-        const videoStream = await axios.get(tiktokVideo.play, { responseType: 'stream' });
+        const tiktokVideo = data.data[0];
+        const videoPath = path.join(__dirname, `${tiktokVideo.title}.mp4`);
+        const videoStream = await axios.get(tiktokVideo.video, { responseType: 'stream' });
         const writer = fs.createWriteStream(videoPath);
 
         videoStream.data.pipe(writer);
@@ -51,9 +55,7 @@ module.exports.run = async function({ api, event, args }) {
         const details = `
 🎥 **TikTok Video**
 🔗 Title: ${tiktokVideo.title}
-👤 Author: ${tiktokVideo.author.nickname} (@${tiktokVideo.author.unique_id})
-🎶 Music: ${tiktokVideo.music_info.title} by ${tiktokVideo.music_info.author}
-👍 Likes: ${tiktokVideo.digg_count} | 💬 Comments: ${tiktokVideo.comment_count} | 🔄 Shares: ${tiktokVideo.share_count}
+📺 Video URL: ${tiktokVideo.video}
         `;
 
         await api.sendMessage({
@@ -63,8 +65,11 @@ module.exports.run = async function({ api, event, args }) {
             fs.unlinkSync(videoPath);
         });
 
-        await api.setMessageReaction('🔥', loadingMessage.messageID, true);
+        if (loadingMessageID) {
+            await api.unsendMessage(loadingMessageID);  // Unsend the loading message instead of deleting
+        }
     } catch (err) {
-        await api.editMessage('❌ | An error occurred while searching for TikTok videos.', loadingMessage.messageID);
+        console.error('Error in TikTok Search:', err);
+        await api.sendMessage('❌ | An error occurred while searching for TikTok videos.', event.threadID, event.messageID);
     }
 };
