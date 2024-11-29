@@ -32,7 +32,7 @@ module.exports.run = async function({ api, event, args }) {
         loadingMessageID = loadingMessage.messageID;
 
     
-        const tiktokUrl = `${yakzy}/tiktok/searchvideo?keywords=${encodeURIComponent(pogi)}&count=1`;
+        const tiktokUrl = `${yakzy}/tiksearchv2?keywords=${encodeURIComponent(pogi)}&count=1`;
         const { data } = await axios.get(tiktokUrl);
 
         if (!data.data || !data.data.length) {
