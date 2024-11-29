@@ -1,50 +1,44 @@
+const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
-const axios = require('axios');
-const { yakzy } = require('../api');
 
 module.exports.config = {
     name: 'tiktok',
     version: '1.0.0',
     role: 0,
-    hasPrefix: false,
-    aliases: ['tiksearch'],
-    description: 'Search and fetch TikTok videos.',
-    usage: 'tiktok [keywords]',
-    credits: 'chilli',
+    hasPrefix: true,
+    aliases: ['tt'],
+    description: 'Search and download a TikTok video',
+    usage: 'tiktok [search term]',
+    credits: 'churchill',
     cooldown: 5,
 };
 
-module.exports.run = async function({ api, event, args }) {
-    const kupal = event.senderID;
-    const pogi = args.join(' ');
-
-    if (!pogi) {
-        return api.sendMessage('❌ | Please provide keywords to search for TikTok videos.', event.threadID, event.messageID);
+module.exports.run = async function ({ api, event, args }) {
+    if (args.length === 0) {
+        return api.sendMessage('🎥 Please provide a search term. For example:\n\ntiktok apt', event.threadID, event.messageID);
     }
 
-    let loadingMessageID;
+    const searchTerm = args.join(' ');
+    const searchApiUrl = `https://betadash-search-download.vercel.app/tiksearchv2?search=${encodeURIComponent(searchTerm)}&count=1`;
+
+    let searchingMessageID;
+
     try {
-        const loadingMessage = await api.sendMessage({
-            body: `🔍 | Searching for TikTok videos...`,
-        }, event.threadID, event.messageID);
+        const searchingMessage = await api.sendMessage(`🔍 Searching TikTok videos for: *${searchTerm}*`, event.threadID);
+        searchingMessageID = searchingMessage.messageID;
 
-        loadingMessageID = loadingMessage.messageID;
+        const response = await axios.get(searchApiUrl);
+        const { title, video } = response.data.data[0];
 
-    
-        const tiktokUrl = `${yakzy}/tiksearchv2?keywords=${encodeURIComponent(pogi)}&count=1`;
-        const { data } = await axios.get(tiktokUrl);
+        const videoPath = path.resolve(__dirname, 'tiktok_video.mp4');
+        const videoStream = await axios({
+            url: video,
+            method: 'GET',
+            responseType: 'stream',
+        });
 
-        if (!data.data || !data.data.length) {
-            await api.sendMessage('❌ | No videos found. Please try different keywords.', event.threadID, event.messageID);
-            return;
-        }
-
-        const tiktokVideo = data.data[0];
-        const videoPath = path.join(__dirname, `${tiktokVideo.title}.mp4`);
-        const videoStream = await axios.get(tiktokVideo.video, { responseType: 'stream' });
         const writer = fs.createWriteStream(videoPath);
-
         videoStream.data.pipe(writer);
 
         await new Promise((resolve, reject) => {
@@ -52,24 +46,26 @@ module.exports.run = async function({ api, event, args }) {
             writer.on('error', reject);
         });
 
-        const details = `
-🎥 **TikTok Video**
-🔗 Title: ${tiktokVideo.title}
-📺 Video URL: ${tiktokVideo.video}
-        `;
+        const messageContent = `🎥 TikTok Video Found:
+${title}`;
 
-        await api.sendMessage({
-            body: details,
-            attachment: fs.createReadStream(videoPath),
-        }, event.threadID, () => {
-            fs.unlinkSync(videoPath);
-        });
+        await api.sendMessage(
+            {
+                body: messageContent,
+                attachment: fs.createReadStream(videoPath),
+            },
+            event.threadID,
+            event.messageID
+        );
 
-        if (loadingMessageID) {
-            await api.unsendMessage(loadingMessageID);  // Unsend the loading message instead of deleting
+        if (searchingMessageID) {
+            api.unsendMessage(searchingMessageID);
         }
-    } catch (err) {
-        console.error('Error in TikTok Search:', err);
-        await api.sendMessage('❌ | An error occurred while searching for TikTok videos.', event.threadID, event.messageID);
+
+        fs.unlinkSync(videoPath);
+
+    } catch (error) {
+        console.error('Error fetching or sending TikTok video:', error);
+        api.sendMessage('❌ Failed to fetch or send the TikTok video. Please try again later.', event.threadID, event.messageID);
     }
 };
