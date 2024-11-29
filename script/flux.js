@@ -1,82 +1,48 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
-const { josh } = require('../api'); 
+const { jonel } = require('../api');
 
 module.exports.config = {
     name: 'flux',
     version: '1.0.0',
     role: 0,
     hasPrefix: false,
-    aliases: [],
-    description: 'Generate an image based on a given prompt using the Flux API.',
-    usage: 'flux <prompt> [model 1-5]\n' +
-           'Example without model: flux dog\n' +
-           'Example with model: flux dog 5',
-    credits: 'chilli',
+    aliases: ['generate', 'fluximage'],
+    description: 'Generate an image from a prompt using Flux API.',
+    usage: 'Reply with a prompt (e.g., "flux cat").',
+    credits: 'Chilli',
     cooldown: 5,
 };
 
-module.exports.run = async function({ api, event, args }) {
-    if (args.length === 0) {
-        return api.sendMessage(
-            `Please provide a prompt to generate an image.\n\nUsage:\n` +
-            `flux <prompt> [model 1-5]\n` +
-            `Example without model: flux dog\n` +
-            `Example with model: flux dog 5`, 
-            event.threadID, 
-            event.messageID
-        );
+module.exports.run = async function({ api, event }) {
+    if (!event.messageReply || !event.messageReply.body) {
+        return api.sendMessage('Please provide a prompt for the image generation. Example: "flux cat".', event.threadID, event.messageID);
     }
 
-    let model = 4;
-    const lastArg = args[args.length - 1];
-    if (/^[1-5]$/.test(lastArg)) {
-        model = lastArg;
-        args.pop();
-    }
+    const prompt = event.messageReply.body.trim();
+    const apiUrl = `${jonel}/api/flux?prompt=${encodeURIComponent(prompt)}`;
 
-    const prompt = args.join(' ');
-
-    const apiUrl = `${josh}/api/flux?prompt=${encodeURIComponent(prompt)}&model=${model}`;
-
-    api.sendMessage('Generating image... Please wait.', event.threadID, () => {}, event.messageID);
+    api.sendMessage('Generating image... Please wait.', event.threadID, event.messageID);
 
     try {
-        const cacheDir = path.join(__dirname, 'cache');
-        if (!fs.existsSync(cacheDir)) {
-            fs.mkdirSync(cacheDir);
-        }
-
-        const fileName = `flux_${Date.now()}.png`;
-        const filePath = path.join(cacheDir, fileName);
         const response = await axios({
             method: 'GET',
             url: apiUrl,
-            responseType: 'stream',
+            responseType: 'arraybuffer',
         });
 
-        const writer = fs.createWriteStream(filePath);
-        response.data.pipe(writer);
+        const filePath = path.join(__dirname, 'cache', `flux_${Date.now()}.jpg`);
+        fs.writeFileSync(filePath, response.data);
 
-        writer.on('finish', async () => {
-            await api.sendMessage({
-                attachment: fs.createReadStream(filePath)
-            }, event.threadID, event.messageID);
+        await api.sendMessage({
+            body: `Here is the generated image for prompt: "${prompt}"`,
+            attachment: fs.createReadStream(filePath),
+        }, event.threadID, event.messageID);
 
-            fs.unlink(filePath, (err) => {
-                if (err) console.error('Error deleting file:', err);
-            });
-        });
-
-        writer.on('error', () => {
-            api.sendMessage('There was an error generating the image. Please try again later.', event.threadID, event.messageID);
-            fs.unlink(filePath, (err) => {
-                if (err) console.error('Error deleting file:', err);
-            });
-        });
+        fs.unlinkSync(filePath);
     } catch (error) {
-        console.error('Error generating image:', error);
+        console.error('Error during image generation:', error.message);
         api.sendMessage('An error occurred while generating the image. Please try again later.', event.threadID, event.messageID);
     }
 };
