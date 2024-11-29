@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node index.js"
   },
-  "keywords": ["fca-horizon-remastered"],
+  "keywords": [
+    "fca-horizon-remastered"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -24,7 +26,6 @@
     "child_process": "^1.0.2",
     "express": "^4.18.2",
     "fca-unofficial": "^1.0.11",
-    "ryuu-fca-api": " ^3.0.1",
     "fs": "^0.0.1-security",
     "fs-extra": "^11.1.1",
     "g4f": "^1.4.2",
@@ -35,7 +36,7 @@
     "moment-timezone": "^0.5.45",
     "mqtt": "^3.0.0",
     "node-cron": "^3.0.3",
-    "npm": "^10.9.0",
+    "npm": "^10.9.1",
     "npmlog": "^1.2.0",
     "os": "^0.1.2",
     "pastebin-api": "^7.0.0",
@@ -47,6 +48,7 @@
     "qs": "^6.12.0",
     "request": "^2.88.2",
     "rsnchat": "^3.0.9",
+    "ryuu-fca-api": " ^3.0.1",
     "simple-youtube-api": "^5.2.1",
     "util": "^0.12.5",
     "websocket-stream": "^5.5.0",
