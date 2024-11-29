@@ -1,64 +1,70 @@
+const fs = require('fs');
+const path = require('path');
+const axios = require('axios');
+const { jonel } = require('../api');
+
 module.exports.config = {
-	name: "tiktok",
-	version: "1.0.0",
-	role: 0,
-	credits: "Jonell Magallanes", 
-	description: "tiktok search",
-	hasPrefix: false,
-	aliases: ["tik"],
-	usage: "[Tiktok <search>]",
-	cooldown: 5,
+    name: 'tiksearch',
+    version: '1.0.0',
+    role: 0,
+    hasPrefix: false,
+    aliases: ['tiktoksearch'],
+    description: 'Search and fetch TikTok videos.',
+    usage: 'tiksearch [keywords]',
+    credits: 'jonel',
+    cooldown: 5,
 };
 
-const axios = require("axios");
-const fs = require("fs");
-const path = require("path");
-const { markApi } = require('../api'); 
-
 module.exports.run = async function({ api, event, args }) {
-	try {
-		const searchQuery = args.join(" ");
-		if (!searchQuery) {
-			api.sendMessage("Usage: tiktok <search text>", event.threadID);
-			return;
-		}
+    const kupal = event.senderID;
+    const pogi = args.join(' ');
 
-		api.sendMessage("🤳 | Searching, please wait...", event.threadID);
+    if (!pogi) {
+        return api.sendMessage('❌ | Please provide keywords to search for TikTok videos.', event.threadID, event.messageID);
+    }
 
-		const response = await axios.get(`${markApi}/api/tiksearch?search=${encodeURIComponent(searchQuery)}`);
+    const loadingMessage = await api.sendMessage({
+        body: `🔍 | Searching for TikTok videos...`,
+    }, event.threadID, event.messageID);
 
-		const videos = response.data.data.videos;
+    try {
+        const tiktokUrl = `${jonel}/tiktok/searchvideo?keywords=${encodeURIComponent(pogi)}`;
+        const { data } = await axios.get(tiktokUrl);
 
-		if (!videos || videos.length === 0) {
-			api.sendMessage("No videos found for the given search query.", event.threadID);
-			return;
-		}
+        if (!data.data || !data.data.videos.length) {
+            await api.editMessage('❌ | No videos found. Please try different keywords.', loadingMessage.messageID);
+            return;
+        }
 
-		const videoData = videos[0];
-		const videoUrl = videoData.play;
+        const tiktokVideo = data.data.videos[0];
+        const videoPath = path.join(__dirname, `${tiktokVideo.video_id}.mp4`);
+        const videoStream = await axios.get(tiktokVideo.play, { responseType: 'stream' });
+        const writer = fs.createWriteStream(videoPath);
 
-		const message = `𝐓𝐢𝐤𝐭𝐨𝐤 𝐫𝐞𝐬𝐮𝐥𝐭:\n\n𝐏𝐨𝐬𝐭 𝐛𝐲: ${videoData.author.nickname}\n𝐔𝐬𝐞𝐫𝐧𝐚𝐦𝐞: ${videoData.author.unique_id}\n\n𝐓𝐢𝐭𝐥𝐞: ${videoData.title}`;
+        videoStream.data.pipe(writer);
 
-		const filePath = path.join(__dirname, `/cache/tiktok_video.mp4`);
-		const writer = fs.createWriteStream(filePath);
+        await new Promise((resolve, reject) => {
+            writer.on('finish', resolve);
+            writer.on('error', reject);
+        });
 
-		const videoResponse = await axios({
-			method: 'get',
-			url: videoUrl,
-			responseType: 'stream'
-		});
+        const details = `
+🎥 **TikTok Video**
+🔗 Title: ${tiktokVideo.title}
+👤 Author: ${tiktokVideo.author.nickname} (@${tiktokVideo.author.unique_id})
+🎶 Music: ${tiktokVideo.music_info.title} by ${tiktokVideo.music_info.author}
+👍 Likes: ${tiktokVideo.digg_count} | 💬 Comments: ${tiktokVideo.comment_count} | 🔄 Shares: ${tiktokVideo.share_count}
+        `;
 
-		videoResponse.data.pipe(writer);
+        await api.sendMessage({
+            body: details,
+            attachment: fs.createReadStream(videoPath),
+        }, event.threadID, () => {
+            fs.unlinkSync(videoPath);
+        });
 
-		writer.on('finish', () => {
-			api.sendMessage(
-				{ body: message, attachment: fs.createReadStream(filePath) },
-				event.threadID,
-				() => fs.unlinkSync(filePath)
-			);
-		});
-	} catch (error) {
-		console.error('Error:', error);
-		api.sendMessage("An error occurred while processing the request.", event.threadID);
-	}
+        await api.setMessageReaction('🔥', loadingMessage.messageID, true);
+    } catch (err) {
+        await api.editMessage('❌ | An error occurred while searching for TikTok videos.', loadingMessage.messageID);
+    }
 };
