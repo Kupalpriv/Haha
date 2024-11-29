@@ -33,7 +33,8 @@ module.exports.run = async function({ api, event, args }) {
         }, event.messageID);
     });
 
-    const apiUrl = `${jonel}/api/gpt4o?ask=${encodeURIComponent(chilli)}&id=1`;
+    
+    const apiUrl = `${jonel}/api/gpt4o-v2?prompt=${encodeURIComponent(chilli)}`;
 
     try {
         const response = await axios.get(apiUrl);
@@ -50,6 +51,6 @@ ${gpt4Response}
 
     } catch (error) {
         console.error('Error:', error);
-        await api.editMessage('An error occurred. Please try again later or use gpt4o.', pangit.messageID);
+        await api.editMessage('An error occurred. Please try again later or use gpt4o or ai2.', pangit.messageID);
     }
 };
