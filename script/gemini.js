@@ -1,38 +1,35 @@
 const axios = require('axios');
-const { josh } = require('../api');
+const { kenlie } = require('../api'); 
 
 module.exports.config = {
     name: 'gemini',
-    version: '1.0.0',
+    version: '1.1.0',
     role: 0,
     hasPrefix: true,
     aliases: ['gemini'],
-    description: 'Interact with the Gemini AI',
-    usage: 'gemini [custom prompt] (attach image or not)',
-    credits: 'churchill',
+    description: 'Analyze an image or answer a question using AI.',
+    usage: 'gemini [question] (reply with an image attachment)',
+    credits: 'chilli',
     cooldown: 3,
 };
 
 module.exports.run = async function({ api, event, args }) {
     const attachment = event.messageReply?.attachments[0] || event.attachments[0];
-    const customPrompt = args.join(' ');
+    const question = args.join(' ') || 'Answer all question';
+    const imageUrl = attachment && attachment.type === 'photo' ? attachment.url : null;
 
-    if (!customPrompt && !attachment) {
-        return api.sendMessage('Please provide a prompt or attach a photo for Gemini to analyze.', event.threadID, event.messageID);
+    if (!imageUrl && !question) {
+        return api.sendMessage(
+            'Please reply with an image or provide a question.',
+            event.threadID,
+            event.messageID
+        );
     }
 
-    let apiUrl = `${josh}/gemini?`;
-
-    if (attachment && attachment.type === 'photo') {
-        const prompt = customPrompt || 'describe this photo';
-        const imageUrl = attachment.url;
-        apiUrl += `prompt=${encodeURIComponent(prompt)}&url=${encodeURIComponent(imageUrl)}`;
-    } else {
-        apiUrl += `prompt=${encodeURIComponent(customPrompt)}`;
-    }
+    const apiUrl = `${kenlie}/pixtral-paid/?question=${encodeURIComponent(question)}${imageUrl ? `&image_url=${encodeURIComponent(imageUrl)}` : ''}`;
 
     const initialMessage = await new Promise((resolve, reject) => {
-        api.sendMessage('🔍 Processing your request...', event.threadID, (err, info) => {
+        api.sendMessage('🔍 Processing your request... Please wait.', event.threadID, (err, info) => {
             if (err) return reject(err);
             resolve(info);
         }, event.messageID);
@@ -40,25 +37,18 @@ module.exports.run = async function({ api, event, args }) {
 
     try {
         const response = await axios.get(apiUrl);
-        const aiResponse = response.data.gemini;
+        const description = response.data.response || 'No response available.';
 
-        const formattedResponse = `
-✨ 𝙶𝚎𝚖𝚒𝚗𝚒 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎
+        const formattedResponse = 
+`∞ | 𝘎𝘦𝘮𝘪𝘯𝘪
 ━━━━━━━━━━━━━━━━━━
-${aiResponse.trim()}
+${description.trim()}
 ━━━━━━━━━━━━━━━━━━
--𝙲𝚑𝚒𝚕𝚕𝚒 𝙼𝚊𝚗𝚜𝚒
-        `;
+-𝐂𝐡𝐢𝐥𝐥𝐢𝐦𝐚𝐧𝐬𝐢`;
 
         await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
-
     } catch (error) {
         console.error('Error:', error);
-        let errorMessage = 'An error occurred, could not process your request.';
-        if (error.response && error.response.data) {
-            errorMessage += `\nDetails: ${error.response.data.message || 'Unknown error'}`;
-        }
-
-        await api.editMessage(errorMessage, initialMessage.messageID);
+        await api.editMessage('An error occurred while processing your request. Please try again later.', initialMessage.messageID);
     }
 };
