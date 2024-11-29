@@ -1,7 +1,9 @@
 const axios = require('axios');
-const { cliff } = require('../api');
 const fs = require('fs');
 const path = require('path');
+
+
+const API_BASE_URL = process.env.YT_AUDIO_API || 'https://dlvc.vercel.app/yt-audio';
 
 module.exports.config = {
     name: 'music',
@@ -21,15 +23,11 @@ module.exports.run = async function({ api, event, args }) {
     }
 
     const searchTerm = args.join(' ');
-    const apiUrl = `${cliff}/yt-audio?search=${encodeURIComponent(searchTerm)}`;
+    const apiUrl = `${API_BASE_URL}?search=${encodeURIComponent(searchTerm)}`;
 
     try {
-        api.setMessageReaction('🎵', event.messageID, (err) => {
-            if (err) console.error('Failed to set reaction:', err);
-        });
-
         const response = await axios.get(apiUrl);
-        const { title, downloadUrl, time, views, Artist, Album, channelName } = response.data;
+        const { title, downloadUrl, time, views, Artist, Album, thumbnail, channelName } = response.data;
 
         const musicPath = path.resolve(__dirname, 'music.mp3');
         const musicStream = await axios({
@@ -59,9 +57,5 @@ module.exports.run = async function({ api, event, args }) {
     } catch (error) {
         console.error('Error fetching music:', error);
         api.sendMessage('❌ Failed to retrieve or download the music. Please try again later.', event.threadID, event.messageID);
-    } finally {
-        api.setMessageReaction('', event.messageID, (err) => {
-            if (err) console.error('Failed to remove reaction:', err);
-        });
     }
 };
