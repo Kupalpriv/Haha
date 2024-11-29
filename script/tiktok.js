@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const { cliff } = require('../api');
+const { yakzy } = require('../api');
 
 module.exports.config = {
     name: 'tiktok',
@@ -32,7 +32,7 @@ module.exports.run = async function({ api, event, args }) {
         loadingMessageID = loadingMessage.messageID;
 
     
-        const tiktokUrl = `${cliff}/tiktok/searchvideo?keywords=${encodeURIComponent(pogi)}&count=1`;
+        const tiktokUrl = `${yakzy}/tiktok/searchvideo?keywords=${encodeURIComponent(pogi)}&count=1`;
         const { data } = await axios.get(tiktokUrl);
 
         if (!data.data || !data.data.length) {
