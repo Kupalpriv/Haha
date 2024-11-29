@@ -2,31 +2,33 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 
-
-const API_BASE_URL = process.env.YT_AUDIO_API || 'https://dlvc.vercel.app/yt-audio';
-
 module.exports.config = {
     name: 'music',
     version: '1.0.0',
     role: 0,
     hasPrefix: true,
     aliases: ['sing'],
-    description: 'Search and download music from YouTube.',
+    description: 'Search and download music using a keyword',
     usage: 'music [search term]',
     credits: 'churchill',
     cooldown: 5,
 };
 
-module.exports.run = async function({ api, event, args }) {
+module.exports.run = async function ({ api, event, args }) {
     if (args.length === 0) {
-        return api.sendMessage('𝑷𝒍𝒆𝒂𝒔𝒆 𝒑𝒓𝒐𝒗𝒊𝒅𝒆 𝒂 𝒎𝒖𝒔𝒊𝒄 𝒕𝒊𝒕𝒍𝒆', event.threadID, event.messageID);
+        return api.sendMessage('🎶 Please provide a search term. For example:\n\nmusic apt', event.threadID, event.messageID);
     }
 
     const searchTerm = args.join(' ');
-    const apiUrl = `${API_BASE_URL}?search=${encodeURIComponent(searchTerm)}`;
+    const searchApiUrl = `https://dlvc.vercel.app/yt-audio?search=${encodeURIComponent(searchTerm)}`;
+
+    let searchingMessageID;
 
     try {
-        const response = await axios.get(apiUrl);
+        const searchingMessage = await api.sendMessage(`🔍 Searching for music: *${searchTerm}*`, event.threadID);
+        searchingMessageID = searchingMessage.messageID;
+
+        const response = await axios.get(searchApiUrl);
         const { title, downloadUrl, time, views, Artist, Album, thumbnail, channelName } = response.data;
 
         const musicPath = path.resolve(__dirname, 'music.mp3');
@@ -44,18 +46,37 @@ module.exports.run = async function({ api, event, args }) {
             writer.on('error', reject);
         });
 
+        const messageContent = `🎶 Now Playing: ${title}
+📀 Album: ${Album}
+🎤 Artist: ${Artist}
+⏱️ Duration: ${time}
+👀 Views: ${views}
+📺 Channel: ${channelName}`;
+
         await api.sendMessage(
             {
-                body: `🎶 **${title}**\n\n🕒 Duration: ${time}\n👀 Views: ${views}\n🎤 Artist: ${Artist}\n💿 Album: ${Album}\n📺 Channel: ${channelName}`,
-                attachment: fs.createReadStream(musicPath),
+                body: messageContent,
+                attachment: [
+                    fs.createReadStream(musicPath),
+                    await axios({
+                        url: thumbnail,
+                        method: 'GET',
+                        responseType: 'stream',
+                    }).then((res) => res.data),
+                ],
             },
             event.threadID,
             event.messageID
         );
 
+        if (searchingMessageID) {
+            api.unsendMessage(searchingMessageID);
+        }
+
         fs.unlinkSync(musicPath);
+
     } catch (error) {
-        console.error('Error fetching music:', error);
-        api.sendMessage('❌ Failed to retrieve or download the music. Please try again later.', event.threadID, event.messageID);
+        console.error('Error fetching or sending music:', error);
+        api.sendMessage('❌ Failed to fetch or send the music. Please try again later.', event.threadID, event.messageID);
     }
 };
