@@ -2,6 +2,7 @@
 module.exports = {
     markApi: 'https://apis-markdevs69v2.onrender.com',
     josh: 'https://joshweb.click',
+    yakzy: 'https://betadash-search-download.vercel.app',
     cliff: 'https://betadash-api-swordslush.vercel.app',
     kaizen: 'https://kaiz-apis.gleeze.com',
     neth: 'https://nethwieginedev.vercel.app',
