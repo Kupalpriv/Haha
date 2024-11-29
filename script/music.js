@@ -29,7 +29,7 @@ module.exports.run = async function ({ api, event, args }) {
         searchingMessageID = searchingMessage.messageID;
 
         const response = await axios.get(searchApiUrl);
-        const { title, downloadUrl, time, views, Artist, Album, thumbnail, channelName } = response.data;
+        const { title, downloadUrl, time, views, Artist, Album, channelName } = response.data;
 
         const musicPath = path.resolve(__dirname, 'music.mp3');
         const musicStream = await axios({
@@ -56,14 +56,7 @@ module.exports.run = async function ({ api, event, args }) {
         await api.sendMessage(
             {
                 body: messageContent,
-                attachment: [
-                    fs.createReadStream(musicPath),
-                    await axios({
-                        url: thumbnail,
-                        method: 'GET',
-                        responseType: 'stream',
-                    }).then((res) => res.data),
-                ],
+                attachment: fs.createReadStream(musicPath),
             },
             event.threadID,
             event.messageID
