@@ -3,54 +3,77 @@ const { jonel } = require('../api');
 
 module.exports.config = {
     name: 'ai',
-    version: '1.0.1',
+    version: '1.1.0',
     role: 0,
     hasPrefix: false,
-    aliases: ['gpt4'],
-    description: 'Get a response from GPT-4',
-    usage: 'ai [your message]',
+    aliases: ['gpt4', 'ai-gen'],
+    description: 'Get a response from GPT-4 or generate images.',
+    usage: 'ai [your prompt]',
     credits: 'churchill',
     cooldown: 3,
 };
 
 module.exports.run = async function({ api, event, args }) {
-    const pogi = event.senderID;
-    const chilli = args.join(' ');
+    const senderID = event.senderID;
+    const userPrompt = args.join(' ');
 
-    if (!chilli) {
+    if (!userPrompt) {
         return api.sendMessage('Please provide a question.', event.threadID, event.messageID);
     }
 
-    const bayot = await api.getUserInfo(pogi);
-    const lubot = bayot[pogi].name;
+    const userInfo = await api.getUserInfo(senderID);
+    const userName = userInfo[senderID].name;
 
-    const pangit = await new Promise((resolve, reject) => {
-        api.sendMessage({
-            body: `🔍 : "${chilli}"...`,
-        }, event.threadID, (err, info) => {
-            if (err) return reject(err);
-            resolve(info);
-        }, event.messageID);
+    const initialMessage = await new Promise((resolve, reject) => {
+        api.sendMessage(
+            `🔍 Generating response for: "${userPrompt}"...`,
+            event.threadID,
+            (err, info) => {
+                if (err) return reject(err);
+                resolve(info);
+            },
+            event.messageID
+        );
     });
 
-    
-    const apiUrl = `${jonel}/api/gpt4o-v2?prompt=${encodeURIComponent(chilli)}`;
+    const apiUrl = `${jonel}/api/gpt4o-v2?prompt=${encodeURIComponent(userPrompt)}`;
 
     try {
         const response = await axios.get(apiUrl);
         const gpt4Response = response.data.response || 'No response from GPT-4.';
 
-        const formattedResponse = 
-`🧩 | Chilli Gpt
+        if (gpt4Response.startsWith('TOOL_CALL: generateImage')) {
+            const imageUrlMatch = gpt4Response.match(/\((https?:\/\/[^\)]+)\)/);
+            const imageUrl = imageUrlMatch ? imageUrlMatch[1] : null;
+
+            if (imageUrl) {
+                await api.sendMessage(
+                    {
+                        body: `🎨 Generated image for: "${userPrompt}"`,
+                        attachment: await axios({
+                            url: imageUrl,
+                            method: 'GET',
+                            responseType: 'stream',
+                        }).then((res) => res.data),
+                    },
+                    event.threadID,
+                    event.messageID
+                );
+            } else {
+                throw new Error('Image URL not found in the response.');
+            }
+        } else {
+            const formattedResponse = `
+🧩 | Chilli Gpt
 ━━━━━━━━━━━━━━━━━━
 ${gpt4Response}
 ━━━━━━━━━━━━━━━━━━
-👤 Asked by: ${lubot}`;
-
-        await api.editMessage(formattedResponse, pangit.messageID);
-
+👤 Asked by: ${userName}
+            `;
+            await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
+        }
     } catch (error) {
         console.error('Error:', error);
-        await api.editMessage('An error occurred. Please try again later or use gpt4o or ai2.', pangit.messageID);
+        await api.editMessage('An error occurred while processing your request. Please try again later.', initialMessage.messageID);
     }
 };
