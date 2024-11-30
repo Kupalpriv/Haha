@@ -1,9 +1,11 @@
 const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 const { jonel } = require('../api');
 
 module.exports.config = {
     name: 'ai',
-    version: '1.0.2',
+    version: '1.0.4',
     role: 0,
     hasPrefix: false,
     aliases: ['gpt4'],
@@ -25,7 +27,7 @@ module.exports.run = async function ({ api, event, args }) {
     const bossing = kupal[pogi].name;
 
     const loading = await new Promise((resolve, reject) => {
-        api.sendMessage('🔍 Generating your response...', event.threadID, (err, info) => {
+        api.sendMessage(' Generating your response...', event.threadID, (err, info) => {
             if (err) return reject(err);
             resolve(info);
         }, event.messageID);
@@ -40,33 +42,32 @@ module.exports.run = async function ({ api, event, args }) {
         const pogiMatch = kupalResponse.match(/\!\[.*\]\((https?:\/\/.*\.(?:png|jpg|jpeg|gif))\)/);
         if (pogiMatch) {
             const bossingUrl = pogiMatch[1];
-            const bossingPath = `./ai_generated_image_${Date.now()}.png`;
+            const tempPath = path.join(__dirname, 'tempImage.png');
 
-            const kupalResponse = await axios({
+            const writer = fs.createWriteStream(tempPath);
+            const downloadStream = await axios({
                 url: bossingUrl,
                 method: 'GET',
                 responseType: 'stream',
             });
-
-            const pogiWriter = require('fs').createWriteStream(bossingPath);
-            kupalResponse.data.pipe(pogiWriter);
+            downloadStream.data.pipe(writer);
 
             await new Promise((resolve, reject) => {
-                pogiWriter.on('finish', resolve);
-                pogiWriter.on('error', reject);
+                writer.on('finish', resolve);
+                writer.on('error', reject);
             });
 
             await api.sendMessage(
                 {
-                    attachment: require('fs').createReadStream(bossingPath),
+                    attachment: fs.createReadStream(tempPath),
                 },
                 event.threadID,
                 event.messageID
             );
 
-            require('fs').unlinkSync(bossingPath);
+            fs.unlinkSync(tempPath);
         } else {
-            const formattedResponse = 
+            const formattedResponse =
 `🧩 | Chilli AI
 ━━━━━━━━━━━━━━━━━━
 ${kupalResponse}
