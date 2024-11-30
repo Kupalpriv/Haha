@@ -35,7 +35,11 @@ module.exports.run = async function({ api, event, enableCommands, args, Utils, p
       let page = 1;
       let start = (page - 1) * pages;
       let end = start + pages;
-      let helpMessage = `📋 | ${convertToGothic('𝖢𝖬𝖣𝖲 𝖫𝗂𝗌𝗍')}: 〔${prefix}〕\n`;
+
+      // Add "[ no prefix ]" when no prefix is set
+      const displayPrefix = prefix ? `〔${prefix}〕` : "[ no prefix ]";
+
+      let helpMessage = `📋 | ${convertToGothic('𝖢𝖬𝖣𝖲 𝖫𝗂𝗌𝗍')}: ${displayPrefix}\n`;
       helpMessage += `𝖳𝗈𝗍𝖺𝗅 ${convertToGothic('𝖢𝗈𝗆𝗆𝖺𝗇𝖽𝗌')}: ${commands.length}🏷️\n\n`;
 
       for (let i = start; i < Math.min(end, commands.length); i++) {
@@ -46,7 +50,7 @@ module.exports.run = async function({ api, event, enableCommands, args, Utils, p
       api.sendMessage(helpMessage, event.threadID, event.messageID);
 
     } else if (input.toLowerCase() === 'all') {
-      let allCommandsMessage = `📋 | ${convertToGothic('𝖢𝖬𝖣𝖲 𝖫𝗂𝗌𝗍')}: 〔${prefix}〕\n`;
+      let allCommandsMessage = `📋 | ${convertToGothic('𝖢𝖬𝖣𝖲 𝖫𝗂𝗌𝗍')}: ${prefix ? `〔${prefix}〕` : "[ no prefix ]"}\n`;
       allCommandsMessage += `𝖳𝗈𝗍𝖺𝗅 ${convertToGothic('𝖢𝗈𝗆𝗆𝖺𝗇𝖽𝗌')}: ${commands.length}🏷️\n\n`;
 
       commands.forEach((cmd, index) => {
@@ -59,7 +63,7 @@ module.exports.run = async function({ api, event, enableCommands, args, Utils, p
       const pages = 20;
       let start = (page - 1) * pages;
       let end = start + pages;
-      let helpMessage = `📋 | ${convertToGothic('𝖢𝖬𝖣𝖲 𝖫𝗂𝗌𝗍')}: 〔${prefix}〕\n`;
+      let helpMessage = `📋 | ${convertToGothic('𝖢𝖬𝖣𝖲 𝖫𝗂𝗌𝗍')}: ${prefix ? `〔${prefix}〕` : "[ no prefix ]"}\n`;
       helpMessage += `𝖳𝗈𝗍𝖺𝗅 ${convertToGothic('𝖢𝗈𝗆𝗆𝖺𝗇𝖽𝗌')}: ${commands.length}🏷️\n\n`;
 
       for (let i = start; i < Math.min(end, commands.length); i++) {
