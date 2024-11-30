@@ -26,7 +26,7 @@ module.exports.run = async function({ api, event, args }) {
 
     const initialMessage = await new Promise((resolve, reject) => {
         api.sendMessage(
-            `🔍 Generating response for: "${userPrompt}"...`,
+            `🔍 :"${userPrompt}"...`,
             event.threadID,
             (err, info) => {
                 if (err) return reject(err);
