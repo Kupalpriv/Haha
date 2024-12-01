@@ -48,7 +48,7 @@
     "qs": "^6.12.0",
     "request": "^2.88.2",
     "rsnchat": "^3.0.9",
-    "ryuu-fca-api": " ^3.0.6",
+    "ryuu-fca-api": " ^3.0.1",
     "simple-youtube-api": "^5.2.1",
     "util": "^0.12.5",
     "websocket-stream": "^5.5.0",
