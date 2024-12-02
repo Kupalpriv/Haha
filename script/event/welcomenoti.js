@@ -1,6 +1,8 @@
 module.exports.config = {
     name: "welcomenoti",
     version: "1.0.0",
+    credits: "Churchill",
+    description: "Send a welcome message to new group members using shareContact."
 };
 
 module.exports.handleEvent = async function ({ api, event }) {
@@ -9,22 +11,21 @@ module.exports.handleEvent = async function ({ api, event }) {
 
     if (logMessageType === "log:subscribe") {
         try {
-            let { threadName, participantIDs } = await api.getThreadInfo(threadID);
-            let addedParticipants = event.logMessageData.addedParticipants;
+            const { threadName, participantIDs } = await api.getThreadInfo(threadID);
+            const addedParticipants = event.logMessageData.addedParticipants;
 
-            for (let newParticipant of addedParticipants) {
-                let userID = newParticipant.userFbId;
+            for (const newParticipant of addedParticipants) {
+                const userID = newParticipant.userFbId;
+                const userName = newParticipant.fullName; // New participant's name
 
                 if (userID !== api.getCurrentUserID()) {
-                    api.shareContact(
-                        `👋 Hello! Welcome to ${threadName || "this group"} 🤗, you're the ${participantIDs.length}th member on this group. Enjoy! 🤗`,
-                        userID,
-                        threadID
-                    );
+                    const message = `🌟 Hi, ${userName}!\n┌────── ～●～ ──────┐\n----- Welcome to ${threadName || "this group"} -----\n└────── ～●～ ──────┘\nYou're the ${participantIDs.length}th member of this group, please enjoy! 🥳♥`;
+
+                    await api.shareContact(message, userID, threadID);
                 }
             }
-        } catch (e) {
-            console.error(e.message);
+        } catch (error) {
+            console.error("Error sending welcome message:", error);
         }
     }
 };
