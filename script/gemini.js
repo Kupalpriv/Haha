@@ -1,9 +1,9 @@
 const axios = require('axios');
-const { kenlie } = require('../api'); 
+const { kaizen } = require('../api'); 
 
 module.exports.config = {
     name: 'gemini',
-    version: '1.1.0',
+    version: '1.1.1',
     role: 0,
     hasPrefix: true,
     aliases: ['gemini'],
@@ -15,7 +15,7 @@ module.exports.config = {
 
 module.exports.run = async function({ api, event, args }) {
     const attachment = event.messageReply?.attachments[0] || event.attachments[0];
-    const question = args.join(' ') || 'Answer all question';
+    const question = args.join(' ') || 'Answer all questions';
     const imageUrl = attachment && attachment.type === 'photo' ? attachment.url : null;
 
     if (!imageUrl && !question) {
@@ -26,7 +26,7 @@ module.exports.run = async function({ api, event, args }) {
         );
     }
 
-    const apiUrl = `${kenlie}/pixtral-paid/?question=${encodeURIComponent(question)}${imageUrl ? `&image_url=${encodeURIComponent(imageUrl)}` : ''}`;
+    const apiUrl = `${kaizen}/api/gemini-vision?q=${encodeURIComponent(question)}&uid=${event.senderID}${imageUrl ? `&imageUrl=${encodeURIComponent(imageUrl)}` : ''}`;
 
     const initialMessage = await new Promise((resolve, reject) => {
         api.sendMessage('🔍 Processing your request... Please wait.', event.threadID, (err, info) => {
