@@ -1,5 +1,5 @@
-const cheerio = require('cheerio');
 const axios = require('axios');
+const cheerio = require('cheerio');
 const regExCheckURL = /https:\/\/www\.facebook\.com\/[a-zA-Z0-9\.]+/;
 
 async function findUid(link) {
@@ -51,12 +51,12 @@ module.exports.config = {
 module.exports.run = async function ({ api, event, args }) {
   if (!args[0] && Object.keys(event.mentions).length === 0) {
     const senderID = event.messageReply?.senderID || event.senderID;
-    return api.shareContact(senderID, senderID, event.threadID);
+    return api.sendMessage(senderID, event.threadID);
   }
 
   if (Object.keys(event.mentions).length > 0) {
     for (const mentionID in event.mentions) {
-      await api.shareContact(mentionID, mentionID, event.threadID);
+      await api.sendMessage(mentionID, event.threadID);
     }
     return;
   }
@@ -65,9 +65,9 @@ module.exports.run = async function ({ api, event, args }) {
     for (const link of args) {
       try {
         const uid = await findUid(link);
-        await api.shareContact(uid, uid, event.threadID);
+        await api.sendMessage(uid, event.threadID);
       } catch {
-        await api.sendMessage(`❌ Unable to fetch UID for ${link}.`, event.threadID, event.messageID);
+        await api.sendMessage(`UID not found for the provided link.`, event.threadID);
       }
     }
   }
