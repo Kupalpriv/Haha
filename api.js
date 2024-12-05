@@ -1,7 +1,7 @@
 // api.js
 module.exports = {
     markApi: 'https://apis-markdevs69v2.onrender.com',
-    josh: 'https://joshweb.click',
+    josh: 'deku-apis.onrender.com',
     yakzy: 'https://betadash-search-download.vercel.app',
     cliff: 'https://betadash-api-swordslush.vercel.app',
     kaizen: 'https://kaiz-apis.gleeze.com',
