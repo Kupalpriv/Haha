@@ -7,7 +7,7 @@ module.exports.config = {
     role: 0,
     hasPrefix: true,
     aliases: [],
-    description: 'Get a response from the BlackBox API',
+    description: 'Get a response from the Mistral API',
     usage: 'ai [your text]',
     credits: 'churchill',
     cooldown: 3,
@@ -33,7 +33,7 @@ module.exports.run = async function ({ api, event, args }) {
         );
     });
 
-    const apiUrl = `${kenlie}/blackbox/?text=${encodeURIComponent(userText)}`;
+    const apiUrl = `${kenlie}/mistral-large/?question=${encodeURIComponent(userText)}`;
 
     try {
         const response = await axios.get(apiUrl);
@@ -51,7 +51,7 @@ module.exports.run = async function ({ api, event, args }) {
         const responseTime = ((Date.now() - startTime) / 1000).toFixed(3);
 
         await api.editMessage(
-            `‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎${responseTime}s\n\n${errorMessage}\n\nCHAT ID: ${event.threadID}`,
+            `‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎${responseTime}s\n\n${errorMessage}\n\nCHAT ID: ${event.threadID}\n\nPlease try to use **ai2** or try again later.`,
             loadingMessage.messageID
         );
     }
