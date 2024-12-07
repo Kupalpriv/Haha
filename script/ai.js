@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { kenlie } = require('../api');
+const { heru } = require('../api');
 
 module.exports.config = {
     name: 'ai',
@@ -7,7 +7,7 @@ module.exports.config = {
     role: 0,
     hasPrefix: true,
     aliases: [],
-    description: 'Get a response from the Mistral API',
+    description: 'Get a response from the GPT-4 API',
     usage: 'ai [your text]',
     credits: 'churchill',
     cooldown: 3,
@@ -33,11 +33,11 @@ module.exports.run = async function ({ api, event, args }) {
         );
     });
 
-    const apiUrl = `${kenlie}/mistral-large/?question=${encodeURIComponent(userText)}`;
+    const apiUrl = `${heru}/api/gpt-4o?prompt=${encodeURIComponent(userText)}`;
 
     try {
         const response = await axios.get(apiUrl);
-        const apiResponse = response.data.response?.trim() || 'I apologize, but I could not retrieve a valid response.';
+        const apiResponse = response.data.content?.trim() || 'I apologize, but I could not retrieve a valid response.';
         const responseTime = ((Date.now() - startTime) / 1000).toFixed(3);
 
         await api.editMessage(
@@ -47,7 +47,7 @@ module.exports.run = async function ({ api, event, args }) {
     } catch (error) {
         console.error('Error fetching from the API:', error);
         const errorMessage =
-            error.response?.data?.response?.trim() || 'An unexpected error occurred. Please try again later.';
+            error.response?.data?.content?.trim() || 'An unexpected error occurred. Please try again later.';
         const responseTime = ((Date.now() - startTime) / 1000).toFixed(3);
 
         await api.editMessage(
