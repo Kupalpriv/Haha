@@ -1,69 +1,51 @@
-const chilli = require('os');
-const bingchilling = require('pidusage');
-const chungkilss = require('axios');
-const pogi = require('fs');
-const churchillitos = require('path');
-const { josh } = require('../api'); 
+const fs = require('fs');
+const path = require('path');
+
+const uptimeFilePath = path.join(__dirname, 'uptime.json');
+
+if (!fs.existsSync(uptimeFilePath)) {
+    const initialData = { startTime: Date.now() };
+    fs.writeFileSync(uptimeFilePath, JSON.stringify(initialData));
+}
 
 module.exports.config = {
-    name: "uptime",
-    version: "1.0.3",
+    name: 'uptime',
+    version: '1.0.0',
     role: 0,
-    credits: "churchill",
-    description: "uptime",
-    hasPrefix: false,
-    cooldowns: 5,
-    aliases: ["up"]
+    credits: 'Churchill',
+    description: 'Displays the bot\'s live uptime.',
+    hasPrefix: true,
+    aliases: ['up', 'runtime'],
+    usage: '',
+    cooldown: 5,
 };
 
-function byte2mb(bytes) {
-    const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    let l = 0, n = parseInt(bytes, 10) || 0;
-    while (n >= 1024 && ++l) n = n / 1024;
-    return `${n.toFixed(n < 10 && l > 0 ? 1 : 0)} ${units[l]}`;
-}
-
-function getUptime(uptime) {
-    const days = Math.floor(uptime / (3600 * 24));
-    const hours = Math.floor((uptime % (3600 * 24)) / 3600);
-    const mins = Math.floor((uptime % 3600) / 60);
-    const seconds = Math.floor(uptime % 60);
-
-    return { days, hours, mins, seconds };
-}
-
-module.exports.run = async ({ api, event }) => {
-    const time = process.uptime();
-    const { days, hours, mins, seconds } = getUptime(time);
-
-    const usage = await bingchilling(process.pid);
-
-    const osInfo = {
-        platform: chilli.platform(),
-        architecture: chilli.arch()
-    };
-
-    const botName = "chilli bot"; // Set the bot name here
-
-    const apiUrl = `${josh}/canvas/uptime2?hours=${hours}&minutes=${mins}&seconds=${seconds}&botname=${botName}`;
-
-    const timeStart = Date.now();
-    const returnResult = `BOT has been working for ${hours} hour(s) ${mins} minute(s) ${seconds} second(s).\n\n❖ Cpu usage: ${usage.cpu.toFixed(1)}%\n❖ RAM usage: ${byte2mb(usage.memory)}\n❖ Cores: ${chilli.cpus().length}\n❖ Ping: ${Date.now() - timeStart}ms\n❖ Operating System Platform: ${osInfo.platform}\n❖ System CPU Architecture: ${osInfo.architecture}`;
-
+module.exports.run = async function({ api, event }) {
     try {
-        const response = await chungkilss.get(apiUrl, { responseType: 'arraybuffer' });
-        const imagePath = churchillitos.join(__dirname, "uptime.jpg");
+        const uptimeData = JSON.parse(fs.readFileSync(uptimeFilePath));
+        const startTime = uptimeData.startTime;
 
-        pogi.writeFileSync(imagePath, response.data);
+        const currentTime = Date.now();
+        const uptimeInSeconds = (currentTime - startTime) / 1000;
+        const formattedUptime = timeFormat(uptimeInSeconds);
 
-        api.sendMessage({
-            body: returnResult,
-            attachment: pogi.createReadStream(imagePath)
-        }, event.threadID, () => {
-            pogi.unlinkSync(imagePath);
-        });
+        api.sendMessage(`🕒 Bot Uptime: ${formattedUptime}`, event.threadID);
     } catch (error) {
-        console.error('Error:', error);
-        api.sendMessage(returnResult, event.threadID);
+        console.error('Error fetching uptime:', error);
+        api.sendMessage('❌ An error occurred while fetching the uptime.', event.threadID);
+    }
+
+    function timeFormat(seconds) {
+        const days = Math.floor(seconds / (3600 * 24));
+        const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60);
+
+        let result = '';
+        if (days > 0) result += `${days} day${days > 1 ? 's' : ''} `;
+        if (hours > 0) result += `${hours} hour${hours > 1 ? 's' : ''} `;
+        if (minutes > 0) result += `${minutes} minute${minutes > 1 ? 's' : ''} `;
+        result += `${secs} second${secs > 1 ? 's' : ''}`;
+        return result.trim();
     }
 };
