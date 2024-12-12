@@ -1,8 +1,10 @@
+const { hiro } = require('../api');
+
 module.exports.config = {
   name: "pinterest",
-  version: "1.0.0",
+  version: "1.0.1",
   role: 0,
-  credits: "𝐌𝐀𝐑𝐉𝐇𝐔𝐍 𝐁𝐀𝐘𝐋𝐎𝐍",
+  credits: "Churchill",
   description: "Image search",
   hasPrefix: false,
   commandCategory: "Search",
@@ -14,31 +16,60 @@ module.exports.config = {
 module.exports.run = async function({ api, event, args }) {
   const axios = require("axios");
   const fs = require("fs-extra");
-  const request = require("request");
-  const keySearch = args.join(" ");
-  if (!keySearch.includes("-")) return api.sendMessage('𝙿𝙻𝙴𝙰𝚂𝙴 𝙴𝙽𝚃𝙴𝚁 𝙰 𝙿𝚁𝙾𝙼𝙿𝚃\n\n𝙴𝚇𝙰𝙼𝙿𝙻𝙴 : pinterest ivana alawi - 5', event.threadID, event.messageID);
-  const keySearchs = keySearch.substr(0, keySearch.indexOf('-'));
-  const numberSearch = keySearch.split("-").pop() || 6;
-  const res = await axios.get(`https://api.kenliejugarap.com/pinterestbymarjhun/?search=${encodeURIComponent(keySearchs)}`);
-  const data = res.data && res.data.data;
 
-  var num = 0;
-  var imgData = [];
-  for (var i = 0; i < parseInt(numberSearch); i++) {
-    let path = __dirname + `/cache/${num+=1}.jpg`;
-    let getDown = (await axios.get(`${data[i]}`, { responseType: 'arraybuffer' })).data;
-    fs.writeFileSync(path, Buffer.from(getDown, 'utf-8'));
-    imgData.push(fs.createReadStream(__dirname + `/cache/${num}.jpg`));
+  const keySearch = args.join(" ");
+  if (!keySearch.includes("-")) {
+    return api.sendMessage(
+      "ENTER A PROMPT\n\nEXAMPLE: pinterest ivana alawi - 5",
+      event.threadID,
+      event.messageID
+    );
   }
 
-  const count = data.length;
+  const searchQuery = keySearch.substr(0, keySearch.indexOf('-')).trim();
+  const numberOfResults = parseInt(keySearch.split("-").pop()) || 5;
 
-  api.sendMessage({
-    attachment: imgData,
-    body: `${numberSearch} 𝙾𝚄𝚃 𝙾𝙵 ${count} 𝙿𝙸𝙲𝚂 𝙵𝙸𝙽𝙳𝙴𝙳\n✿━━━━━━━━━━✿\n𝚁𝙴𝚂𝚄𝙻𝚃𝚂 𝙾𝙵: ${keySearchs}`
-  }, event.threadID, event.messageID);
+  try {
+    const response = await axios.get(`${hiro}/image/pinterest?search=${encodeURIComponent(searchQuery)}`);
+    const images = response.data.data;
 
-  for (let ii = 1; ii < parseInt(numberSearch); ii++) {
-    fs.unlinkSync(__dirname + `/cache/${ii}.jpg`)
+    if (!images || images.length === 0) {
+      return api.sendMessage(
+        "NO IMAGES FOUND. TRY A DIFFERENT KEYWORD.",
+        event.threadID,
+        event.messageID
+      );
+    }
+
+    const selectedImages = images.slice(0, numberOfResults);
+    const attachments = [];
+
+    for (let i = 0; i < selectedImages.length; i++) {
+      const imagePath = `${__dirname}/cache/img_${i + 1}.jpg`;
+      const imageBuffer = (await axios.get(selectedImages[i], { responseType: "arraybuffer" })).data;
+
+      fs.writeFileSync(imagePath, imageBuffer);
+      attachments.push(fs.createReadStream(imagePath));
+    }
+
+    await api.sendMessage(
+      {
+        attachment: attachments,
+        body: `🔥 RESULTS FOR: ${searchQuery.toUpperCase()}\n📸 IMAGES FOUND: ${selectedImages.length}/${response.data.count}`,
+      },
+      event.threadID,
+      event.messageID
+    );
+
+    for (let i = 0; i < selectedImages.length; i++) {
+      const imagePath = `${__dirname}/cache/img_${i + 1}.jpg`;
+      fs.unlinkSync(imagePath);
+    }
+  } catch (error) {
+    return api.sendMessage(
+      "ERROR FETCHING IMAGES. PLEASE TRY AGAIN LATER.",
+      event.threadID,
+      event.messageID
+    );
   }
 };
