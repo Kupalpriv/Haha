@@ -5,67 +5,67 @@ const { kaizen } = require('../api');
 
 module.exports.config = {
     name: 'remini',
-    version: '1.3.0',
+    version: '1.0.0',
     role: 0,
-    hasPrefix: false,
+    hasPrefix: true,
     aliases: [],
-    description: 'Enhance an image by replying with "remini" to an image attachment.',
-    usage: 'Reply to an image with "remini".',
-    credits: 'chill',
+    description: 'Upscale an image by replying to it.',
+    usage: 'remini (reply to an image)',
+    credits: 'chilli',
     cooldown: 5,
 };
 
 module.exports.run = async function ({ api, event }) {
-    if (!event.messageReply || !event.messageReply.attachments || event.messageReply.attachments.length === 0) {
-        return api.sendMessage('Please reply to an image with "remini" to enhance it.', event.threadID, event.messageID);
+    const { messageReply, threadID, messageID } = event;
+
+    if (!messageReply || !messageReply.attachments || messageReply.attachments[0]?.type !== 'photo') {
+        return api.sendMessage('Please reply to an image to upscale it.', threadID, messageID);
     }
 
-    const attachment = event.messageReply.attachments[0];
-    if (attachment.type !== 'photo') {
-        return api.sendMessage('The attachment must be an image.', event.threadID, event.messageID);
-    }
+    const imageUrl = messageReply.attachments[0].url;
+    const upscaleApiUrl = `${kaizen}/api/upscale?url=${encodeURIComponent(imageUrl)}`;
+    const tempFilePath = path.resolve(__dirname, 'temp_upscaled.jpg');
 
-    const imageUrl = attachment.url;
-    const apiUrl = `${kaizen}/api/upscale?url=${encodeURIComponent(imageUrl)}`;
-
-    api.sendMessage('Enhancing the image... Please wait.', event.threadID, event.messageID);
+    let loadingMessageID;
 
     try {
-        const response = await axios.get(apiUrl);
-        if (!response.data.response) {
-            return api.sendMessage('The enhancement API failed to process the image. Please try again later.', event.threadID, event.messageID);
-        }
+        const loadingMessage = await api.sendMessage('𝐸𝑛ℎ𝑎𝑛𝑐𝑖𝑛𝑔...', threadID, messageID);
+        loadingMessageID = loadingMessage.messageID;
 
-        const enhancedImageUrl = response.data.response;
-        const tempPath = path.join(__dirname, 'cache', `remini_${Date.now()}.jpg`);
-        const writer = fs.createWriteStream(tempPath);
+        const response = await axios.get(upscaleApiUrl);
+        const upscaleResult = response.data.url;
+
+        if (!upscaleResult) throw new Error('No upscaled image URL returned.');
 
         const imageStream = await axios({
+            url: upscaleResult,
             method: 'GET',
-            url: enhancedImageUrl,
             responseType: 'stream',
         });
 
+        const writer = fs.createWriteStream(tempFilePath);
         imageStream.data.pipe(writer);
 
-        writer.on('finish', () => {
-            api.sendMessage(
-                {
-                    body: 'ok na kupal:',
-                    attachment: fs.createReadStream(tempPath),
-                },
-                event.threadID,
-                () => fs.unlinkSync(tempPath),
-                event.messageID
-            );
+        await new Promise((resolve, reject) => {
+            writer.on('finish', resolve);
+            writer.on('error', reject);
         });
 
-        writer.on('error', (err) => {
-            console.error('Error saving the enhanced image:', err);
-            api.sendMessage('An error occurred while processing the image. Please try again later.', event.threadID, event.messageID);
-        });
+        await api.sendMessage(
+            {
+                body: 'Here is your upscaled image:',
+                attachment: fs.createReadStream(tempFilePath),
+            },
+            threadID,
+            () => {
+                if (loadingMessageID) api.unsendMessage(loadingMessageID);
+            },
+            messageID
+        );
+
+        fs.unlinkSync(tempFilePath);
     } catch (error) {
-        console.error('Error during image enhancement:', error);
-        api.sendMessage('An error occurred while enhancing the image. Please try again later.', event.threadID, event.messageID);
+        api.sendMessage('Failed to process the image. Please try again later.', threadID, messageID);
+        if (loadingMessageID) api.unsendMessage(loadingMessageID);
     }
 };
