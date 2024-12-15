@@ -77,7 +77,7 @@ module.exports.run = async function ({ api, event, args }) {
         );
     } catch (error) {
         const errorMessage =
-            error.response?.data?.response?.trim() || 'An unexpected error occurred. Please try again later.';
+            error.response?.data?.response?.trim() || 'An unexpected error occurred. Please try again later or use ai2.';
         const responseTime = ((Date.now() - startTime) / 1000).toFixed(3);
 
         await api.editMessage(
