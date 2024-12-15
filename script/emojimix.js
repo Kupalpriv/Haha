@@ -9,56 +9,55 @@ module.exports.config = {
     role: 0,
     hasPrefix: true,
     aliases: [],
-    description: 'Combine two emojis into a unique emojimix!',
+    description: 'Combine two emojis into one using Emojimix API.',
     usage: 'emojimix [emoji1] [emoji2]',
-    credits: 'Kaizen',
-    cooldown: 3,
+    credits: 'chilli',
+    cooldown: 5,
 };
 
 module.exports.run = async function ({ api, event, args }) {
+    const { threadID, messageID } = event;
+
     if (args.length < 2) {
-        return api.sendMessage('Please provide two emojis to mix. Example: emojimix 😹 😸', event.threadID, event.messageID);
+        return api.sendMessage('Please provide two emojis to mix.\n\nExample: emojimix 👻 💀', threadID, messageID);
     }
 
-    const [emoji1, emoji2] = args;
-    const apiUrl = `${kaizen}/api/emojimix?emoji1=${encodeURIComponent(emoji1)}&emoji2=${encodeURIComponent(emoji2)}`;
+    const emoji1 = encodeURIComponent(args[0]);
+    const emoji2 = encodeURIComponent(args[1]);
+    const apiUrl = `${kaizen}/api/emojimix?emoji1=${emoji1}&emoji2=${emoji2}`;
+    const tempFilePath = path.resolve(__dirname, 'emojimix.png');
+
+    let loadingMessageID;
 
     try {
-        const response = await axios.get(apiUrl);
-        const imageUrl = response.data.response;
+        const loadingMessage = await api.sendMessage('Mixing your emojis, please wait...', threadID, messageID);
+        loadingMessageID = loadingMessage.messageID;
 
-        if (!imageUrl) {
-            return api.sendMessage('Failed to generate emojimix. Please try again later.', event.threadID, event.messageID);
-        }
+        const response = await axios.get(apiUrl, { responseType: 'stream' });
+        const writer = fs.createWriteStream(tempFilePath);
+        response.data.pipe(writer);
 
-        const tempPath = path.join(__dirname, 'cache', `emojimix_${Date.now()}.png`);
-        const writer = fs.createWriteStream(tempPath);
-
-        const imageStream = await axios({
-            method: 'GET',
-            url: imageUrl,
-            responseType: 'stream',
+        await new Promise((resolve, reject) => {
+            writer.on('finish', resolve);
+            writer.on('error', reject);
         });
 
-        imageStream.data.pipe(writer);
+        await api.sendMessage(
+            {
+                body: 'Here is your mixed emoji:',
+                attachment: fs.createReadStream(tempFilePath),
+            },
+            threadID,
+            () => {
+                if (loadingMessageID) api.unsendMessage(loadingMessageID);
+            },
+            messageID
+        );
 
-        writer.on('finish', () => {
-            api.sendMessage(
-                {
-                    attachment: fs.createReadStream(tempPath),
-                },
-                event.threadID,
-                () => fs.unlinkSync(tempPath),
-                event.messageID
-            );
-        });
-
-        writer.on('error', (err) => {
-            console.error('Error saving emojimix image:', err);
-            api.sendMessage('An error occurred while processing your Emojimix. Please try again later.', event.threadID, event.messageID);
-        });
+        fs.unlinkSync(tempFilePath);
     } catch (error) {
-        console.error('Error during emojimix generation:', error);
-        api.sendMessage('An error occurred while generating your Emojimix. Please try again later.', event.threadID, event.messageID);
+        console.error('Error fetching emojimix:', error);
+        api.sendMessage('Failed to mix the emojis. Please try again later.', threadID, messageID);
+        if (loadingMessageID) api.unsendMessage(loadingMessageID);
     }
 };
