@@ -1,11 +1,11 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
-const { kenlie } = require('../api'); 
+const { kaizen } = require('../api');
 
 module.exports.config = {
     name: 'remini',
-    version: '1.2.1',
+    version: '1.3.0',
     role: 0,
     hasPrefix: false,
     aliases: [],
@@ -15,8 +15,7 @@ module.exports.config = {
     cooldown: 5,
 };
 
-module.exports.run = async function({ api, event }) {
-    // Check if the user replied to a message containing an image
+module.exports.run = async function ({ api, event }) {
     if (!event.messageReply || !event.messageReply.attachments || event.messageReply.attachments.length === 0) {
         return api.sendMessage('Please reply to an image with "remini" to enhance it.', event.threadID, event.messageID);
     }
@@ -27,20 +26,17 @@ module.exports.run = async function({ api, event }) {
     }
 
     const imageUrl = attachment.url;
-    const apiUrl = `${kenlie}/imgrestore/?imgurl=${encodeURIComponent(imageUrl)}`;
+    const apiUrl = `${kaizen}/api/upscale?url=${encodeURIComponent(imageUrl)}`;
 
     api.sendMessage('Enhancing the image... Please wait.', event.threadID, event.messageID);
 
     try {
-        
         const response = await axios.get(apiUrl);
-        if (!response.data.status || !response.data.response) {
+        if (!response.data.response) {
             return api.sendMessage('The enhancement API failed to process the image. Please try again later.', event.threadID, event.messageID);
         }
 
         const enhancedImageUrl = response.data.response;
-
-        // Download the enhanced image to a temporary file
         const tempPath = path.join(__dirname, 'cache', `remini_${Date.now()}.jpg`);
         const writer = fs.createWriteStream(tempPath);
 
@@ -53,14 +49,15 @@ module.exports.run = async function({ api, event }) {
         imageStream.data.pipe(writer);
 
         writer.on('finish', () => {
-            // Send the enhanced image as a reply
-            api.sendMessage({
-                body: 'Here is your enhanced image:',
-                attachment: fs.createReadStream(tempPath),
-            }, event.threadID, () => {
-                // Delete the temporary file after sending
-                fs.unlinkSync(tempPath);
-            }, event.messageID);
+            api.sendMessage(
+                {
+                    body: 'ok na kupal:',
+                    attachment: fs.createReadStream(tempPath),
+                },
+                event.threadID,
+                () => fs.unlinkSync(tempPath),
+                event.messageID
+            );
         });
 
         writer.on('error', (err) => {
